@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://dh3qn6y4att5h"]
+
+[ext_resource type="Script" path="res://Scripts/PlatformerPackage3D.gd" id="1_3ylhl"]
+[ext_resource type="Script" path="res://Scripts/CameraSystem.gd" id="2_ydapg"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yxglf"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_b56rl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_70anq"]
+albedo_color = Color(0, 0.776471, 0.156863, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_86le5"]
+albedo_color = Color(0.505882, 0.278431, 0.101961, 1)
+
+[node name="TestLab" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0248103, 0.0438733, -0.0368707)
+
+[node name="PlatformerPackage3D" type="PlatformerPackage3D" parent="."]
+walking_speed = 5.0
+camera_node_path = NodePath("CameraSystem/SpringArm3D/Camera3D")
+script = ExtResource("1_3ylhl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlatformerPackage3D"]
+shape = SubResource("BoxShape3D_yxglf")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlatformerPackage3D"]
+mesh = SubResource("BoxMesh_b56rl")
+surface_material_override/0 = SubResource("StandardMaterial3D_70anq")
+
+[node name="CameraSystem" type="Node3D" parent="PlatformerPackage3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.219977, 0)
+script = ExtResource("2_ydapg")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="PlatformerPackage3D/CameraSystem"]
+transform = Transform3D(0.999994, -0.00173014, 0.00316133, 0.000486139, 0.933963, 0.357368, -0.00357086, -0.357364, 0.933958, 0, 0.661283, 0)
+collision_mask = 4
+spring_length = 4.0
+
+[node name="Camera3D" type="Camera3D" parent="PlatformerPackage3D/CameraSystem/SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+size = Vector3(10, 1, 10)
+material = SubResource("StandardMaterial3D_86le5")
