@@ -1,6 +1,7 @@
 #include "register_types.h"
 
 #include "PlatformerPackage3D.h"
+#include "PlatformerFeetSensor.h"
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
@@ -14,6 +15,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 
     // List of classes to register
     ClassDB::register_class<PlatformerPackage3D>();
+	ClassDB::register_class<PlatformerFeetSensor>();
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {

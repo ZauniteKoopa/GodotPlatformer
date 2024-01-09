@@ -12,6 +12,10 @@ void PlatformerPackage3D::_bind_methods() {
     // General methods to bind
     ClassDB::bind_method(D_METHOD("relative_run"), &PlatformerPackage3D::relative_run);
 
+    // Listeners to bind
+    ClassDB::bind_method(D_METHOD("on_landed"), &PlatformerPackage3D::on_landed);
+    ClassDB::bind_method(D_METHOD("on_fall_begin"), &PlatformerPackage3D::on_fall_begin);
+
     // Bind properties
     bind_properties();
 }
@@ -70,6 +74,18 @@ void PlatformerPackage3D::relative_run(Vector2 controller_vector, double time_de
     Vector3 movement_delta = (controller_vector.x * world_right) + (controller_vector.y * world_forward);
     movement_delta = walking_speed * time_delta * movement_delta.normalized();
     move_and_collide(movement_delta);
+}
+
+
+// Event handler for when the unit lands on the ground
+void PlatformerPackage3D::on_landed() {
+    UtilityFunctions::print("LANDED");
+}
+
+
+// Event handler for when the unit begins to fall
+void PlatformerPackage3D::on_fall_begin() {
+    UtilityFunctions::print("THE FALL BEGINS");
 }
 
 

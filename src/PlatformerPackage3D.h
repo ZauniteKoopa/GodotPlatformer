@@ -29,10 +29,15 @@ class PlatformerPackage3D : public CharacterBody3D {
         // On physics update
         void _physics_process(double delta) override;
 
+        // Event handler for when the unit lands on the ground
+        void on_landed();
+
+        // Event handler for when the unit begins to fall
+        void on_fall_begin();
+
         // Speed property
         void set_walking_speed(const double p_walking_speed);
         double get_walking_speed() const;
-
 
         // Camera Node Property
         void set_camera_node_path(const NodePath p_node_path);

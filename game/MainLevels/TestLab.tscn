@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dh3qn6y4att5h"]
+[gd_scene load_steps=9 format=3 uid="uid://dh3qn6y4att5h"]
 
 [ext_resource type="Script" path="res://Scripts/PlatformerPackage3D.gd" id="1_3ylhl"]
 [ext_resource type="Script" path="res://Scripts/CameraSystem.gd" id="2_ydapg"]
@@ -10,8 +10,14 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_70anq"]
 albedo_color = Color(0, 0.776471, 0.156863, 1)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_1ec5k"]
+size = Vector3(0.8, 0.1, 0.8)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_86le5"]
 albedo_color = Color(0.505882, 0.278431, 0.101961, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_i8aj4"]
+size = Vector3(10, 1, 10)
 
 [node name="TestLab" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0248103, 0.0438733, -0.0368707)
@@ -19,7 +25,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0248103, 0.0438733, -0.036
 [node name="PlatformerPackage3D" type="PlatformerPackage3D" parent="."]
 walking_speed = 5.0
 camera_node_path = NodePath("CameraSystem/SpringArm3D/Camera3D")
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.241175, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0393105, 0)
+collision_layer = 2
+collision_mask = 2
 script = ExtResource("1_3ylhl")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlatformerPackage3D"]
@@ -42,7 +50,23 @@ spring_length = 4.0
 transform = Transform3D(0.999999, -1.86265e-09, -5.58794e-09, 4.65661e-10, 1, -1.91794e-08, -1.86265e-09, -7.87404e-08, 1, 0, 5.96046e-08, 4)
 rotation_edit_mode = 2
 
-[node name="Floor" type="CSGBox3D" parent="."]
+[node name="PlatformerFeetSensor" type="PlatformerFeetSensor" parent="PlatformerPackage3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlatformerPackage3D/PlatformerFeetSensor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.55, 0)
+shape = SubResource("BoxShape3D_1ec5k")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="Floor" type="CSGBox3D" parent="StaticBody3D"]
 size = Vector3(10, 1, 10)
 material = SubResource("StandardMaterial3D_86le5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_i8aj4")
+
+[connection signal="body_entered" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/PlatformerFeetSensor" method="on_body_enter"]
+[connection signal="body_exited" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/PlatformerFeetSensor" method="on_body_exit"]
+[connection signal="fall_begin" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D" method="on_fall_begin"]
+[connection signal="landed" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D" method="on_landed"]
