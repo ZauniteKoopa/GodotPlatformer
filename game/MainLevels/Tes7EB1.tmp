@@ -26,15 +26,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0248103, 0.0438733, -0.036
 walking_speed = 5.0
 walking_air_reduction = 0.5
 camera_node_path = NodePath("CameraSystem/SpringArm3D/Camera3D")
-long_jump_height = 2.5
-short_jump_height = 0.4
-player_gravity = 10.0
-gravity_apex_modifier = 0.75
-apex_speed_definition = 0.75
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -14.509, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 collision_layer = 2
 collision_mask = 2
-velocity = Vector3(0, -10, 0)
 script = ExtResource("1_3ylhl")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlatformerPackage3D"]

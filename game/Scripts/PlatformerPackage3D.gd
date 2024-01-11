@@ -4,7 +4,7 @@ extends PlatformerPackage3D
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 
-func _physics_process(delta):
+func _process(delta):
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir = Input.get_vector(
@@ -15,3 +15,8 @@ func _physics_process(delta):
 	)
 	
 	relative_run(input_dir, delta);
+	
+	if (Input.is_action_just_pressed("Jump")):
+		start_jump()
+	if (Input.is_action_just_released("Jump")):
+		cancel_jump()
