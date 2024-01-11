@@ -75,6 +75,9 @@ PlatformerPackage3D::PlatformerPackage3D() {
     grounded = false;
     currentVerticalSpeed = 0;
 
+    // Reference nodes (MUST BE SET TO NULL ON CONSTRUCTION)
+    current_camera = nullptr;
+
 }
 
 // Main function to clean up
@@ -125,13 +128,11 @@ void PlatformerPackage3D::cancel_jump() {
 // Main function to move a certain direction given a controller vector
 void PlatformerPackage3D::relative_run(Vector2 controller_vector, double time_delta) {
     // Initialize camera if it has not been set up yet
-    // if (current_camera == nullptr) {
-    //     initialize_current_camera();
-    // }
-    initialize_current_camera();
+    if (current_camera == nullptr) {
+        initialize_current_camera();
+    }
 
     // Get world directions based on current camera (forward = current_camera.transform.basis.z)
-    // UtilityFunctions::print(current_camera->get_position());
     Vector3 world_forward = -current_camera->get_global_transform().get_basis().get_column(2);
     Vector3 up_vector = Vector3(0, 1, 0);
     Vector3 world_right = world_forward.cross(up_vector);
