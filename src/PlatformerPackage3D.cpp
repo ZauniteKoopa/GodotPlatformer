@@ -78,7 +78,8 @@ PlatformerPackage3D::PlatformerPackage3D() {
 }
 
 // Main function to clean up
-PlatformerPackage3D::~PlatformerPackage3D() {}
+PlatformerPackage3D::~PlatformerPackage3D() {
+}
 
 // Main function that plays on game start
 void PlatformerPackage3D::_ready() {
@@ -101,7 +102,6 @@ void PlatformerPackage3D::_physics_process(double delta) {
         // Set the velocity and then move
         set_velocity(calculate_horizontal_velocity(delta) + calculate_vertical_velocity(delta));
         move_and_slide();
-        UtilityFunctions::print("its running aaaa");
     }
 }
 
@@ -125,13 +125,14 @@ void PlatformerPackage3D::cancel_jump() {
 // Main function to move a certain direction given a controller vector
 void PlatformerPackage3D::relative_run(Vector2 controller_vector, double time_delta) {
     // Initialize camera if it has not been set up yet
-    if (current_camera == nullptr) {
-        initialize_current_camera();
-    }
+    // if (current_camera == nullptr) {
+    //     initialize_current_camera();
+    // }
+    initialize_current_camera();
 
     // Get world directions based on current camera (forward = current_camera.transform.basis.z)
     // UtilityFunctions::print(current_camera->get_position());
-    Vector3 world_forward = -get_global_transform().get_basis().get_column(2);
+    Vector3 world_forward = -current_camera->get_global_transform().get_basis().get_column(2);
     Vector3 up_vector = Vector3(0, 1, 0);
     Vector3 world_right = world_forward.cross(up_vector);
 
@@ -231,7 +232,6 @@ NodePath PlatformerPackage3D::get_camera_node_path() const {
 
 void PlatformerPackage3D::initialize_current_camera() {
     if (camera_node_path != nullptr) {
-        UtilityFunctions::print("INITIALIZED CURRENT CAMERA");
         current_camera = get_node<Camera3D>(camera_node_path);
     }
 }
