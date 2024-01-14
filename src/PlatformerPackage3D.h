@@ -2,6 +2,7 @@
 #define PLATFORMERPACKAGE3D_H
 
 #include <godot_cpp/classes/character_body3d.hpp>
+#include <godot_cpp/classes/node3d.hpp>
 #include <godot_cpp/classes/camera3d.hpp>
 
 namespace godot {
@@ -14,9 +15,13 @@ class PlatformerPackage3D : public CharacterBody3D {
         double walking_air_reduction;
         Vector3 currentHorizontalDirection;
 
-        // Pointers to cameras
+        // Pointers to camera
         NodePath camera_node_path;
         class Camera3D* current_camera;
+
+        // Pointer to Character mesh
+        NodePath character_body_path;
+        class Node3D* character_body;
 
         // Vertical movement
         double longJumpHeight;
@@ -58,6 +63,11 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Event handler for when the unit begins to fall
         void on_fall_begin();
 
+
+        // --------------------------
+        // PROPERTIES
+        // -------------------------
+
         // walking Speed property
         void set_walking_speed(const double p_walking_speed);
         double get_walking_speed() const;
@@ -69,6 +79,10 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Camera Node Property
         void set_camera_node_path(const NodePath p_node_path);
         NodePath get_camera_node_path() const;
+
+        // Character body property
+        void set_character_body_path(const NodePath p_node_path);
+        NodePath get_character_body_path() const;
 
         // Player base jump height
         void set_long_jump_height(const double jump_height);
@@ -90,7 +104,7 @@ class PlatformerPackage3D : public CharacterBody3D {
     private:
         // Initializers
         void static bind_properties();
-        void initialize_current_camera();
+        void initialize_current_node_pointers();
 
         // Velocity calculation
         Vector3 calculate_vertical_velocity(double delta);

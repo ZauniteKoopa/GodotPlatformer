@@ -37,6 +37,10 @@ void PlatformerPackage3D::bind_properties() {
     ClassDB::bind_method(D_METHOD("set_camera_node_path"), &PlatformerPackage3D::set_camera_node_path);
     ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::NODE_PATH, "camera_node_path"), "set_camera_node_path", "get_camera_node_path");
 
+    ClassDB::bind_method(D_METHOD("get_character_body_path"), &PlatformerPackage3D::get_character_body_path);
+    ClassDB::bind_method(D_METHOD("set_character_body_path"), &PlatformerPackage3D::set_character_body_path);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::NODE_PATH, "character_body_path"), "set_character_body_path", "get_character_body_path");
+
     ClassDB::bind_method(D_METHOD("get_long_jump_height"), &PlatformerPackage3D::get_long_jump_height);
     ClassDB::bind_method(D_METHOD("set_long_jump_height"), &PlatformerPackage3D::set_long_jump_height);
     ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "long_jump_height"), "set_long_jump_height", "get_long_jump_height");
@@ -77,6 +81,7 @@ PlatformerPackage3D::PlatformerPackage3D() {
 
     // Reference nodes (MUST BE SET TO NULL ON CONSTRUCTION)
     current_camera = nullptr;
+    character_body = nullptr;
 
 }
 
@@ -86,15 +91,7 @@ PlatformerPackage3D::~PlatformerPackage3D() {
 
 // Main function that plays on game start
 void PlatformerPackage3D::_ready() {
-    // Disable if you're in editor
-    if (Engine::get_singleton()->is_editor_hint()) {
-        set_process_internal(false);
-        set_physics_process_internal(false);
-    } else {
-        set_process_internal(true);
-        set_physics_process_internal(true);
-    }
-
+    initialize_current_node_pointers();
     currentVerticalSpeed = 0;
 }
 
@@ -127,11 +124,6 @@ void PlatformerPackage3D::cancel_jump() {
 
 // Main function to move a certain direction given a controller vector
 void PlatformerPackage3D::relative_run(Vector2 controller_vector, double time_delta) {
-    // Initialize camera if it has not been set up yet
-    if (current_camera == nullptr) {
-        initialize_current_camera();
-    }
-
     // Get world directions based on current camera (forward = current_camera.transform.basis.z)
     Vector3 world_forward = -current_camera->get_global_transform().get_basis().get_column(2);
     Vector3 up_vector = Vector3(0, 1, 0);
@@ -181,6 +173,11 @@ Vector3 PlatformerPackage3D::calculate_vertical_velocity(double delta) {
 // Main private helper function to calculate the XZ component of velocity
 Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
     double curSpeed = (grounded) ? walking_speed : walking_speed * walking_air_reduction;
+
+    if (currentHorizontalDirection.length() > 0.01f) {
+        character_body->look_at(get_global_position() + currentHorizontalDirection);
+    }
+
     return curSpeed * currentHorizontalDirection;
 }
 
@@ -231,9 +228,24 @@ NodePath PlatformerPackage3D::get_camera_node_path() const {
     return camera_node_path;
 }
 
-void PlatformerPackage3D::initialize_current_camera() {
+
+// Character Node Path Setter / Getter
+void PlatformerPackage3D::set_character_body_path(const NodePath p_node_path) {
+    character_body_path = p_node_path;
+}
+
+NodePath PlatformerPackage3D::get_character_body_path() const {
+    return character_body_path;
+}
+
+
+void PlatformerPackage3D::initialize_current_node_pointers() {
     if (camera_node_path != nullptr) {
         current_camera = get_node<Camera3D>(camera_node_path);
+    }
+
+    if (character_body_path != nullptr) {
+        character_body = get_node<Node3D>(character_body_path);
     }
 }
 
