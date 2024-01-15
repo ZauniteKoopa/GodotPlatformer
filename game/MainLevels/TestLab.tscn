@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://Scripts/CameraSystem.gd" id="2_ydapg"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1ec5k"]
-size = Vector3(0.8, 0.1, 0.8)
+size = Vector3(0.8, 0.180371, 0.8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_yxglf"]
 
@@ -34,8 +34,9 @@ gravity_apex_modifier = 0.75
 apex_speed_definition = 0.75
 transform = Transform3D(0.999844, 0, 0.0176444, 0, 1, 0, -0.0176444, 0, 0.999844, 0, 0.5, 0)
 collision_layer = 2
-collision_mask = 2
+collision_mask = 3
 velocity = Vector3(0, -10, 0)
+safe_margin = 0.01
 script = ExtResource("1_3ylhl")
 
 [node name="CameraSystem" type="Node3D" parent="PlatformerPackage3D"]
@@ -54,7 +55,7 @@ rotation_edit_mode = 2
 [node name="PlatformerFeetSensor" type="PlatformerFeetSensor" parent="PlatformerPackage3D"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlatformerPackage3D/PlatformerFeetSensor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.55, 0)
+transform = Transform3D(1, 0, -1.67638e-08, 0, 1, 0, 1.67638e-08, 0, 1, 0, -0.590186, 0)
 shape = SubResource("BoxShape3D_1ec5k")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlatformerPackage3D"]
@@ -68,6 +69,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_70anq")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+disable_mode = 2
+collision_mask = 3
 
 [node name="Floor" type="CSGBox3D" parent="StaticBody3D"]
 size = Vector3(10, 1, 10)
@@ -77,7 +80,9 @@ material = SubResource("StandardMaterial3D_86le5")
 shape = SubResource("BoxShape3D_i8aj4")
 
 [node name="StaticBody3D2" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.4404, -2.61536, 2.20241)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.53169, 0.55287, -0.0116942)
+disable_mode = 2
+collision_mask = 3
 
 [node name="Floor" type="CSGBox3D" parent="StaticBody3D2"]
 size = Vector3(10, 1, 10)

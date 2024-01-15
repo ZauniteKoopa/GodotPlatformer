@@ -100,7 +100,10 @@ void PlatformerPackage3D::_physics_process(double delta) {
     // Check if you're in editor mode or in game mode. If in game mode, actually run it
     if (!Engine::get_singleton()->is_editor_hint()) {
         // Set the velocity and then move
-        set_velocity(calculate_horizontal_velocity(delta) + calculate_vertical_velocity(delta));
+        Vector3 velocityVector = calculate_horizontal_velocity(delta) + calculate_vertical_velocity(delta);
+
+        // Move the enemy forward
+        set_velocity(velocityVector);
         move_and_slide();
     }
 }
