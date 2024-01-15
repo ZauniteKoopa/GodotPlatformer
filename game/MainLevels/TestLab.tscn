@@ -40,17 +40,18 @@ safe_margin = 0.01
 script = ExtResource("1_3ylhl")
 
 [node name="CameraSystem" type="Node3D" parent="PlatformerPackage3D"]
-transform = Transform3D(1, 0, 0, 0, 0.944926, 0.327284, 0, -0.327284, 0.944926, 0, 0.219977, 0)
+transform = Transform3D(0.965017, -0.0620964, 0.25473, 0, 0.971549, 0.236838, -0.262189, -0.228553, 0.937562, 0.0163549, 0.498002, 0.000288617)
 script = ExtResource("2_ydapg")
 
 [node name="SpringArm3D" type="SpringArm3D" parent="PlatformerPackage3D/CameraSystem"]
-transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 0.661283, 0)
-collision_mask = 4
+transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 3.37604e-09, 0.661284, -1.11759e-08)
+collision_mask = 7
 spring_length = 4.0
 
 [node name="PlayerCamera" type="Camera3D" parent="PlatformerPackage3D/CameraSystem/SpringArm3D"]
-transform = Transform3D(0.999999, -1.86265e-09, -5.58794e-09, 4.65661e-10, 1, -1.91794e-08, -1.86265e-09, -7.87404e-08, 1, 0, 5.96046e-08, 4)
+transform = Transform3D(1, -4.65662e-10, -8.32667e-17, 4.65661e-10, 1, 8.94069e-08, 0, -8.9407e-08, 1, -1.11759e-08, 1.19209e-07, 4.85626)
 rotation_edit_mode = 2
+fov = 62.3
 
 [node name="PlatformerFeetSensor" type="PlatformerFeetSensor" parent="PlatformerPackage3D"]
 
