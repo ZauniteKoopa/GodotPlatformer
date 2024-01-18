@@ -19,6 +19,9 @@ void PlatformerPackage3D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("on_landed"), &PlatformerPackage3D::on_landed);
     ClassDB::bind_method(D_METHOD("on_fall_begin"), &PlatformerPackage3D::on_fall_begin);
 
+    // Signals to bind
+    ADD_SIGNAL(MethodInfo("jump_begin"));
+
     // Bind properties
     bind_properties();
 }
@@ -113,6 +116,7 @@ void PlatformerPackage3D::_physics_process(double delta) {
 void PlatformerPackage3D::start_jump() {
     if (grounded) {
         currentVerticalSpeed = calculate_starting_jump_velocity(playerGravity, longJumpHeight);
+        emit_signal("jump_begin");
     }
 }
 

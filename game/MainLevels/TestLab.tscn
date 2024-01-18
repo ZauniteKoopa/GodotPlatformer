@@ -54,6 +54,7 @@ rotation_edit_mode = 2
 fov = 62.3
 
 [node name="PlatformerFeetSensor" type="PlatformerFeetSensor" parent="PlatformerPackage3D"]
+coyote_time_duration = 0.2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlatformerPackage3D/PlatformerFeetSensor"]
 transform = Transform3D(1, 0, -1.67638e-08, 0, 1, 0, 1.67638e-08, 0, 1, 0, -0.590186, 0)
@@ -92,6 +93,7 @@ material = SubResource("StandardMaterial3D_86le5")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2"]
 shape = SubResource("BoxShape3D_i8aj4")
 
+[connection signal="jump_begin" from="PlatformerPackage3D" to="PlatformerPackage3D/PlatformerFeetSensor" method="disable_coyote_time"]
 [connection signal="body_entered" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/PlatformerFeetSensor" method="on_body_enter"]
 [connection signal="body_exited" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/PlatformerFeetSensor" method="on_body_exit"]
 [connection signal="fall_begin" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D" method="on_fall_begin"]
