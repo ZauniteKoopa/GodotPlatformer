@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/character_body3d.hpp>
 #include <godot_cpp/classes/node3d.hpp>
 #include <godot_cpp/classes/camera3d.hpp>
+#include "BufferTimer.h"
 
 namespace godot {
 class PlatformerPackage3D : public CharacterBody3D {
@@ -34,6 +35,11 @@ class PlatformerPackage3D : public CharacterBody3D {
         bool grounded;
         double currentVerticalSpeed;
 
+        // Jump Buffering
+        double jumpBufferDuration;
+        BufferTimer* jumpBufferTimer;
+        double bufferedJumpHeight;
+
     protected:
         // Main function to bind methods to class
         void static _bind_methods();
@@ -44,6 +50,9 @@ class PlatformerPackage3D : public CharacterBody3D {
 
         // On game start
         void _ready() override;
+
+        // On frame update
+        void process_timers(double delta);
 
         // On physics update
         void _physics_process(double delta) override;
@@ -101,10 +110,17 @@ class PlatformerPackage3D : public CharacterBody3D {
         void set_apex_speed_definition(const double speed);
         double get_apex_speed_definition() const;
 
+        // Set jump buffer
+        void set_jump_buffer_duration(const double duration);
+        double get_jump_buffer_duration() const;
+
     private:
         // Initializers
         void static bind_properties();
         void initialize_current_node_pointers();
+
+        // Main function to launch a jump upon starting a jump
+        void launch_jump(double jumpHeight);
 
         // Velocity calculation
         Vector3 calculate_vertical_velocity(double delta);

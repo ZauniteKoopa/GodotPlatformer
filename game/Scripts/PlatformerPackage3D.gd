@@ -5,6 +5,8 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 
 func _process(delta):
+	process_timers(delta)
+		
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir = Input.get_vector(

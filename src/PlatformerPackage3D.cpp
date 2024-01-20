@@ -14,6 +14,7 @@ void PlatformerPackage3D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("relative_run"), &PlatformerPackage3D::relative_run);
     ClassDB::bind_method(D_METHOD("start_jump"), &PlatformerPackage3D::start_jump);
     ClassDB::bind_method(D_METHOD("cancel_jump"), &PlatformerPackage3D::cancel_jump);
+    ClassDB::bind_method(D_METHOD("process_timers"), &PlatformerPackage3D::process_timers);
 
     // Listeners to bind
     ClassDB::bind_method(D_METHOD("on_landed"), &PlatformerPackage3D::on_landed);
@@ -63,6 +64,10 @@ void PlatformerPackage3D::bind_properties() {
     ClassDB::bind_method(D_METHOD("get_apex_speed_definition"), &PlatformerPackage3D::get_apex_speed_definition);
     ClassDB::bind_method(D_METHOD("set_apex_speed_definition"), &PlatformerPackage3D::set_apex_speed_definition);
     ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "apex_speed_definition"), "set_apex_speed_definition", "get_apex_speed_definition");
+
+    ClassDB::bind_method(D_METHOD("get_jump_buffer_duration"), &PlatformerPackage3D::get_jump_buffer_duration);
+    ClassDB::bind_method(D_METHOD("set_jump_buffer_duration"), &PlatformerPackage3D::set_jump_buffer_duration);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "jump_buffer_duration"), "set_jump_buffer_duration", "get_jump_buffer_duration");
 }
 
 // General constructor
@@ -82,21 +87,37 @@ PlatformerPackage3D::PlatformerPackage3D() {
     grounded = false;
     currentVerticalSpeed = 0;
 
+    // Main jump buffer
+    jumpBufferDuration = 0.01;
+    jumpBufferTimer = new BufferTimer(jumpBufferDuration);
+
     // Reference nodes (MUST BE SET TO NULL ON CONSTRUCTION)
     current_camera = nullptr;
     character_body = nullptr;
 
 }
 
+
 // Main function to clean up
 PlatformerPackage3D::~PlatformerPackage3D() {
+    delete jumpBufferTimer;
 }
+
 
 // Main function that plays on game start
 void PlatformerPackage3D::_ready() {
     initialize_current_node_pointers();
     currentVerticalSpeed = 0;
 }
+
+
+// On frame update
+void PlatformerPackage3D::process_timers(double delta) {
+    if (!Engine::get_singleton()->is_editor_hint()) {
+        jumpBufferTimer->update(delta);
+    }
+}
+
 
 // Main function that plays for each physics frame
 void PlatformerPackage3D::_physics_process(double delta) {
@@ -114,18 +135,36 @@ void PlatformerPackage3D::_physics_process(double delta) {
 
 // Main function to start a jump
 void PlatformerPackage3D::start_jump() {
+    // If already grounded, jump immediately
     if (grounded) {
-        currentVerticalSpeed = calculate_starting_jump_velocity(playerGravity, longJumpHeight);
-        emit_signal("jump_begin");
+        launch_jump(longJumpHeight);
+
+    // Else, activate the buffer timer and initialize
+    } else {
+        jumpBufferTimer->reset();
+        bufferedJumpHeight = longJumpHeight;
     }
 }
+
 
 // Main function to cancel a jump in midair 
 void PlatformerPackage3D::cancel_jump() {
     if (!grounded) {
         double shortJumpVelocity = calculate_starting_jump_velocity(playerGravity, shortJumpHeight);
         currentVerticalSpeed = Math::min(currentVerticalSpeed, shortJumpVelocity);
+
+        // If you were in jump buffering stage, lower buffer jump height to the canceled jump height 
+        if (jumpBufferTimer->isRunning()) {
+            bufferedJumpHeight = shortJumpHeight;
+        }
     }
+}
+
+
+// Main function to launch a jump upon starting a jump
+void PlatformerPackage3D::launch_jump(double jumpHeight) {
+    currentVerticalSpeed = calculate_starting_jump_velocity(playerGravity, jumpHeight);
+    emit_signal("jump_begin");
 }
 
 
@@ -152,8 +191,16 @@ void PlatformerPackage3D::relative_run(Vector2 controller_vector, double time_de
 
 // Event handler for when the unit lands on the ground
 void PlatformerPackage3D::on_landed() {
-    currentVerticalSpeed = 0;
-    grounded = true;
+    // If jump buffering still active, just launch jump and cancel jump
+    if (jumpBufferTimer->isRunning()) {
+        launch_jump(bufferedJumpHeight);
+        jumpBufferTimer->cancel();
+
+    // Else, just land on the ground
+    } else {
+        currentVerticalSpeed = 0;
+        grounded = true;
+    }
 }
 
 
@@ -304,4 +351,15 @@ void PlatformerPackage3D::set_apex_speed_definition(const double speed) {
 
 double PlatformerPackage3D::get_apex_speed_definition() const {
     return apexSpeedDefinition;
+}
+
+
+// Set jump buffer
+void PlatformerPackage3D::set_jump_buffer_duration(const double duration) {
+    jumpBufferDuration = duration;
+    jumpBufferTimer->setMaxDuration(duration);
+}
+
+double PlatformerPackage3D::get_jump_buffer_duration() const {
+    return jumpBufferDuration;
 }
