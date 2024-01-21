@@ -1,7 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://dh3qn6y4att5h"]
+[gd_scene load_steps=11 format=3 uid="uid://dh3qn6y4att5h"]
 
 [ext_resource type="Script" path="res://Scripts/PlatformerPackage3D.gd" id="1_3ylhl"]
 [ext_resource type="Script" path="res://Scripts/CameraSystem.gd" id="2_ydapg"]
+[ext_resource type="AudioStream" uid="uid://d2fdowpk0k2ui" path="res://Audio/Player_Jump.wav" id="3_5cp4s"]
+[ext_resource type="AudioStream" uid="uid://c4cfp564qe7be" path="res://Audio/Player_Land.wav" id="4_ui6ct"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1ec5k"]
 size = Vector3(0.8, 0.180371, 0.8)
@@ -70,6 +72,17 @@ mesh = SubResource("BoxMesh_b56rl")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_70anq")
 
+[node name="AudioCenter" type="Node3D" parent="PlatformerPackage3D"]
+
+[node name="PlayerJumpSpeaker" type="AudioStreamPlayer3D" parent="PlatformerPackage3D/AudioCenter"]
+transform = Transform3D(1, 0, -3.72529e-09, 0, 1, 0, 1.86265e-09, 0, 1, 0, 0, 0)
+stream = ExtResource("3_5cp4s")
+volume_db = -16.2
+
+[node name="PlayerLandSpeaker" type="AudioStreamPlayer3D" parent="PlatformerPackage3D/AudioCenter"]
+stream = ExtResource("4_ui6ct")
+volume_db = -10.0
+
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 disable_mode = 2
@@ -95,7 +108,9 @@ material = SubResource("StandardMaterial3D_86le5")
 shape = SubResource("BoxShape3D_i8aj4")
 
 [connection signal="jump_begin" from="PlatformerPackage3D" to="PlatformerPackage3D/PlatformerFeetSensor" method="disable_coyote_time"]
+[connection signal="jump_begin" from="PlatformerPackage3D" to="PlatformerPackage3D/AudioCenter/PlayerJumpSpeaker" method="play"]
 [connection signal="body_entered" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/PlatformerFeetSensor" method="on_body_enter"]
 [connection signal="body_exited" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/PlatformerFeetSensor" method="on_body_exit"]
 [connection signal="fall_begin" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D" method="on_fall_begin"]
 [connection signal="landed" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D" method="on_landed"]
+[connection signal="landed" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/AudioCenter/PlayerLandSpeaker" method="play"]
