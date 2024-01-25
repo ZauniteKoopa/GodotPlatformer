@@ -14,6 +14,8 @@ PlatformerFeetSensor::PlatformerFeetSensor() {
     curCoyoteTimer.unref();
     coyoteTimeListener = Callable(this, "on_coyote_timeout");
     coyoteTimeDisabled = false;
+
+    floorMaxAngle = 45;
 }
 
 // Main destructor
@@ -42,37 +44,124 @@ void PlatformerFeetSensor::_bind_methods() {
 
 // Main event handler function for when something enters this area
 void PlatformerFeetSensor::on_body_enter(Node3D* body) {
-    groundLock.lock();
+    // Check collision normal. If within floor threshold, then count it as ground
+    Vector3 collisionNormal = get_collision_normal(body);
+    Vector3 upVector = Vector3(0, 1, 0);
+    double curAngle = Math::rad_to_deg(collisionNormal.angle_to(upVector));
 
-    // If landed, emit signal and cancel current coyote timer
-    if (numGroundSensed == 0) {
-        emit_signal("landed");
+    // Only increment counter if ground is actually valid ground
+    if (curAngle <= floorMaxAngle) {
+        groundLock.lock();
 
-        cancel_coyote_timer();
-        coyoteTimeDisabled = false;
+        // If landed, emit signal and cancel current coyote timer
+        if (numGroundSensed == 0) {
+            emit_signal("landed");
+
+            cancel_coyote_timer();
+            coyoteTimeDisabled = false;
+        }
+        numGroundSensed++;
+
+        groundLock.unlock();
     }
-    numGroundSensed++;
-
-    groundLock.unlock();
 }
 
 // Main event handler function for when something exits this area
 void PlatformerFeetSensor::on_body_exit(Node3D* body) {
-    groundLock.lock();
-    numGroundSensed--;
+    // Check collision normal. If within floor threshold, then count it as ground
+    Vector3 collisionNormal = get_collision_normal(body);
+    Vector3 upVector = Vector3(0, 1, 0);
+    double curAngle = Math::rad_to_deg(collisionNormal.angle_to(upVector));
 
-    // If no ground left to stand, cancel coyote timer if any exist and start a new timer
-    if (numGroundSensed == 0) {
-        cancel_coyote_timer();
+    // Only decrement counter if ground is actually valid ground (THIS WILL BE A BUG IF THE GROUND YOU'RE STANDING ON TURNS INTO A WALL LIKE WALKING OFF A STEEP SLOPE.)
+    if (curAngle <= floorMaxAngle) {
+        groundLock.lock();
+        numGroundSensed--;
 
-        if (coyoteTimeDisabled) {
-            emit_signal("fall_begin");
-        } else {
-            start_coyote_timer();
+        // If no ground left to stand, cancel coyote timer if any exist and start a new timer
+        if (numGroundSensed == 0) {
+            cancel_coyote_timer();
+
+            if (coyoteTimeDisabled) {
+                emit_signal("fall_begin");
+            } else {
+                start_coyote_timer();
+            }
         }
-    }
 
+        groundLock.unlock();
+    }
+}
+
+
+// Main function to project movement on current ground plane
+Vector3 PlatformerFeetSensor::project_movement_on_ground(Vector3 velocity) {
+    // Get the ground plane
+    Vector3 ground_normal = get_overall_ground_normal();
+    Plane ground_plane = Plane(ground_normal, Vector3(0, 0, 0));
+
+    // Do calculations based on plane projection
+    double speed = velocity.length();
+    Vector3 projectedVelocity = ground_plane.project(velocity).normalized();
+    return projectedVelocity * speed;
+}
+
+
+// Main helper function to get the ground normal, MUST BE ON PHYSICS UPDATE
+Vector3 PlatformerFeetSensor::get_overall_ground_normal() {
+    // Check if you're grounded
+    int tempNumGround;
+    Vector3 upVector = Vector3(0, 1, 0);
+
+    groundLock.lock();
+    tempNumGround = numGroundSensed;
     groundLock.unlock();
+
+    // If grounded, apply raycast check. else, return default normal (Vector3.up)
+    if (tempNumGround > 0) {
+        // Get all overlapping bodies. Start from floor max angle as the starting min
+        TypedArray<Node3D> overlappingGround = get_overlapping_bodies();
+        double minAngle = floorMaxAngle + 1;
+        Vector3 answer = upVector;
+
+        for (int i = 0; i < overlappingGround.size(); i++) {
+            // Get current ground
+            Object* g = overlappingGround[i];
+            Node3D* curGround = Object::cast_to<Node3D>(g);
+
+            // Get collision normal and compare to min angle. Always pick the normal with the smallest angle from UP
+            Vector3 curNormal = get_collision_normal(curGround);
+            double curAngle = Math::rad_to_deg(curNormal.angle_to(upVector));
+            if (curAngle < minAngle) {
+                minAngle = curAngle;
+                answer = curNormal;
+            }
+        }
+
+        return answer;
+    } else {
+        return upVector;
+    }
+}
+
+
+// Main function to get the normal of one collision
+Vector3 PlatformerFeetSensor::get_collision_normal(Node3D* collidedGround) {
+    // Set up query and fire ray cast
+    PhysicsDirectSpaceState3D* spaceState = get_world_3d()->get_direct_space_state();
+    Ref<PhysicsRayQueryParameters3D> rayCastQuery = PhysicsRayQueryParameters3D::create(
+        get_global_position(),
+        collidedGround->get_global_position()
+    );
+
+    Dictionary rayResult = spaceState->intersect_ray(rayCastQuery);
+
+    // If you hit something, return the normal of that collision. Else, return the upVector
+    if (rayResult.is_empty()) {
+        return Vector3(0, 1, 0);
+    } else {
+        return rayResult["normal"];
+    }
 }
 
 

@@ -29,6 +29,7 @@ walking_speed = 5.0
 walking_air_reduction = 0.5
 camera_node_path = NodePath("CameraSystem/SpringArm3D/PlayerCamera")
 character_body_path = NodePath("CollisionShape3D")
+player_feet_path = NodePath("PlatformerFeetSensor")
 long_jump_height = 2.5
 short_jump_height = 1.0
 player_gravity = 18.0
@@ -80,11 +81,12 @@ stream = ExtResource("3_5cp4s")
 volume_db = -16.2
 
 [node name="PlayerLandSpeaker" type="AudioStreamPlayer3D" parent="PlatformerPackage3D/AudioCenter"]
+transform = Transform3D(1, 0, -1.86265e-09, 0, 1, 0, 1.86265e-09, 0, 1, -0.0177902, -0.0725532, 0.0626138)
 stream = ExtResource("4_ui6ct")
 volume_db = -10.0
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00563049, -1.01921, 0.0124369)
 disable_mode = 2
 collision_mask = 3
 
@@ -96,7 +98,7 @@ material = SubResource("StandardMaterial3D_86le5")
 shape = SubResource("BoxShape3D_i8aj4")
 
 [node name="StaticBody3D2" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.53169, 0.55287, -0.0116942)
+transform = Transform3D(0.744867, -0.641914, 0.181987, 0.65993, 0.748992, -0.059191, -0.098311, 0.164188, 0.981518, 5.27806, 0.270969, -0.0116942)
 disable_mode = 2
 collision_mask = 3
 

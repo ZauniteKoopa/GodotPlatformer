@@ -45,6 +45,10 @@ void PlatformerPackage3D::bind_properties() {
     ClassDB::bind_method(D_METHOD("set_character_body_path"), &PlatformerPackage3D::set_character_body_path);
     ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::NODE_PATH, "character_body_path"), "set_character_body_path", "get_character_body_path");
 
+    ClassDB::bind_method(D_METHOD("get_player_feet_path"), &PlatformerPackage3D::get_player_feet_path);
+    ClassDB::bind_method(D_METHOD("set_player_feet_path"), &PlatformerPackage3D::set_player_feet_path);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::NODE_PATH, "player_feet_path"), "set_player_feet_path", "get_player_feet_path");
+
     ClassDB::bind_method(D_METHOD("get_long_jump_height"), &PlatformerPackage3D::get_long_jump_height);
     ClassDB::bind_method(D_METHOD("set_long_jump_height"), &PlatformerPackage3D::set_long_jump_height);
     ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "long_jump_height"), "set_long_jump_height", "get_long_jump_height");
@@ -94,6 +98,7 @@ PlatformerPackage3D::PlatformerPackage3D() {
     // Reference nodes (MUST BE SET TO NULL ON CONSTRUCTION)
     current_camera = nullptr;
     character_body = nullptr;
+    player_feet = nullptr;
 
 }
 
@@ -228,11 +233,13 @@ Vector3 PlatformerPackage3D::calculate_vertical_velocity(double delta) {
 Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
     double curSpeed = (grounded) ? walking_speed : walking_speed * walking_air_reduction;
 
+    // Face in the horizontal direction
     if (currentHorizontalDirection.length() > 0.01f) {
         character_body->look_at(get_global_position() + currentHorizontalDirection);
     }
+    
 
-    return curSpeed * currentHorizontalDirection;
+    return player_feet->project_movement_on_ground(curSpeed * currentHorizontalDirection);;
 }
 
 
@@ -293,6 +300,16 @@ NodePath PlatformerPackage3D::get_character_body_path() const {
 }
 
 
+// Player feet property
+void PlatformerPackage3D::set_player_feet_path(const NodePath p_node_path) {
+    player_feet_path = p_node_path;
+}
+
+NodePath PlatformerPackage3D::get_player_feet_path() const {
+    return player_feet_path;
+}
+
+
 void PlatformerPackage3D::initialize_current_node_pointers() {
     if (camera_node_path != nullptr) {
         current_camera = get_node<Camera3D>(camera_node_path);
@@ -300,6 +317,10 @@ void PlatformerPackage3D::initialize_current_node_pointers() {
 
     if (character_body_path != nullptr) {
         character_body = get_node<Node3D>(character_body_path);
+    }
+
+    if (player_feet_path != nullptr) {
+        player_feet = get_node<PlatformerFeetSensor>(player_feet_path);
     }
 }
 

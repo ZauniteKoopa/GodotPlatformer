@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/character_body3d.hpp>
 #include <godot_cpp/classes/node3d.hpp>
 #include <godot_cpp/classes/camera3d.hpp>
+#include "PlatformerFeetSensor.h"
 #include "BufferTimer.h"
 
 namespace godot {
@@ -23,6 +24,10 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Pointer to Character mesh
         NodePath character_body_path;
         class Node3D* character_body;
+
+        // Pointer to Player feet
+        NodePath player_feet_path;
+        class PlatformerFeetSensor* player_feet;
 
         // Vertical movement
         double longJumpHeight;
@@ -92,6 +97,10 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Character body property
         void set_character_body_path(const NodePath p_node_path);
         NodePath get_character_body_path() const;
+
+        // Player feet property
+        void set_player_feet_path(const NodePath p_node_path);
+        NodePath get_player_feet_path() const;
 
         // Player base jump height
         void set_long_jump_height(const double jump_height);

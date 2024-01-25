@@ -4,6 +4,9 @@
 #include <godot_cpp/classes/area3d.hpp>
 #include <godot_cpp/classes/node3d.hpp>
 #include <godot_cpp/classes/scene_tree_timer.hpp>
+#include <godot_cpp/classes/world3d.hpp>
+#include <godot_cpp/classes/physics_ray_query_parameters3d.hpp>
+#include <godot_cpp/classes/physics_direct_space_state3d.hpp>
 #include <mutex>
 
 namespace godot {
@@ -20,8 +23,10 @@ class PlatformerFeetSensor : public Area3D {
         double coyoteTimeDuration;
         Ref<SceneTreeTimer> curCoyoteTimer;
         Callable coyoteTimeListener;
-        
         bool coyoteTimeDisabled;
+
+        // Manging angles at different grounds
+        double floorMaxAngle;
 
 
     protected:
@@ -44,6 +49,9 @@ class PlatformerFeetSensor : public Area3D {
         // Event handler for coyote timeout
         void on_coyote_timeout();
 
+        // Main function to project movement on current ground plane
+        Vector3 project_movement_on_ground(Vector3 velocity);
+
 
         // ---------------------------------
         //  Properties
@@ -56,6 +64,12 @@ class PlatformerFeetSensor : public Area3D {
         // Private helper sequence to do coyote time sequence
         void start_coyote_timer();
         void cancel_coyote_timer();
+
+        // Main function to get the OVERALL normal of the ground you're standing on
+        Vector3 get_overall_ground_normal();
+
+        // Main function to get the normal of one collision
+        Vector3 get_collision_normal(Node3D* collidedGround);
 
 };
 }
