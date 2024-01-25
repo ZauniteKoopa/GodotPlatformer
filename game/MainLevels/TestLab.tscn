@@ -36,10 +36,11 @@ player_gravity = 18.0
 gravity_apex_modifier = 0.75
 apex_speed_definition = 0.75
 jump_buffer_duration = 0.1
-transform = Transform3D(0.999844, 0, 0.0176444, 0, 1, 0, -0.0176444, 0, 0.999844, 0, 0.5, 0)
+transform = Transform3D(0.999844, 0, 0.0176444, 0, 1, 0, -0.0176444, 0, 0.999844, 0.0619726, 0.5, 0)
 collision_layer = 2
 collision_mask = 3
 velocity = Vector3(0, -10, 0)
+floor_max_angle = 0.872665
 safe_margin = 0.01
 script = ExtResource("1_3ylhl")
 
@@ -59,6 +60,7 @@ fov = 62.3
 
 [node name="PlatformerFeetSensor" type="PlatformerFeetSensor" parent="PlatformerPackage3D"]
 coyote_time_duration = 0.2
+floor_max_angle = 50.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlatformerPackage3D/PlatformerFeetSensor"]
 transform = Transform3D(1, 0, -1.67638e-08, 0, 1, 0, 1.67638e-08, 0, 1, 0, -0.590186, 0)
@@ -98,11 +100,12 @@ material = SubResource("StandardMaterial3D_86le5")
 shape = SubResource("BoxShape3D_i8aj4")
 
 [node name="StaticBody3D2" type="StaticBody3D" parent="."]
-transform = Transform3D(0.744867, -0.641914, 0.181987, 0.65993, 0.748992, -0.059191, -0.098311, 0.164188, 0.981518, 5.27806, 0.270969, -0.0116942)
+transform = Transform3D(0.866025, -0.5, 0, 0.497261, 0.861281, -0.104528, 0.0522642, 0.0905243, 0.994522, 6.03338, 0.270969, -0.0116942)
 disable_mode = 2
 collision_mask = 3
 
 [node name="Floor" type="CSGBox3D" parent="StaticBody3D2"]
+transform = Transform3D(1, -2.42144e-08, 2.23517e-08, 3.91155e-08, 1, 0, 2.23517e-08, -1.49012e-08, 1, 0, 0, 0)
 size = Vector3(10, 1, 10)
 material = SubResource("StandardMaterial3D_86le5")
 

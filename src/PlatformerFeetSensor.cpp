@@ -40,6 +40,11 @@ void PlatformerFeetSensor::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_coyote_time_duration"), &PlatformerFeetSensor::set_coyote_time_duration);
     ClassDB::add_property("PlatformerFeetSensor", PropertyInfo(Variant::FLOAT, "coyote_time_duration"), "set_coyote_time_duration", "get_coyote_time_duration");
 
+    // Set up properties
+    ClassDB::bind_method(D_METHOD("get_floor_max_angle"), &PlatformerFeetSensor::get_floor_max_angle);
+    ClassDB::bind_method(D_METHOD("set_floor_max_angle"), &PlatformerFeetSensor::set_floor_max_angle);
+    ClassDB::add_property("PlatformerFeetSensor", PropertyInfo(Variant::FLOAT, "floor_max_angle"), "set_floor_max_angle", "get_floor_max_angle");
+
 }
 
 // Main event handler function for when something enters this area
@@ -177,6 +182,16 @@ void PlatformerFeetSensor::set_coyote_time_duration(const double duration) {
 
 double PlatformerFeetSensor::get_coyote_time_duration() const {
     return coyoteTimeDuration;
+}
+
+
+void PlatformerFeetSensor::set_floor_max_angle(const double angle) {
+    floorMaxAngle = angle;
+}
+
+
+double PlatformerFeetSensor::get_floor_max_angle() const {
+    return floorMaxAngle;
 }
 
 

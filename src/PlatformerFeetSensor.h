@@ -60,6 +60,9 @@ class PlatformerFeetSensor : public Area3D {
         void set_coyote_time_duration(const double duration);
         double get_coyote_time_duration() const;
 
+        void set_floor_max_angle(const double angle);
+        double get_floor_max_angle() const;
+
     private:
         // Private helper sequence to do coyote time sequence
         void start_coyote_timer();
