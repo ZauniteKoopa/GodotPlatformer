@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dh3qn6y4att5h"]
+[gd_scene load_steps=13 format=3 uid="uid://dh3qn6y4att5h"]
 
 [ext_resource type="Script" path="res://Scripts/PlatformerPackage3D.gd" id="1_3ylhl"]
 [ext_resource type="Script" path="res://Scripts/CameraSystem.gd" id="2_ydapg"]
@@ -14,6 +14,16 @@ size = Vector3(0.8, 0.180371, 0.8)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_70anq"]
 albedo_color = Color(0, 0.776471, 0.156863, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e8lsg"]
+albedo_color = Color(0, 0, 0, 1)
+disable_receive_shadows = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_mv0lw"]
+material = SubResource("StandardMaterial3D_e8lsg")
+top_radius = 0.7
+bottom_radius = 0.7
+height = 0.05
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_86le5"]
 albedo_color = Color(0.505882, 0.278431, 0.101961, 1)
@@ -86,6 +96,17 @@ volume_db = -16.2
 transform = Transform3D(1, 0, -1.86265e-09, 0, 1, 0, 1.86265e-09, 0, 1, -0.0177902, -0.0725532, 0.0626138)
 stream = ExtResource("4_ui6ct")
 volume_db = -10.0
+
+[node name="SpotShadow" type="SpotShadow" parent="PlatformerPackage3D"]
+max_shadow_scale = 1.2
+shadow_mesh_path = NodePath("ShadowMesh")
+transform = Transform3D(1, -1.86265e-09, 0, 0, -4.37114e-08, -1, 1.86265e-09, 1, -4.37114e-08, 0, 0, 0)
+spring_length = 6.0
+
+[node name="ShadowMesh" type="MeshInstance3D" parent="PlatformerPackage3D/SpotShadow"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 6)
+mesh = SubResource("CylinderMesh_mv0lw")
+skeleton = NodePath("")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00563049, -1.01921, 0.0124369)
