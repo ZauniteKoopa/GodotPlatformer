@@ -4,6 +4,9 @@
 #include <godot_cpp/classes/character_body3d.hpp>
 #include <godot_cpp/classes/node3d.hpp>
 #include <godot_cpp/classes/camera3d.hpp>
+#include <godot_cpp/classes/world3d.hpp>
+#include <godot_cpp/classes/physics_ray_query_parameters3d.hpp>
+#include <godot_cpp/classes/physics_direct_space_state3d.hpp>
 #include "PlatformerFeetSensor.h"
 #include "BufferTimer.h"
 
@@ -36,6 +39,16 @@ class PlatformerPackage3D : public CharacterBody3D {
         double gravityApexModifier;
         double apexSpeedDefinition;
         double maxFallSpeed;
+
+        // General wall behavior
+        double maxWallGrabVerticalSpeed;
+        double maxWallGrabAngleRequirement;
+
+        // Ledge grab handling
+        double ledgeGrabVerticalBuffer;
+        double ledgeGrabReach;
+        bool grabbingLedge;
+        double autoGrabVerticalOffset;
 
         bool grounded;
         double currentVerticalSpeed;
@@ -130,6 +143,22 @@ class PlatformerPackage3D : public CharacterBody3D {
 
         // Main function to launch a jump upon starting a jump
         void launch_jump(double jumpHeight);
+
+        // Main function to snap to a ledge
+        //  ledgePosition is the position of the ledge
+        //  Wall normal is the normal of the wall
+        void snap_to_ledge(Vector3 ledgePosition, Vector3 wallNormal);
+
+        // Main private helper function to cast a ray
+        Dictionary cast_ray(Vector3 from, Vector3 to);
+
+
+        // Main function to check if you can grab the current wall
+        bool can_interact_with_wall();
+
+        // Main helper function to handle ledge grab
+        //  Pre: assumes that is_on_wall() is true
+        void handle_ledge_grab();
 
         // Velocity calculation
         Vector3 calculate_vertical_velocity(double delta);

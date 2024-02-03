@@ -95,6 +95,14 @@ PlatformerPackage3D::PlatformerPackage3D() {
     jumpBufferDuration = 0.01;
     jumpBufferTimer = new BufferTimer(jumpBufferDuration);
 
+    // Ledge grab variables
+    grabbingLedge = false;
+    ledgeGrabReach = 0.3;
+    ledgeGrabVerticalBuffer = 0.1;
+    maxWallGrabVerticalSpeed = 1.5;
+    maxWallGrabAngleRequirement = 10;
+    autoGrabVerticalOffset = 0.3;
+
     // Reference nodes (MUST BE SET TO NULL ON CONSTRUCTION)
     current_camera = nullptr;
     character_body = nullptr;
@@ -134,6 +142,13 @@ void PlatformerPackage3D::_physics_process(double delta) {
         // Move the enemy forward
         set_velocity(velocityVector);
         move_and_slide();
+
+        // After moving, check for wall if you're on a wall ANND falling AND vertical speed < maxWallGrabVerticalSpeed
+        if (can_interact_with_wall()) {
+            if (!grabbingLedge) {
+                handle_ledge_grab();
+            }
+        }
     }
 }
 
@@ -141,7 +156,7 @@ void PlatformerPackage3D::_physics_process(double delta) {
 // Main function to start a jump
 void PlatformerPackage3D::start_jump() {
     // If already grounded, jump immediately
-    if (grounded) {
+    if (grounded || grabbingLedge) {
         launch_jump(longJumpHeight);
 
     // Else, activate the buffer timer and initialize
@@ -169,6 +184,7 @@ void PlatformerPackage3D::cancel_jump() {
 // Main function to launch a jump upon starting a jump
 void PlatformerPackage3D::launch_jump(double jumpHeight) {
     currentVerticalSpeed = calculate_starting_jump_velocity(playerGravity, jumpHeight);
+    grabbingLedge = false;
     emit_signal("jump_begin");
 }
 
@@ -215,10 +231,38 @@ void PlatformerPackage3D::on_fall_begin() {
 }
 
 
+// Main helper function to handle ledge grab
+//  Pre: assumes that is_on_wall() is true
+void PlatformerPackage3D::handle_ledge_grab() {
+    Vector3 wallNormal = get_wall_normal();
+    Vector3 verticalLedgeGrabLimitPosition = get_global_position() + Vector3(0, 0.5 + ledgeGrabVerticalBuffer, 0);
+    Vector3 maximumLedgeFrabReachPosition = verticalLedgeGrabLimitPosition + (-wallNormal * (ledgeGrabReach + 0.5f));
+
+    // If nothing is in between the grab limit positions, then it's plausible to grab a ledge
+    Dictionary rayLimitResults = cast_ray(verticalLedgeGrabLimitPosition, maximumLedgeFrabReachPosition);
+    if (rayLimitResults.is_empty()) {
+        // From maximum ledge grab reach position, move down to see if you're able to hit a ledge
+        Vector3 lowerLedgeGrabReachPosition = maximumLedgeFrabReachPosition + (Vector3(0, -(0.5 + ledgeGrabVerticalBuffer), 0));
+        Dictionary rayCollision = cast_ray(maximumLedgeFrabReachPosition + Vector3(0, -0.01, 0), lowerLedgeGrabReachPosition);
+        grabbingLedge = !rayCollision.is_empty();
+
+        // If grabbing ledge, calculate ledge position and autosnap to that position
+        if (grabbingLedge) {
+            Vector3 playerLedgePosition = Vector3(get_global_position().x, rayCollision["position"], get_global_position().z);
+            Dictionary ledgeCollision = cast_ray(playerLedgePosition, rayCollision["position"]);
+            snap_to_ledge(ledgeCollision["position"], wallNormal);
+        }
+
+    } else {
+        grabbingLedge = false;
+    }
+}
+
+
 // Main private helper function to calculate the vertical component of velocity
 Vector3 PlatformerPackage3D::calculate_vertical_velocity(double delta) {
     // Update currentVerticalSpeed based on gravity if not grounded
-    if (!grounded) {
+    if (!grounded && !grabbingLedge) {
         bool inApex = (currentVerticalSpeed > -apexSpeedDefinition && currentVerticalSpeed < apexSpeedDefinition);
         double curGravity = (inApex) ? gravityApexModifier * playerGravity : playerGravity;
         currentVerticalSpeed -= (curGravity * delta);
@@ -232,9 +276,10 @@ Vector3 PlatformerPackage3D::calculate_vertical_velocity(double delta) {
 // Main private helper function to calculate the XZ component of velocity
 Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
     double curSpeed = (grounded) ? walking_speed : walking_speed * walking_air_reduction;
+    curSpeed = (grabbingLedge) ? 0 : curSpeed;
 
     // Face in the horizontal direction
-    if (currentHorizontalDirection.length() > 0.01f) {
+    if (currentHorizontalDirection.length() > 0.01f && curSpeed > 0) {
         character_body->look_at(get_global_position() + currentHorizontalDirection);
     }
     
@@ -243,15 +288,58 @@ Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
 }
 
 
+// Main function to snap to a ledge
+//  ledgePosition is the global position of the ledge
+void PlatformerPackage3D::snap_to_ledge(Vector3 ledgePosition, Vector3 wallNormal) {
+    Vector3 positionToSnapTo = ledgePosition + (wallNormal * 0.51) + Vector3(0, -autoGrabVerticalOffset, 0);
+    set_global_position(positionToSnapTo);
+    character_body->look_at(get_global_position() - wallNormal);
+
+    set_velocity(Vector3(0, 0, 0));
+    currentVerticalSpeed = 0;
+}
+
+
 // Main function to calculate the starting jump velocity given gravity and targeted height
 double PlatformerPackage3D::calculate_starting_jump_velocity(double curGravity, double targetedHeight) {
     return Math::sqrt(2.0 * curGravity * targetedHeight);
+}
+
+// Main function to check if you can grab the current wall
+bool PlatformerPackage3D::can_interact_with_wall() {
+    // Check if there's a wall to interact with. if not, you can't interact with anything
+    if (is_on_wall()) {
+        // Get the angle of the wall (current wall from an extremely steep wall)
+        Plane surface_movement_plane = Plane(Vector3(0, 1, 0), Vector3(0, 0, 0));
+        Vector3 wallNormal = get_wall_normal();
+        Vector3 steepestWallNormal = surface_movement_plane.project(wallNormal);
+
+        // You can only interact if wall is a cliff (not an cavern or a sliding mountain)
+        bool canInteract = (wallNormal.y >= steepestWallNormal.y) && (wallNormal.angle_to(steepestWallNormal) < maxWallGrabAngleRequirement);
+
+        return !grounded && currentVerticalSpeed <= maxWallGrabVerticalSpeed && canInteract;
+
+    } else {
+        return false;
+    }
 }
 
 
 // Main helper function to check if a number is close enough to zero
 bool PlatformerPackage3D::is_zero(double num) {
     return (num > -0.001) && (num < 0.001);
+}
+
+
+// Main helper function to cast a ray
+Dictionary PlatformerPackage3D::cast_ray(Vector3 from, Vector3 to) {
+    PhysicsDirectSpaceState3D* spaceState = get_world_3d()->get_direct_space_state();
+    Ref<PhysicsRayQueryParameters3D> rayCastQuery = PhysicsRayQueryParameters3D::create(
+        from,
+        to,
+        get_collision_mask()
+    );
+    return spaceState->intersect_ray(rayCastQuery);
 }
 
 
