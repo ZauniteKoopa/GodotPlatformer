@@ -7,6 +7,8 @@
 #include <godot_cpp/classes/world3d.hpp>
 #include <godot_cpp/classes/physics_ray_query_parameters3d.hpp>
 #include <godot_cpp/classes/physics_direct_space_state3d.hpp>
+#include <godot_cpp/classes/shape3d.hpp>
+#include <godot_cpp/classes/capsule_shape3d.hpp>
 #include "PlatformerFeetSensor.h"
 #include "BufferTimer.h"
 
@@ -41,14 +43,14 @@ class PlatformerPackage3D : public CharacterBody3D {
         double maxFallSpeed;
 
         // General wall behavior
-        double maxWallGrabVerticalSpeed;
-        double maxWallGrabAngleRequirement;
+        double maxWallGrabVerticalSpeed;    // prop
+        double maxWallGrabAngleRequirement; // prop
 
         // Ledge grab handling
-        double ledgeGrabVerticalBuffer;
-        double ledgeGrabReach;
+        double ledgeGrabVerticalReach;  // Prop
+        double ledgeGrabHorizontalReach;  // prop
+        double autoGrabVerticalOffset; // prop
         bool grabbingLedge;
-        double autoGrabVerticalOffset;
 
         bool grounded;
         double currentVerticalSpeed;
@@ -136,6 +138,30 @@ class PlatformerPackage3D : public CharacterBody3D {
         void set_jump_buffer_duration(const double duration);
         double get_jump_buffer_duration() const;
 
+
+        // -------------------------------
+        // Ledge grab properties
+        // -------------------------------
+        void set_ledge_grab_vertical_reach(const double p_value);
+        double get_ledge_grab_vertical_reach() const;
+
+        void set_ledge_grab_horizontal_reach(const double p_value);
+        double get_ledge_grab_horizontal_reach() const;
+
+        void set_auto_grab_vertical_offset(const double p_value);
+        double get_auto_grab_vertical_offset() const;
+
+        
+        // -------------------------------
+        // Wall interaction properties
+        // -------------------------------
+
+        void set_max_wall_grab_vertical_speed(const double p_value);
+        double get_max_wall_grab_vertical_speed() const;
+
+        void set_max_wall_grab_angle_requirement(const double p_value);
+        double get_max_wall_grab_angle_requirement() const;
+
     private:
         // Initializers
         void static bind_properties();
@@ -152,7 +178,6 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Main private helper function to cast a ray
         Dictionary cast_ray(Vector3 from, Vector3 to);
 
-
         // Main function to check if you can grab the current wall
         bool can_interact_with_wall();
 
@@ -165,6 +190,10 @@ class PlatformerPackage3D : public CharacterBody3D {
         Vector3 calculate_horizontal_velocity(double delta);
         double calculate_starting_jump_velocity(double curGravity, double targetedHeight);
         bool is_zero(double num);
+
+        // Main shape accessor functions
+        double get_collider_shape_height();
+        double get_collider_shape_radius();
 };
 };
 

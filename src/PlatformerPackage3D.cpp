@@ -22,6 +22,7 @@ void PlatformerPackage3D::_bind_methods() {
 
     // Signals to bind
     ADD_SIGNAL(MethodInfo("jump_begin"));
+    ADD_SIGNAL(MethodInfo("ledge_grab_begin"));
 
     // Bind properties
     bind_properties();
@@ -69,6 +70,26 @@ void PlatformerPackage3D::bind_properties() {
     ClassDB::bind_method(D_METHOD("set_apex_speed_definition"), &PlatformerPackage3D::set_apex_speed_definition);
     ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "apex_speed_definition"), "set_apex_speed_definition", "get_apex_speed_definition");
 
+    ClassDB::bind_method(D_METHOD("get_ledge_grab_horizontal_reach"), &PlatformerPackage3D::get_ledge_grab_horizontal_reach);
+    ClassDB::bind_method(D_METHOD("set_ledge_grab_horizontal_reach"), &PlatformerPackage3D::set_ledge_grab_horizontal_reach);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "ledge_grab_horizontal_reach"), "set_ledge_grab_horizontal_reach", "get_ledge_grab_horizontal_reach");
+
+    ClassDB::bind_method(D_METHOD("get_ledge_grab_vertical_reach"), &PlatformerPackage3D::get_ledge_grab_vertical_reach);
+    ClassDB::bind_method(D_METHOD("set_ledge_grab_vertical_reach"), &PlatformerPackage3D::set_ledge_grab_vertical_reach);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "ledge_grab_vertical_reach"), "set_ledge_grab_vertical_reach", "get_ledge_grab_vertical_reach");
+
+    ClassDB::bind_method(D_METHOD("get_auto_grab_vertical_offset"), &PlatformerPackage3D::get_auto_grab_vertical_offset);
+    ClassDB::bind_method(D_METHOD("set_auto_grab_vertical_offset"), &PlatformerPackage3D::set_auto_grab_vertical_offset);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "auto_grab_vertical_offset"), "set_auto_grab_vertical_offset", "get_auto_grab_vertical_offset");
+
+    ClassDB::bind_method(D_METHOD("get_max_wall_grab_angle_requirement"), &PlatformerPackage3D::get_max_wall_grab_angle_requirement);
+    ClassDB::bind_method(D_METHOD("set_max_wall_grab_angle_requirement"), &PlatformerPackage3D::set_max_wall_grab_angle_requirement);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "max_wall_grab_angle_requirement"), "set_max_wall_grab_angle_requirement", "get_max_wall_grab_angle_requirement");
+
+    ClassDB::bind_method(D_METHOD("get_max_wall_grab_vertical_speed"), &PlatformerPackage3D::get_max_wall_grab_vertical_speed);
+    ClassDB::bind_method(D_METHOD("set_max_wall_grab_vertical_speed"), &PlatformerPackage3D::set_max_wall_grab_vertical_speed);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "max_wall_grab_vertical_speed"), "set_max_wall_grab_vertical_speed", "get_max_wall_grab_vertical_speed");
+
     ClassDB::bind_method(D_METHOD("get_jump_buffer_duration"), &PlatformerPackage3D::get_jump_buffer_duration);
     ClassDB::bind_method(D_METHOD("set_jump_buffer_duration"), &PlatformerPackage3D::set_jump_buffer_duration);
     ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "jump_buffer_duration"), "set_jump_buffer_duration", "get_jump_buffer_duration");
@@ -97,9 +118,9 @@ PlatformerPackage3D::PlatformerPackage3D() {
 
     // Ledge grab variables
     grabbingLedge = false;
-    ledgeGrabReach = 0.3;
-    ledgeGrabVerticalBuffer = 0.1;
-    maxWallGrabVerticalSpeed = 1.5;
+    ledgeGrabHorizontalReach = 0.5;
+    ledgeGrabVerticalReach = 0.2;
+    maxWallGrabVerticalSpeed = 1;
     maxWallGrabAngleRequirement = 10;
     autoGrabVerticalOffset = 0.3;
 
@@ -235,20 +256,27 @@ void PlatformerPackage3D::on_fall_begin() {
 //  Pre: assumes that is_on_wall() is true
 void PlatformerPackage3D::handle_ledge_grab() {
     Vector3 wallNormal = get_wall_normal();
-    Vector3 verticalLedgeGrabLimitPosition = get_global_position() + Vector3(0, 0.5 + ledgeGrabVerticalBuffer, 0);
-    Vector3 maximumLedgeFrabReachPosition = verticalLedgeGrabLimitPosition + (-wallNormal * (ledgeGrabReach + 0.5f));
+    double halfColliderHeight = 0.5 * get_collider_shape_height();
+    double colliderRadius = get_collider_shape_radius();
+
+    Vector3 verticalLedgeGrabLimitPosition = get_global_position() + Vector3(0, halfColliderHeight + ledgeGrabVerticalReach, 0);
+    Vector3 maximumLedgeFrabReachPosition = verticalLedgeGrabLimitPosition + (-wallNormal * (ledgeGrabHorizontalReach + colliderRadius));
 
     // If nothing is in between the grab limit positions, then it's plausible to grab a ledge
     Dictionary rayLimitResults = cast_ray(verticalLedgeGrabLimitPosition, maximumLedgeFrabReachPosition);
     if (rayLimitResults.is_empty()) {
         // From maximum ledge grab reach position, move down to see if you're able to hit a ledge
-        Vector3 lowerLedgeGrabReachPosition = maximumLedgeFrabReachPosition + (Vector3(0, -(0.5 + ledgeGrabVerticalBuffer), 0));
-        Dictionary rayCollision = cast_ray(maximumLedgeFrabReachPosition + Vector3(0, -0.01, 0), lowerLedgeGrabReachPosition);
+        Vector3 lowerledgeGrabHorizontalReachPosition = maximumLedgeFrabReachPosition + (Vector3(0, -(halfColliderHeight + ledgeGrabVerticalReach), 0));
+        Dictionary rayCollision = cast_ray(maximumLedgeFrabReachPosition, lowerledgeGrabHorizontalReachPosition);
         grabbingLedge = !rayCollision.is_empty();
 
         // If grabbing ledge, calculate ledge position and autosnap to that position
         if (grabbingLedge) {
-            Vector3 playerLedgePosition = Vector3(get_global_position().x, rayCollision["position"], get_global_position().z);
+            emit_signal("ledge_grab_begin");
+            Vector3 ledgePosition = rayCollision["position"];
+            ledgePosition += Vector3(0, -0.0001, 0);
+
+            Vector3 playerLedgePosition = Vector3(get_global_position().x, ledgePosition.y, get_global_position().z);
             Dictionary ledgeCollision = cast_ray(playerLedgePosition, rayCollision["position"]);
             snap_to_ledge(ledgeCollision["position"], wallNormal);
         }
@@ -291,7 +319,7 @@ Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
 // Main function to snap to a ledge
 //  ledgePosition is the global position of the ledge
 void PlatformerPackage3D::snap_to_ledge(Vector3 ledgePosition, Vector3 wallNormal) {
-    Vector3 positionToSnapTo = ledgePosition + (wallNormal * 0.51) + Vector3(0, -autoGrabVerticalOffset, 0);
+    Vector3 positionToSnapTo = ledgePosition + (wallNormal * (get_collider_shape_radius() + 0.01)) + Vector3(0, -autoGrabVerticalOffset, 0);
     set_global_position(positionToSnapTo);
     character_body->look_at(get_global_position() - wallNormal);
 
@@ -315,7 +343,7 @@ bool PlatformerPackage3D::can_interact_with_wall() {
         Vector3 steepestWallNormal = surface_movement_plane.project(wallNormal);
 
         // You can only interact if wall is a cliff (not an cavern or a sliding mountain)
-        bool canInteract = (wallNormal.y >= steepestWallNormal.y) && (wallNormal.angle_to(steepestWallNormal) < maxWallGrabAngleRequirement);
+        bool canInteract = (wallNormal.y <= steepestWallNormal.y) || (wallNormal.angle_to(steepestWallNormal) < maxWallGrabAngleRequirement);
 
         return !grounded && currentVerticalSpeed <= maxWallGrabVerticalSpeed && canInteract;
 
@@ -340,6 +368,22 @@ Dictionary PlatformerPackage3D::cast_ray(Vector3 from, Vector3 to) {
         get_collision_mask()
     );
     return spaceState->intersect_ray(rayCastQuery);
+}
+
+
+// Main shape accessor functions
+double PlatformerPackage3D::get_collider_shape_height() {
+    Ref<Shape3D> mainColliderShape = shape_owner_get_shape(0, 0);
+    Ref<CapsuleShape3D> mainCapsuleCollider = mainColliderShape;
+
+    return mainCapsuleCollider->get_height();
+}
+
+double PlatformerPackage3D::get_collider_shape_radius() {
+    Ref<Shape3D> mainColliderShape = shape_owner_get_shape(0, 0);
+    Ref<CapsuleShape3D> mainCapsuleCollider = mainColliderShape;
+
+    return mainCapsuleCollider->get_radius();
 }
 
 
@@ -471,4 +515,57 @@ void PlatformerPackage3D::set_jump_buffer_duration(const double duration) {
 
 double PlatformerPackage3D::get_jump_buffer_duration() const {
     return jumpBufferDuration;
+}
+
+
+// -------------------------------
+// Ledge grab properties
+// -------------------------------
+
+void PlatformerPackage3D::set_ledge_grab_horizontal_reach(const double p_value) {
+    ledgeGrabHorizontalReach = p_value;
+}
+
+double PlatformerPackage3D::get_ledge_grab_horizontal_reach() const {
+    return ledgeGrabHorizontalReach;
+}
+
+
+void PlatformerPackage3D::set_ledge_grab_vertical_reach(const double p_value) {
+    ledgeGrabVerticalReach = p_value;
+}
+
+double PlatformerPackage3D::get_ledge_grab_vertical_reach() const {
+    return ledgeGrabVerticalReach;
+}
+
+
+void PlatformerPackage3D::set_auto_grab_vertical_offset(const double p_value) {
+    autoGrabVerticalOffset = p_value;
+}
+
+double PlatformerPackage3D::get_auto_grab_vertical_offset() const {
+    return autoGrabVerticalOffset;
+}
+
+
+// -------------------------------
+// Wall interaction properties
+// -------------------------------
+
+void PlatformerPackage3D::set_max_wall_grab_angle_requirement(const double p_value) {
+    maxWallGrabAngleRequirement = p_value;
+}
+
+double PlatformerPackage3D::get_max_wall_grab_angle_requirement() const {
+    return maxWallGrabAngleRequirement;
+}
+
+
+void PlatformerPackage3D::set_max_wall_grab_vertical_speed(const double p_value) {
+    maxWallGrabVerticalSpeed = p_value;
+}
+
+double PlatformerPackage3D::get_max_wall_grab_vertical_speed() const {
+    return maxWallGrabVerticalSpeed;
 }
