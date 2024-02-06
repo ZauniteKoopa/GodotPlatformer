@@ -38,7 +38,7 @@ size = Vector3(10, 1, 10)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0248103, 0.0438733, -0.0368707)
 
 [node name="PlatformerPackage3D" type="PlatformerPackage3D" parent="."]
-walking_speed = 5.0
+walking_speed = 8.0
 walking_air_reduction = 0.5
 camera_node_path = NodePath("CameraSystem/SpringArm3D/PlayerCamera")
 character_body_path = NodePath("CollisionShape3D")

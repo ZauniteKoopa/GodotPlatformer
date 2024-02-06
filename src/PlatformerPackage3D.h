@@ -20,7 +20,11 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Horizontal movement
         double walking_speed;
         double walking_air_reduction;
-        Vector3 currentHorizontalDirection;
+        Vector3 currentGroundInputDirection;
+        Vector3 currentGroundMovement;
+        double walking_acceleration;
+        double walking_deceleration;
+        double immediate_stop_speed;
 
         // Pointers to camera
         NodePath camera_node_path;

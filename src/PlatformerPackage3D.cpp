@@ -99,7 +99,11 @@ void PlatformerPackage3D::bind_properties() {
 PlatformerPackage3D::PlatformerPackage3D() {
     // Starting grounded movement
     walking_speed = 10;
-    currentHorizontalDirection = Vector3(0, 0, 0);
+    currentGroundInputDirection = Vector3(0, 0, 0);
+    currentGroundMovement = Vector3(0, 0, 0);
+    walking_acceleration = 500;
+    walking_deceleration = 350;
+    immediate_stop_speed = 5;
 
     // Starting vertical movement
     longJumpHeight = 6;
@@ -224,9 +228,9 @@ void PlatformerPackage3D::relative_run(Vector2 controller_vector, double time_de
     world_right = surface_movement_plane.project(world_right).normalized();
 
     // Change the current horizontal direction. Normalize it if it's not the zero vector
-    currentHorizontalDirection = (controller_vector.x * world_right) + (controller_vector.y * world_forward);
+    currentGroundInputDirection = (controller_vector.x * world_right) + (controller_vector.y * world_forward);
     if (!is_zero(controller_vector.x) || !is_zero(controller_vector.y)) {
-        currentHorizontalDirection.normalize();
+        currentGroundInputDirection.normalize();
     }
 }
 
@@ -303,16 +307,42 @@ Vector3 PlatformerPackage3D::calculate_vertical_velocity(double delta) {
 
 // Main private helper function to calculate the XZ component of velocity
 Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
-    double curSpeed = (grounded) ? walking_speed : walking_speed * walking_air_reduction;
-    curSpeed = (grabbingLedge) ? 0 : curSpeed;
+    double maxRunningSpeed = walking_speed;
 
-    // Face in the horizontal direction
-    if (currentHorizontalDirection.length() > 0.01f && curSpeed > 0) {
-        character_body->look_at(get_global_position() + currentHorizontalDirection);
+    // If you're actually moving, adjust currentGroundMovement
+    if (currentGroundInputDirection.length() > 0.01f && !grabbingLedge) {
+        // If you're going really fast or you going in the same general direction as curGroundMovement, accelerate in that direction
+        if (currentGroundMovement.length() > immediate_stop_speed || Math::rad_to_deg(currentGroundMovement.angle_to(currentGroundInputDirection)) < 60) {
+            // Adjust currentGroundMovement
+            currentGroundMovement += (delta * delta * walking_acceleration * currentGroundInputDirection);
+
+            // If accelerating past maxSpeed, restrict it
+            if (currentGroundMovement.length() > maxRunningSpeed) {
+                currentGroundMovement = maxRunningSpeed * currentGroundMovement.normalized();
+            }
+
+        // Else, you can just make a hard turn
+        } else {
+            currentGroundMovement = (delta * delta * walking_acceleration * currentGroundInputDirection);
+        }
+
+        // Rotate
+        character_body->look_at(get_global_position() + currentGroundMovement);
+
+    // If you're not moving, decelerate
+    } else {
+        // If you can immediately stop. If you can't decelerate.
+        if (currentGroundMovement.length() > immediate_stop_speed) {
+            double targetSpeed = Math::max(currentGroundMovement.length() - (delta * delta * walking_deceleration), 0.0);
+            currentGroundMovement = targetSpeed * currentGroundMovement.normalized();
+
+        } else {
+            currentGroundMovement = Vector3(0, 0, 0);
+        }
     }
-    
 
-    return player_feet->project_movement_on_ground(curSpeed * currentHorizontalDirection);;
+    Vector3 curHorizontalDelta = (grounded) ? currentGroundMovement : walking_air_reduction * currentGroundMovement;
+    return player_feet->project_movement_on_ground(curHorizontalDelta);
 }
 
 
