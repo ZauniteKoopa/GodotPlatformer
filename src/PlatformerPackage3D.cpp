@@ -43,6 +43,10 @@ PlatformerPackage3D::PlatformerPackage3D() {
     longJumpHeight = 2.5;
     skidJumpHeight = 3.5;
     shortJumpHeight = 1;
+    extraJumpHeight = 1;
+
+    maxExtraJumps = 1;
+    curExtraJumpsDone = 0;
     playerGravity = 5;
     gravityApexModifier = 0.5;
     apexSpeedDefinition = 1.5;
@@ -120,6 +124,11 @@ void PlatformerPackage3D::start_jump() {
         double curJumpHeight = (grounded && is_skidding()) ? skidJumpHeight : longJumpHeight;
         launch_jump(curJumpHeight);
 
+    // If you have extra jumps left, launch_jump and increment
+    }else if (curExtraJumpsDone < maxExtraJumps) {
+        launch_jump(extraJumpHeight);
+        curExtraJumpsDone++;
+
     // Else, activate the buffer timer and initialize
     } else {
         jumpBufferTimer->reset();
@@ -173,6 +182,9 @@ void PlatformerPackage3D::relative_run(Vector2 controller_vector, double time_de
 
 // Event handler for when the unit lands on the ground
 void PlatformerPackage3D::on_landed() {
+    // Reset curExtraJumpsDone each time
+    curExtraJumpsDone = 0;
+
     // If jump buffering still active, just launch jump and cancel jump
     if (jumpBufferTimer->isRunning()) {
         launch_jump(Math::max(bufferedJumpHeight, shortJumpHeight + 0.5));
@@ -288,6 +300,7 @@ void PlatformerPackage3D::snap_to_ledge(Vector3 ledgePosition, Vector3 wallNorma
     Vector3 positionToSnapTo = ledgePosition + (wallNormal * (get_collider_shape_radius() + 0.01)) + Vector3(0, -autoGrabVerticalOffset, 0);
     set_global_position(positionToSnapTo);
     character_body->look_at(get_global_position() - wallNormal);
+    currentGroundMovement = Vector3(0, 0, 0);
 
     set_velocity(Vector3(0, 0, 0));
     currentVerticalSpeed = 0;
@@ -496,6 +509,24 @@ double PlatformerPackage3D::get_skid_jump_height() const {
 }
 
 
+// Extra jumps
+void PlatformerPackage3D::set_max_extra_jumps(const int p_value) {
+    maxExtraJumps = p_value;
+}
+
+int PlatformerPackage3D::get_max_extra_jumps() const {
+    return maxExtraJumps;
+}
+
+void PlatformerPackage3D::set_extra_jump_height(const double p_value) {
+    extraJumpHeight = p_value;
+}
+
+double PlatformerPackage3D::get_extra_jump_height() const {
+    return extraJumpHeight;
+}
+
+
 // Player downward acceleration
 void PlatformerPackage3D::set_player_gravity(const double gravity) {
     playerGravity = gravity;
@@ -639,6 +670,14 @@ void PlatformerPackage3D::bind_properties() {
     ClassDB::bind_method(D_METHOD("get_skid_jump_height"), &PlatformerPackage3D::get_skid_jump_height);
     ClassDB::bind_method(D_METHOD("set_skid_jump_height"), &PlatformerPackage3D::set_skid_jump_height);
     ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "skid_jump_height"), "set_skid_jump_height", "get_skid_jump_height");
+
+    ClassDB::bind_method(D_METHOD("get_max_extra_jumps"), &PlatformerPackage3D::get_max_extra_jumps);
+    ClassDB::bind_method(D_METHOD("set_max_extra_jumps"), &PlatformerPackage3D::set_max_extra_jumps);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::INT, "max_extra_jumps"), "set_max_extra_jumps", "get_max_extra_jumps");
+
+    ClassDB::bind_method(D_METHOD("get_extra_jump_height"), &PlatformerPackage3D::get_extra_jump_height);
+    ClassDB::bind_method(D_METHOD("set_extra_jump_height"), &PlatformerPackage3D::set_extra_jump_height);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "extra_jump_height"), "set_extra_jump_heightt", "get_extra_jump_height");
 
     ClassDB::bind_method(D_METHOD("get_player_gravity"), &PlatformerPackage3D::get_player_gravity);
     ClassDB::bind_method(D_METHOD("set_player_gravity"), &PlatformerPackage3D::set_player_gravity);

@@ -43,10 +43,14 @@ class PlatformerPackage3D : public CharacterBody3D {
         double longJumpHeight;          // Max jump height
         double shortJumpHeight;         // Tap jump height
         double skidJumpHeight;          // Skid jump height
+        int maxExtraJumps;                 // Number of extra jumps afforded
+        double extraJumpHeight;         // The height of the double jump
         double playerGravity;           // Gravity affecting the player, affects how heavy a jump feels
         double gravityApexModifier;     // Apex modifiers when a player is at the apex of the jump
         double apexSpeedDefinition;     // Vertical speed at which the player should be in to be considered in the apex of a jump
         double maxFallSpeed;            // Max fall speed
+        
+        int curExtraJumpsDone;
 
         // General wall behavior
         double maxWallGrabVerticalSpeed;    // The maximum vertical speed to begin clining on to a wall (you cannot be more)
@@ -144,6 +148,13 @@ class PlatformerPackage3D : public CharacterBody3D {
 
         void set_skid_jump_height(const double p_value);
         double get_skid_jump_height() const;
+
+        // Extra jumps
+        void set_max_extra_jumps(const int p_value);
+        int get_max_extra_jumps() const;
+
+        void set_extra_jump_height(const double p_value);
+        double get_extra_jump_height() const;
 
         // Player gravity and apex modifiers
         void set_player_gravity(const double gravity);
