@@ -28,86 +28,21 @@ void PlatformerPackage3D::_bind_methods() {
     bind_properties();
 }
 
-// General call to bind properties from the parent bind methods
-void PlatformerPackage3D::bind_properties() {
-    ClassDB::bind_method(D_METHOD("get_walking_speed"), &PlatformerPackage3D::get_walking_speed);
-    ClassDB::bind_method(D_METHOD("set_walking_speed"), &PlatformerPackage3D::set_walking_speed);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "walking_speed"), "set_walking_speed", "get_walking_speed");
-
-    ClassDB::bind_method(D_METHOD("get_walking_air_reduction"), &PlatformerPackage3D::get_walking_air_reduction);
-    ClassDB::bind_method(D_METHOD("set_walking_air_reduction"), &PlatformerPackage3D::set_walking_air_reduction);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "walking_air_reduction"), "set_walking_air_reduction", "get_walking_air_reduction");
-
-    ClassDB::bind_method(D_METHOD("get_camera_node_path"), &PlatformerPackage3D::get_camera_node_path);
-    ClassDB::bind_method(D_METHOD("set_camera_node_path"), &PlatformerPackage3D::set_camera_node_path);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::NODE_PATH, "camera_node_path"), "set_camera_node_path", "get_camera_node_path");
-
-    ClassDB::bind_method(D_METHOD("get_character_body_path"), &PlatformerPackage3D::get_character_body_path);
-    ClassDB::bind_method(D_METHOD("set_character_body_path"), &PlatformerPackage3D::set_character_body_path);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::NODE_PATH, "character_body_path"), "set_character_body_path", "get_character_body_path");
-
-    ClassDB::bind_method(D_METHOD("get_player_feet_path"), &PlatformerPackage3D::get_player_feet_path);
-    ClassDB::bind_method(D_METHOD("set_player_feet_path"), &PlatformerPackage3D::set_player_feet_path);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::NODE_PATH, "player_feet_path"), "set_player_feet_path", "get_player_feet_path");
-
-    ClassDB::bind_method(D_METHOD("get_long_jump_height"), &PlatformerPackage3D::get_long_jump_height);
-    ClassDB::bind_method(D_METHOD("set_long_jump_height"), &PlatformerPackage3D::set_long_jump_height);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "long_jump_height"), "set_long_jump_height", "get_long_jump_height");
-
-    ClassDB::bind_method(D_METHOD("get_short_jump_height"), &PlatformerPackage3D::get_short_jump_height);
-    ClassDB::bind_method(D_METHOD("set_short_jump_height"), &PlatformerPackage3D::set_short_jump_height);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "short_jump_height"), "set_short_jump_height", "get_short_jump_height");
-
-    ClassDB::bind_method(D_METHOD("get_player_gravity"), &PlatformerPackage3D::get_player_gravity);
-    ClassDB::bind_method(D_METHOD("set_player_gravity"), &PlatformerPackage3D::set_player_gravity);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "player_gravity"), "set_player_gravity", "get_player_gravity");
-
-    ClassDB::bind_method(D_METHOD("get_gravity_apex_modifier"), &PlatformerPackage3D::get_gravity_apex_modifier);
-    ClassDB::bind_method(D_METHOD("set_gravity_apex_modifier"), &PlatformerPackage3D::set_gravity_apex_modifier);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "gravity_apex_modifier"), "set_gravity_apex_modifier", "get_gravity_apex_modifier");
-
-    ClassDB::bind_method(D_METHOD("get_apex_speed_definition"), &PlatformerPackage3D::get_apex_speed_definition);
-    ClassDB::bind_method(D_METHOD("set_apex_speed_definition"), &PlatformerPackage3D::set_apex_speed_definition);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "apex_speed_definition"), "set_apex_speed_definition", "get_apex_speed_definition");
-
-    ClassDB::bind_method(D_METHOD("get_ledge_grab_horizontal_reach"), &PlatformerPackage3D::get_ledge_grab_horizontal_reach);
-    ClassDB::bind_method(D_METHOD("set_ledge_grab_horizontal_reach"), &PlatformerPackage3D::set_ledge_grab_horizontal_reach);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "ledge_grab_horizontal_reach"), "set_ledge_grab_horizontal_reach", "get_ledge_grab_horizontal_reach");
-
-    ClassDB::bind_method(D_METHOD("get_ledge_grab_vertical_reach"), &PlatformerPackage3D::get_ledge_grab_vertical_reach);
-    ClassDB::bind_method(D_METHOD("set_ledge_grab_vertical_reach"), &PlatformerPackage3D::set_ledge_grab_vertical_reach);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "ledge_grab_vertical_reach"), "set_ledge_grab_vertical_reach", "get_ledge_grab_vertical_reach");
-
-    ClassDB::bind_method(D_METHOD("get_auto_grab_vertical_offset"), &PlatformerPackage3D::get_auto_grab_vertical_offset);
-    ClassDB::bind_method(D_METHOD("set_auto_grab_vertical_offset"), &PlatformerPackage3D::set_auto_grab_vertical_offset);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "auto_grab_vertical_offset"), "set_auto_grab_vertical_offset", "get_auto_grab_vertical_offset");
-
-    ClassDB::bind_method(D_METHOD("get_max_wall_grab_angle_requirement"), &PlatformerPackage3D::get_max_wall_grab_angle_requirement);
-    ClassDB::bind_method(D_METHOD("set_max_wall_grab_angle_requirement"), &PlatformerPackage3D::set_max_wall_grab_angle_requirement);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "max_wall_grab_angle_requirement"), "set_max_wall_grab_angle_requirement", "get_max_wall_grab_angle_requirement");
-
-    ClassDB::bind_method(D_METHOD("get_max_wall_grab_vertical_speed"), &PlatformerPackage3D::get_max_wall_grab_vertical_speed);
-    ClassDB::bind_method(D_METHOD("set_max_wall_grab_vertical_speed"), &PlatformerPackage3D::set_max_wall_grab_vertical_speed);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "max_wall_grab_vertical_speed"), "set_max_wall_grab_vertical_speed", "get_max_wall_grab_vertical_speed");
-
-    ClassDB::bind_method(D_METHOD("get_jump_buffer_duration"), &PlatformerPackage3D::get_jump_buffer_duration);
-    ClassDB::bind_method(D_METHOD("set_jump_buffer_duration"), &PlatformerPackage3D::set_jump_buffer_duration);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "jump_buffer_duration"), "set_jump_buffer_duration", "get_jump_buffer_duration");
-}
-
 // General constructor
 PlatformerPackage3D::PlatformerPackage3D() {
     // Starting grounded movement
-    walking_speed = 10;
+    max_walking_speed = 10;
+    starting_walking_speed = 3;
     currentGroundInputDirection = Vector3(0, 0, 0);
     currentGroundMovement = Vector3(0, 0, 0);
-    walking_acceleration = 500;
-    walking_deceleration = 350;
-    immediate_stop_speed = 5;
+    walking_acceleration = 750;
+    walking_deceleration = 400;
+    immediate_stop_speed = 3;
 
     // Starting vertical movement
-    longJumpHeight = 6;
-    shortJumpHeight = 3;
+    longJumpHeight = 2.5;
+    skidJumpHeight = 3.5;
+    shortJumpHeight = 1;
     playerGravity = 5;
     gravityApexModifier = 0.5;
     apexSpeedDefinition = 1.5;
@@ -182,7 +117,8 @@ void PlatformerPackage3D::_physics_process(double delta) {
 void PlatformerPackage3D::start_jump() {
     // If already grounded, jump immediately
     if (grounded || grabbingLedge) {
-        launch_jump(longJumpHeight);
+        double curJumpHeight = (grounded && is_skidding()) ? skidJumpHeight : longJumpHeight;
+        launch_jump(curJumpHeight);
 
     // Else, activate the buffer timer and initialize
     } else {
@@ -307,7 +243,7 @@ Vector3 PlatformerPackage3D::calculate_vertical_velocity(double delta) {
 
 // Main private helper function to calculate the XZ component of velocity
 Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
-    double maxRunningSpeed = walking_speed;
+    double maxRunningSpeed = max_walking_speed;
 
     // If you're actually moving, adjust currentGroundMovement
     if (currentGroundInputDirection.length() > 0.01f && !grabbingLedge) {
@@ -323,7 +259,7 @@ Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
 
         // Else, you can just make a hard turn
         } else {
-            currentGroundMovement = (delta * delta * walking_acceleration * currentGroundInputDirection);
+            currentGroundMovement = starting_walking_speed * currentGroundInputDirection;
         }
 
         // Rotate
@@ -417,18 +353,60 @@ double PlatformerPackage3D::get_collider_shape_radius() {
 }
 
 
+// Main definition on whether or not the payer is skidding or not
+bool PlatformerPackage3D::is_skidding() {
+    return Math::rad_to_deg(currentGroundInputDirection.angle_to(currentGroundMovement)) > 120;
+}
+
+
 
 // ------------------------------------------------
 // PROPERTIES
 // ------------------------------------------------
 
 // Walking speed property setter / getter
-void PlatformerPackage3D::set_walking_speed(const double p_walking_speed) {
-    walking_speed = p_walking_speed;
+void PlatformerPackage3D::set_max_walking_speed(const double p_max_walking_speed) {
+    max_walking_speed = p_max_walking_speed;
 }
 
-double PlatformerPackage3D::get_walking_speed() const {
-    return walking_speed;
+double PlatformerPackage3D::get_max_walking_speed() const {
+    return max_walking_speed;
+}
+
+
+void PlatformerPackage3D::set_starting_walking_speed(const double p_value) {
+    starting_walking_speed = p_value;
+}
+
+double PlatformerPackage3D::get_starting_walking_speed() const {
+    return starting_walking_speed;
+}
+
+
+void PlatformerPackage3D::set_walking_acceleration(const double p_value) {
+    walking_acceleration = p_value;
+}
+
+double PlatformerPackage3D::get_walking_acceleration() const {
+    return walking_acceleration;
+}
+
+
+void PlatformerPackage3D::set_walking_deceleration(const double p_value) {
+    walking_deceleration = p_value;
+}
+
+double PlatformerPackage3D::get_walking_deceleration() const {
+    return walking_deceleration;
+}
+
+
+void PlatformerPackage3D::set_immediate_stop_speed(const double p_value) {
+    immediate_stop_speed = p_value;
+}
+
+double PlatformerPackage3D::get_immediate_stop_speed() const {
+    return immediate_stop_speed;
 }
 
 
@@ -506,6 +484,17 @@ void PlatformerPackage3D::set_short_jump_height(const double jump_height) {
 double PlatformerPackage3D::get_short_jump_height() const {
     return shortJumpHeight;
 }
+
+
+// Skid jump
+void PlatformerPackage3D::set_skid_jump_height(const double p_value) {
+    skidJumpHeight = p_value;
+}
+
+double PlatformerPackage3D::get_skid_jump_height() const {
+    return skidJumpHeight;
+}
+
 
 // Player downward acceleration
 void PlatformerPackage3D::set_player_gravity(const double gravity) {
@@ -598,4 +587,92 @@ void PlatformerPackage3D::set_max_wall_grab_vertical_speed(const double p_value)
 
 double PlatformerPackage3D::get_max_wall_grab_vertical_speed() const {
     return maxWallGrabVerticalSpeed;
+}
+
+
+// General call to bind properties from the parent bind methods
+void PlatformerPackage3D::bind_properties() {
+    ClassDB::bind_method(D_METHOD("get_max_walking_speed"), &PlatformerPackage3D::get_max_walking_speed);
+    ClassDB::bind_method(D_METHOD("set_max_walking_speed"), &PlatformerPackage3D::set_max_walking_speed);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "max_walking_speed"), "set_max_walking_speed", "get_max_walking_speed");
+
+    ClassDB::bind_method(D_METHOD("get_starting_walking_speed"), &PlatformerPackage3D::get_starting_walking_speed);
+    ClassDB::bind_method(D_METHOD("set_starting_walking_speed"), &PlatformerPackage3D::set_starting_walking_speed);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "starting_walking_speed"), "set_starting_walking_speed", "get_starting_walking_speed");
+
+    ClassDB::bind_method(D_METHOD("get_walking_acceleration"), &PlatformerPackage3D::get_walking_acceleration);
+    ClassDB::bind_method(D_METHOD("set_walking_acceleration"), &PlatformerPackage3D::set_walking_acceleration);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "walking_acceleration"), "set_walking_acceleration", "get_walking_acceleration");
+
+    ClassDB::bind_method(D_METHOD("get_walking_deceleration"), &PlatformerPackage3D::get_walking_deceleration);
+    ClassDB::bind_method(D_METHOD("set_walking_deceleration"), &PlatformerPackage3D::set_walking_deceleration);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "walking_deceleration"), "set_walking_deceleration", "get_walking_deceleration");
+
+    ClassDB::bind_method(D_METHOD("get_immediate_stop_speed"), &PlatformerPackage3D::get_immediate_stop_speed);
+    ClassDB::bind_method(D_METHOD("set_immediate_stop_speed"), &PlatformerPackage3D::set_immediate_stop_speed);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "immediate_stop_speed"), "set_immediate_stop_speed", "get_immediate_stop_speed");
+
+    ClassDB::bind_method(D_METHOD("get_walking_air_reduction"), &PlatformerPackage3D::get_walking_air_reduction);
+    ClassDB::bind_method(D_METHOD("set_walking_air_reduction"), &PlatformerPackage3D::set_walking_air_reduction);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "walking_air_reduction"), "set_walking_air_reduction", "get_walking_air_reduction");
+
+    ClassDB::bind_method(D_METHOD("get_camera_node_path"), &PlatformerPackage3D::get_camera_node_path);
+    ClassDB::bind_method(D_METHOD("set_camera_node_path"), &PlatformerPackage3D::set_camera_node_path);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::NODE_PATH, "camera_node_path"), "set_camera_node_path", "get_camera_node_path");
+
+    ClassDB::bind_method(D_METHOD("get_character_body_path"), &PlatformerPackage3D::get_character_body_path);
+    ClassDB::bind_method(D_METHOD("set_character_body_path"), &PlatformerPackage3D::set_character_body_path);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::NODE_PATH, "character_body_path"), "set_character_body_path", "get_character_body_path");
+
+    ClassDB::bind_method(D_METHOD("get_player_feet_path"), &PlatformerPackage3D::get_player_feet_path);
+    ClassDB::bind_method(D_METHOD("set_player_feet_path"), &PlatformerPackage3D::set_player_feet_path);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::NODE_PATH, "player_feet_path"), "set_player_feet_path", "get_player_feet_path");
+
+    ClassDB::bind_method(D_METHOD("get_long_jump_height"), &PlatformerPackage3D::get_long_jump_height);
+    ClassDB::bind_method(D_METHOD("set_long_jump_height"), &PlatformerPackage3D::set_long_jump_height);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "long_jump_height"), "set_long_jump_height", "get_long_jump_height");
+
+    ClassDB::bind_method(D_METHOD("get_short_jump_height"), &PlatformerPackage3D::get_short_jump_height);
+    ClassDB::bind_method(D_METHOD("set_short_jump_height"), &PlatformerPackage3D::set_short_jump_height);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "short_jump_height"), "set_short_jump_height", "get_short_jump_height");
+
+    ClassDB::bind_method(D_METHOD("get_skid_jump_height"), &PlatformerPackage3D::get_skid_jump_height);
+    ClassDB::bind_method(D_METHOD("set_skid_jump_height"), &PlatformerPackage3D::set_skid_jump_height);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "skid_jump_height"), "set_skid_jump_height", "get_skid_jump_height");
+
+    ClassDB::bind_method(D_METHOD("get_player_gravity"), &PlatformerPackage3D::get_player_gravity);
+    ClassDB::bind_method(D_METHOD("set_player_gravity"), &PlatformerPackage3D::set_player_gravity);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "player_gravity"), "set_player_gravity", "get_player_gravity");
+
+    ClassDB::bind_method(D_METHOD("get_gravity_apex_modifier"), &PlatformerPackage3D::get_gravity_apex_modifier);
+    ClassDB::bind_method(D_METHOD("set_gravity_apex_modifier"), &PlatformerPackage3D::set_gravity_apex_modifier);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "gravity_apex_modifier"), "set_gravity_apex_modifier", "get_gravity_apex_modifier");
+
+    ClassDB::bind_method(D_METHOD("get_apex_speed_definition"), &PlatformerPackage3D::get_apex_speed_definition);
+    ClassDB::bind_method(D_METHOD("set_apex_speed_definition"), &PlatformerPackage3D::set_apex_speed_definition);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "apex_speed_definition"), "set_apex_speed_definition", "get_apex_speed_definition");
+
+    ClassDB::bind_method(D_METHOD("get_ledge_grab_horizontal_reach"), &PlatformerPackage3D::get_ledge_grab_horizontal_reach);
+    ClassDB::bind_method(D_METHOD("set_ledge_grab_horizontal_reach"), &PlatformerPackage3D::set_ledge_grab_horizontal_reach);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "ledge_grab_horizontal_reach"), "set_ledge_grab_horizontal_reach", "get_ledge_grab_horizontal_reach");
+
+    ClassDB::bind_method(D_METHOD("get_ledge_grab_vertical_reach"), &PlatformerPackage3D::get_ledge_grab_vertical_reach);
+    ClassDB::bind_method(D_METHOD("set_ledge_grab_vertical_reach"), &PlatformerPackage3D::set_ledge_grab_vertical_reach);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "ledge_grab_vertical_reach"), "set_ledge_grab_vertical_reach", "get_ledge_grab_vertical_reach");
+
+    ClassDB::bind_method(D_METHOD("get_auto_grab_vertical_offset"), &PlatformerPackage3D::get_auto_grab_vertical_offset);
+    ClassDB::bind_method(D_METHOD("set_auto_grab_vertical_offset"), &PlatformerPackage3D::set_auto_grab_vertical_offset);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "auto_grab_vertical_offset"), "set_auto_grab_vertical_offset", "get_auto_grab_vertical_offset");
+
+    ClassDB::bind_method(D_METHOD("get_max_wall_grab_angle_requirement"), &PlatformerPackage3D::get_max_wall_grab_angle_requirement);
+    ClassDB::bind_method(D_METHOD("set_max_wall_grab_angle_requirement"), &PlatformerPackage3D::set_max_wall_grab_angle_requirement);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "max_wall_grab_angle_requirement"), "set_max_wall_grab_angle_requirement", "get_max_wall_grab_angle_requirement");
+
+    ClassDB::bind_method(D_METHOD("get_max_wall_grab_vertical_speed"), &PlatformerPackage3D::get_max_wall_grab_vertical_speed);
+    ClassDB::bind_method(D_METHOD("set_max_wall_grab_vertical_speed"), &PlatformerPackage3D::set_max_wall_grab_vertical_speed);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "max_wall_grab_vertical_speed"), "set_max_wall_grab_vertical_speed", "get_max_wall_grab_vertical_speed");
+
+    ClassDB::bind_method(D_METHOD("get_jump_buffer_duration"), &PlatformerPackage3D::get_jump_buffer_duration);
+    ClassDB::bind_method(D_METHOD("set_jump_buffer_duration"), &PlatformerPackage3D::set_jump_buffer_duration);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "jump_buffer_duration"), "set_jump_buffer_duration", "get_jump_buffer_duration");
 }

@@ -18,13 +18,14 @@ class PlatformerPackage3D : public CharacterBody3D {
 
     private:
         // Horizontal movement
-        double walking_speed;
-        double walking_air_reduction;
+        double max_walking_speed;       // Max walking speed given no additional force is added (MAX)
+        double walking_air_reduction;   // Movement reduction when in the air
+        double starting_walking_speed;  // The starting walking speed when you first walk 
+        double walking_acceleration;    // The rate at which you accelerate to max speed as you move
+        double walking_deceleration;    // The rate at which you decelerate when not inputing but your character moves
+        double immediate_stop_speed;    //  The minimum speed before you stop to a stand still
         Vector3 currentGroundInputDirection;
         Vector3 currentGroundMovement;
-        double walking_acceleration;
-        double walking_deceleration;
-        double immediate_stop_speed;
 
         // Pointers to camera
         NodePath camera_node_path;
@@ -39,28 +40,29 @@ class PlatformerPackage3D : public CharacterBody3D {
         class PlatformerFeetSensor* player_feet;
 
         // Vertical movement
-        double longJumpHeight;
-        double shortJumpHeight;
-        double playerGravity;
-        double gravityApexModifier;
-        double apexSpeedDefinition;
-        double maxFallSpeed;
+        double longJumpHeight;          // Max jump height
+        double shortJumpHeight;         // Tap jump height
+        double skidJumpHeight;          // Skid jump height
+        double playerGravity;           // Gravity affecting the player, affects how heavy a jump feels
+        double gravityApexModifier;     // Apex modifiers when a player is at the apex of the jump
+        double apexSpeedDefinition;     // Vertical speed at which the player should be in to be considered in the apex of a jump
+        double maxFallSpeed;            // Max fall speed
 
         // General wall behavior
-        double maxWallGrabVerticalSpeed;    // prop
-        double maxWallGrabAngleRequirement; // prop
+        double maxWallGrabVerticalSpeed;    // The maximum vertical speed to begin clining on to a wall (you cannot be more)
+        double maxWallGrabAngleRequirement; // The maximum angle to hang on to a wall (a straight wall is 0 degrees)
 
         // Ledge grab handling
-        double ledgeGrabVerticalReach;  // Prop
-        double ledgeGrabHorizontalReach;  // prop
-        double autoGrabVerticalOffset; // prop
+        double ledgeGrabVerticalReach;      // How far up the player could reach for a ledge
+        double ledgeGrabHorizontalReach;    // How far forward the player could reach for a ledge
+        double autoGrabVerticalOffset;      // The offset to snap to from the ledge
         bool grabbingLedge;
 
         bool grounded;
         double currentVerticalSpeed;
 
         // Jump Buffering
-        double jumpBufferDuration;
+        double jumpBufferDuration;          // How long the jump buffer time is
         BufferTimer* jumpBufferTimer;
         double bufferedJumpHeight;
 
@@ -102,8 +104,20 @@ class PlatformerPackage3D : public CharacterBody3D {
         // -------------------------
 
         // walking Speed property
-        void set_walking_speed(const double p_walking_speed);
-        double get_walking_speed() const;
+        void set_max_walking_speed(const double p_walking_speed);
+        double get_max_walking_speed() const;
+
+        void set_starting_walking_speed(const double p_value);
+        double get_starting_walking_speed() const;
+
+        void set_walking_acceleration(const double p_value);
+        double get_walking_acceleration() const;
+
+        void set_walking_deceleration(const double p_value);
+        double get_walking_deceleration() const;
+
+        void set_immediate_stop_speed(const double p_value);
+        double get_immediate_stop_speed() const;
 
         // Air reduction on walking
         void set_walking_air_reduction(const double reduction);
@@ -127,6 +141,9 @@ class PlatformerPackage3D : public CharacterBody3D {
 
         void set_short_jump_height(const double jump_height);
         double get_short_jump_height() const;
+
+        void set_skid_jump_height(const double p_value);
+        double get_skid_jump_height() const;
 
         // Player gravity and apex modifiers
         void set_player_gravity(const double gravity);
@@ -184,6 +201,9 @@ class PlatformerPackage3D : public CharacterBody3D {
 
         // Main function to check if you can grab the current wall
         bool can_interact_with_wall();
+
+        // Function to check if you're skidding
+        bool is_skidding();
 
         // Main helper function to handle ledge grab
         //  Pre: assumes that is_on_wall() is true
