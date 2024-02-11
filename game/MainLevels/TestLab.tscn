@@ -41,17 +41,23 @@ albedo_color = Color(0, 0.635294, 0.537255, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0248103, 0.0438733, -0.0368707)
 
 [node name="PlatformerPackage3D" type="PlatformerPackage3D" parent="."]
-max_walking_speed = 8.0
-walking_deceleration = 600.0
+max_walking_speed = 6.0
+starting_walking_speed = 2.0
+walking_acceleration = 1000.0
+walking_deceleration = 800.0
+immediate_stop_speed = 1.0
 walking_air_reduction = 0.5
 camera_node_path = NodePath("CameraSystem/SpringArm3D/PlayerCamera")
 character_body_path = NodePath("CollisionShape3D")
 player_feet_path = NodePath("PlatformerFeetSensor")
-player_gravity = 18.0
+player_gravity = 20.0
 gravity_apex_modifier = 0.75
 apex_speed_definition = 0.75
 max_wall_grab_angle_requirement = 5.0
 jump_buffer_duration = 0.1
+wall_jump_speed_force_magnitude = 4.0
+wall_jump_speed_duration = 0.5
+wall_jump_height = 1.75
 transform = Transform3D(0.999844, 0, 0.0176444, 0, 1, 0, -0.0176444, 0, 0.999844, 0.0660276, 1.44413, 0.0244875)
 collision_layer = 2
 collision_mask = 3
@@ -162,13 +168,13 @@ transform = Transform3D(1, 8.30751e-08, -5.72763e-08, 1.13225e-07, 1, -2.14204e-
 shape = SubResource("BoxShape3D_i8aj4")
 
 [node name="Wall2" type="StaticBody3D" parent="."]
-transform = Transform3D(-1.31134e-07, -3, 0, 3, -1.31134e-07, 0, 0, 0, 3, -0.668535, 16.6607, 1.64338)
+transform = Transform3D(-1.31134e-07, -3, 0, 3, -1.31134e-07, 0, 0, 0, 3, -0.668535, 16.6607, 47.7623)
 disable_mode = 2
 collision_mask = 3
 metadata/_edit_group_ = true
 
 [node name="Floor" type="CSGBox3D" parent="Wall2"]
-transform = Transform3D(1, -2.42144e-08, 2.23517e-08, 3.91155e-08, 1, 0, 2.23517e-08, -1.49012e-08, 1, 0, 0, 0)
+transform = Transform3D(1, -2.42144e-08, 2.23517e-08, 3.91155e-08, 1, 2.11758e-22, 2.23517e-08, -1.49012e-08, 1, 0, 0, 0)
 size = Vector3(10, 1, 10)
 material = SubResource("StandardMaterial3D_rw3qs")
 

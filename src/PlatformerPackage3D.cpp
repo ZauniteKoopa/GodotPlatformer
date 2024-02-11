@@ -72,7 +72,6 @@ PlatformerPackage3D::PlatformerPackage3D() {
     // Applied forces
     appliedSpeedDecayRate = 20;
     appliedSpeedVector = Vector3(0, 0, 0);
-    appliedSpeedDuration = 0.3;
     appliedSpeedActive = false;
     appliedSpeedTimeoutListener = Callable(this, "on_speed_force_expire");
 
@@ -124,8 +123,8 @@ void PlatformerPackage3D::_physics_process(double delta) {
             }
 
             // If you didn't grab the ledge, slide on the wall
+            grabbingWall = !grabbingLedge;
             if (!grabbingLedge) {
-                grabbingWall = true;
                 currentGroundMovement = Vector3(0, 0, 0);
             }
 
@@ -154,7 +153,7 @@ void PlatformerPackage3D::start_jump() {
 
     // If grabbing wall, do a wall jump
     } else if (grabbingWall) {
-        apply_speed_force(wallJumpSpeedForceMagnitude * get_wall_normal(), wallJumpSpeedDuration);
+        apply_speed_force(calculate_wall_jump_force(currentGroundInputDirection), wallJumpSpeedDuration);
         launch_jump(wallJumpHeight);
 
     // If you have extra jumps left, launch_jump and increment
@@ -229,6 +228,35 @@ void PlatformerPackage3D::apply_speed_force(Vector3 speedForceVector, double dur
     
     appliedSpeedLock.unlock();
 }
+
+
+// Main helper function to calculate the wall jump normal
+//  Pre: player exists on wall, playerWorldInput is the direction the player wants to go to in the world, flatten in a flat plane
+Vector3 PlatformerPackage3D::calculate_wall_jump_force(Vector3 playerWorldInput) {
+    // Get wall vectors
+    Vector3 wallNormal = get_wall_normal();
+    Vector3 wallSurface = wallNormal.cross(Vector3(0, 1, 0));
+
+    // Get dot product to see if player is moving towards the wall when jumping. If so, bounce it so vector faces wall normal
+    double dotProduct = playerWorldInput.dot(wallNormal);
+    if (dotProduct < 0.0) {
+        playerWorldInput = playerWorldInput.bounce(wallNormal);
+    }
+
+    // Clamp the angle and calculate the 2 possible direction vectors
+    double targetRads = Math::min(Math::deg_to_rad(maxWallJumpAngleVariance), (double)playerWorldInput.angle_to(wallNormal));
+    Vector3 vectorCandidate1 = (Math::cos(targetRads) * wallNormal) + (Math::sin(targetRads) * wallSurface);
+    Vector3 vectorCandidate2 = (Math::cos(targetRads) * wallNormal) - (Math::sin(targetRads) * wallSurface);
+
+    // Pick which canidate is correct by seeing which one is angled closer (higher dot product)
+    if (vectorCandidate1.dot(playerWorldInput) > vectorCandidate2.dot(playerWorldInput)) {
+        return wallJumpSpeedForceMagnitude * vectorCandidate1;
+    } else {
+        return wallJumpSpeedForceMagnitude * vectorCandidate2;
+    }
+
+}
+
 
 // Main function to cancel speed force
 void PlatformerPackage3D::cancel_speed_force() {
@@ -713,6 +741,55 @@ double PlatformerPackage3D::get_max_wall_grab_vertical_speed() const {
 }
 
 
+// -------------------------------
+// Wall grab properties
+// -------------------------------
+
+void PlatformerPackage3D::set_max_wall_grab_fall_speed(const double p_value) {
+    maxWallGrabFallSpeed = p_value;
+}
+
+double PlatformerPackage3D::get_max_wall_grab_fall_speed() const {
+    return maxWallGrabFallSpeed;
+}
+
+
+void PlatformerPackage3D::set_wall_jump_speed_force_magnitude(const double p_value) {
+    wallJumpSpeedForceMagnitude = p_value;
+}
+
+double PlatformerPackage3D::get_wall_jump_speed_force_magnitude() const {
+    return wallJumpSpeedForceMagnitude;
+}
+
+
+void PlatformerPackage3D::set_wall_jump_speed_duration(const double p_value) {
+    wallJumpSpeedDuration= p_value;
+}
+
+double PlatformerPackage3D::get_wall_jump_speed_duration() const {
+    return wallJumpSpeedDuration;
+}
+
+
+void PlatformerPackage3D::set_wall_jump_height(const double p_value) {
+    wallJumpHeight = p_value;
+}
+
+double PlatformerPackage3D::get_wall_jump_height() const {
+    return wallJumpHeight;
+}
+
+
+void PlatformerPackage3D::set_max_wall_jump_angle_variant(const double p_value) {
+    maxWallJumpAngleVariance = p_value;
+}
+
+double PlatformerPackage3D::get_max_wall_jump_angle_variant() const {
+    return maxWallJumpAngleVariance;
+}
+
+
 // General call to bind properties from the parent bind methods
 void PlatformerPackage3D::bind_properties() {
     ClassDB::bind_method(D_METHOD("get_max_walking_speed"), &PlatformerPackage3D::get_max_walking_speed);
@@ -806,4 +883,24 @@ void PlatformerPackage3D::bind_properties() {
     ClassDB::bind_method(D_METHOD("get_jump_buffer_duration"), &PlatformerPackage3D::get_jump_buffer_duration);
     ClassDB::bind_method(D_METHOD("set_jump_buffer_duration"), &PlatformerPackage3D::set_jump_buffer_duration);
     ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "jump_buffer_duration"), "set_jump_buffer_duration", "get_jump_buffer_duration");
+
+    ClassDB::bind_method(D_METHOD("get_max_wall_grab_fall_speed"), &PlatformerPackage3D::get_max_wall_grab_fall_speed);
+    ClassDB::bind_method(D_METHOD("set_max_wall_grab_fall_speed"), &PlatformerPackage3D::set_max_wall_grab_fall_speed);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "max_wall_grab_fall_speed"), "set_max_wall_grab_fall_speed", "get_max_wall_grab_fall_speed");
+
+    ClassDB::bind_method(D_METHOD("get_wall_jump_speed_force_magnitude"), &PlatformerPackage3D::get_wall_jump_speed_force_magnitude);
+    ClassDB::bind_method(D_METHOD("set_wall_jump_speed_force_magnitude"), &PlatformerPackage3D::set_wall_jump_speed_force_magnitude);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "wall_jump_speed_force_magnitude"), "set_wall_jump_speed_force_magnitude", "get_wall_jump_speed_force_magnitude");
+
+    ClassDB::bind_method(D_METHOD("get_wall_jump_speed_duration"), &PlatformerPackage3D::get_wall_jump_speed_duration);
+    ClassDB::bind_method(D_METHOD("set_wall_jump_speed_duration"), &PlatformerPackage3D::set_wall_jump_speed_duration);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "wall_jump_speed_duration"), "set_wall_jump_speed_duration", "get_wall_jump_speed_duration");
+
+    ClassDB::bind_method(D_METHOD("get_wall_jump_height"), &PlatformerPackage3D::get_wall_jump_height);
+    ClassDB::bind_method(D_METHOD("set_wall_jump_height"), &PlatformerPackage3D::set_wall_jump_height);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "wall_jump_height"), "set_wall_jump_height", "get_wall_jump_height");
+
+    ClassDB::bind_method(D_METHOD("get_max_wall_jump_angle_variant"), &PlatformerPackage3D::get_max_wall_jump_angle_variant);
+    ClassDB::bind_method(D_METHOD("set_max_wall_jump_angle_variant"), &PlatformerPackage3D::set_max_wall_jump_angle_variant);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "max_wall_jump_angle_variant"), "set_max_wall_jump_angle_variant", "get_max_wall_jump_angle_variant");
 }

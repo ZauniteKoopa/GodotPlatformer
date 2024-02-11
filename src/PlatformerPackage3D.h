@@ -71,20 +71,20 @@ class PlatformerPackage3D : public CharacterBody3D {
         double bufferedJumpHeight;
 
         // Wall slide / jump
-        bool grabbingWall = false;
-        double maxWallGrabFallSpeed = 3;
-        double wallJumpSpeedForceMagnitude = 3.5;
-        double wallJumpSpeedDuration = 0.6;
-        double wallJumpHeight = 2;
+        bool grabbingWall = false;                    // Flag for grabbing wall
+        double maxWallGrabFallSpeed = 2.5;            // The max fall speed when grabbing the wall
+        double wallJumpSpeedForceMagnitude = 3.5;     // Magnitude of the horizontal force when jumping off of the wall
+        double wallJumpSpeedDuration = 0.4;           // Duration of the horizontal force when jumping off a wall
+        double wallJumpHeight = 2;                    // General height of the wall jump
+        double maxWallJumpAngleVariance = 30;         // Angle of variance for when jumping off the wall
 
         // Applied forces
-        std::mutex appliedSpeedLock;
-        double appliedSpeedDuration;
-        Vector3 appliedSpeedVector;
-        double appliedSpeedDecayRate;
-        Ref<SceneTreeTimer> appliedSpeedTimer;
-        bool appliedSpeedActive = false;
-        Callable appliedSpeedTimeoutListener;
+        std::mutex appliedSpeedLock;                 // Lock for applying speed forces
+        Vector3 appliedSpeedVector;                  // Current applied speed force vector
+        double appliedSpeedDecayRate;                // Once flag is off, rate at which speed decays
+        Ref<SceneTreeTimer> appliedSpeedTimer;       // current applied speed force timer
+        bool appliedSpeedActive = false;             // Flag for if applied Speed force is active
+        Callable appliedSpeedTimeoutListener;        // Main listener for appliedSeedTimeout
 
 
     protected:
@@ -222,6 +222,28 @@ class PlatformerPackage3D : public CharacterBody3D {
         void set_max_wall_grab_angle_requirement(const double p_value);
         double get_max_wall_grab_angle_requirement() const;
 
+
+        // -------------------------------
+        // Wall grab properties
+        // -------------------------------
+
+
+        void set_max_wall_grab_fall_speed(const double p_value);
+        double get_max_wall_grab_fall_speed() const;
+
+        void set_wall_jump_speed_force_magnitude(const double p_value);
+        double get_wall_jump_speed_force_magnitude() const;
+
+        void set_wall_jump_speed_duration(const double p_value);
+        double get_wall_jump_speed_duration() const;
+
+        void set_wall_jump_height(const double p_value);
+        double get_wall_jump_height() const;
+
+        void set_max_wall_jump_angle_variant(const double p_value);
+        double get_max_wall_jump_angle_variant() const;
+
+
     private:
         // Initializers
         void static bind_properties();
@@ -247,6 +269,9 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Main helper function to handle ledge grab
         //  Pre: assumes that is_on_wall() is true
         void handle_ledge_grab();
+
+        // Main helper function to calculate the wall jump normal
+        Vector3 calculate_wall_jump_force(Vector3 playerWorldInput);
 
         // Velocity calculation
         Vector3 calculate_vertical_velocity(double delta);
