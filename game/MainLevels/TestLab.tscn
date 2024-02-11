@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dh3qn6y4att5h"]
+[gd_scene load_steps=15 format=3 uid="uid://dh3qn6y4att5h"]
 
 [ext_resource type="Script" path="res://Scripts/PlatformerPackage3D.gd" id="1_3ylhl"]
 [ext_resource type="Script" path="res://Scripts/CameraSystem.gd" id="2_ydapg"]
@@ -34,11 +34,15 @@ albedo_color = Color(0.505882, 0.278431, 0.101961, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_i8aj4"]
 size = Vector3(10, 1, 10)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rw3qs"]
+albedo_color = Color(0, 0.635294, 0.537255, 1)
+
 [node name="TestLab" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0248103, 0.0438733, -0.0368707)
 
 [node name="PlatformerPackage3D" type="PlatformerPackage3D" parent="."]
 max_walking_speed = 8.0
+walking_deceleration = 600.0
 walking_air_reduction = 0.5
 camera_node_path = NodePath("CameraSystem/SpringArm3D/PlayerCamera")
 character_body_path = NodePath("CollisionShape3D")
@@ -128,7 +132,7 @@ material = SubResource("StandardMaterial3D_86le5")
 shape = SubResource("BoxShape3D_i8aj4")
 
 [node name="StaticBody3D2" type="StaticBody3D" parent="."]
-transform = Transform3D(3, 0, 0, 0, 2.99978, -0.036651, 0, 0.036651, 2.99978, 18.9853, 1.52488, 0.363195)
+transform = Transform3D(3, 0, 0, 0, 2.99978, -0.036651, 0, 0.036651, 2.99978, 70.4575, 1.52488, 0.363195)
 disable_mode = 2
 collision_mask = 3
 metadata/_edit_group_ = true
@@ -139,6 +143,36 @@ size = Vector3(10, 1, 10)
 material = SubResource("StandardMaterial3D_86le5")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2"]
+transform = Transform3D(1, 8.30751e-08, -5.72763e-08, 1.13225e-07, 1, -2.14204e-08, 6.17001e-08, -1.98372e-07, 1, 0, 0, 0)
+shape = SubResource("BoxShape3D_i8aj4")
+
+[node name="Wall" type="StaticBody3D" parent="."]
+transform = Transform3D(-1.31134e-07, -3, 0, 3, -1.31134e-07, 0, 0, 0, 3, -6.0896, 1.52488, 0.363195)
+disable_mode = 2
+collision_mask = 3
+metadata/_edit_group_ = true
+
+[node name="Floor" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, -2.42144e-08, 2.23517e-08, 3.91155e-08, 1, 0, 2.23517e-08, -1.49012e-08, 1, 0, 0, 0)
+size = Vector3(10, 1, 10)
+material = SubResource("StandardMaterial3D_rw3qs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall"]
+transform = Transform3D(1, 8.30751e-08, -5.72763e-08, 1.13225e-07, 1, -2.14204e-08, 6.17001e-08, -1.98372e-07, 1, 0, 0, 0)
+shape = SubResource("BoxShape3D_i8aj4")
+
+[node name="Wall2" type="StaticBody3D" parent="."]
+transform = Transform3D(-1.31134e-07, -3, 0, 3, -1.31134e-07, 0, 0, 0, 3, -0.668535, 16.6607, 1.64338)
+disable_mode = 2
+collision_mask = 3
+metadata/_edit_group_ = true
+
+[node name="Floor" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, -2.42144e-08, 2.23517e-08, 3.91155e-08, 1, 0, 2.23517e-08, -1.49012e-08, 1, 0, 0, 0)
+size = Vector3(10, 1, 10)
+material = SubResource("StandardMaterial3D_rw3qs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall2"]
 transform = Transform3D(1, 8.30751e-08, -5.72763e-08, 1.13225e-07, 1, -2.14204e-08, 6.17001e-08, -1.98372e-07, 1, 0, 0, 0)
 shape = SubResource("BoxShape3D_i8aj4")
 

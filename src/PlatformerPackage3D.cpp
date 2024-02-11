@@ -2,6 +2,7 @@
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/engine.hpp>
+#include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
 // To print UtilityFunctions::print()
@@ -19,6 +20,7 @@ void PlatformerPackage3D::_bind_methods() {
     // Listeners to bind
     ClassDB::bind_method(D_METHOD("on_landed"), &PlatformerPackage3D::on_landed);
     ClassDB::bind_method(D_METHOD("on_fall_begin"), &PlatformerPackage3D::on_fall_begin);
+    ClassDB::bind_method(D_METHOD("on_speed_force_expire"), &PlatformerPackage3D::on_speed_force_expire);
 
     // Signals to bind
     ADD_SIGNAL(MethodInfo("jump_begin"));
@@ -67,6 +69,13 @@ PlatformerPackage3D::PlatformerPackage3D() {
     maxWallGrabAngleRequirement = 10;
     autoGrabVerticalOffset = 0.3;
 
+    // Applied forces
+    appliedSpeedDecayRate = 20;
+    appliedSpeedVector = Vector3(0, 0, 0);
+    appliedSpeedDuration = 0.3;
+    appliedSpeedActive = false;
+    appliedSpeedTimeoutListener = Callable(this, "on_speed_force_expire");
+
     // Reference nodes (MUST BE SET TO NULL ON CONSTRUCTION)
     current_camera = nullptr;
     character_body = nullptr;
@@ -109,10 +118,29 @@ void PlatformerPackage3D::_physics_process(double delta) {
 
         // After moving, check for wall if you're on a wall ANND falling AND vertical speed < maxWallGrabVerticalSpeed
         if (can_interact_with_wall()) {
+            // Check if you can grabbing ledge
             if (!grabbingLedge) {
                 handle_ledge_grab();
             }
+
+            // If you didn't grab the ledge, slide on the wall
+            if (!grabbingLedge) {
+                grabbingWall = true;
+                currentGroundMovement = Vector3(0, 0, 0);
+            }
+
+        // Else, set grabbingWall to false
+        } else {
+            grabbingWall = false;
         }
+
+        // Decay applied forces if not active anymore
+        appliedSpeedLock.lock();
+        if (!appliedSpeedActive && appliedSpeedVector.length() > 0.001) {
+            double newAppliedSpeed = Math::max(0.0, appliedSpeedVector.length() - (appliedSpeedDecayRate * delta));
+            appliedSpeedVector = appliedSpeedVector.normalized() * newAppliedSpeed;
+        }
+        appliedSpeedLock.unlock();
     }
 }
 
@@ -124,8 +152,13 @@ void PlatformerPackage3D::start_jump() {
         double curJumpHeight = (grounded && is_skidding()) ? skidJumpHeight : longJumpHeight;
         launch_jump(curJumpHeight);
 
+    // If grabbing wall, do a wall jump
+    } else if (grabbingWall) {
+        apply_speed_force(wallJumpSpeedForceMagnitude * get_wall_normal(), wallJumpSpeedDuration);
+        launch_jump(wallJumpHeight);
+
     // If you have extra jumps left, launch_jump and increment
-    }else if (curExtraJumpsDone < maxExtraJumps) {
+    } else if (curExtraJumpsDone < maxExtraJumps) {
         launch_jump(extraJumpHeight);
         curExtraJumpsDone++;
 
@@ -177,6 +210,58 @@ void PlatformerPackage3D::relative_run(Vector2 controller_vector, double time_de
     if (!is_zero(controller_vector.x) || !is_zero(controller_vector.y)) {
         currentGroundInputDirection.normalize();
     }
+}
+
+
+// Main function to apply speed force
+void PlatformerPackage3D::apply_speed_force(Vector3 speedForceVector, double duration) {
+    cancel_speed_force();
+
+    appliedSpeedLock.lock();
+
+    // Set speed
+    appliedSpeedVector = speedForceVector;
+    appliedSpeedActive = true;
+
+    // Create timer and connect
+    appliedSpeedTimer = get_tree()->create_timer(duration);
+    appliedSpeedTimer->connect("timeout", appliedSpeedTimeoutListener);
+    
+    appliedSpeedLock.unlock();
+}
+
+// Main function to cancel speed force
+void PlatformerPackage3D::cancel_speed_force() {
+    appliedSpeedLock.lock();
+
+    // Set applied speed to 0
+    appliedSpeedVector = Vector3(0, 0, 0);
+    appliedSpeedActive = false;
+
+    // Disable timer if it's still running
+    if (appliedSpeedTimer.is_valid()) {
+        appliedSpeedTimer->disconnect("timeout", appliedSpeedTimeoutListener);
+        appliedSpeedTimer->set_time_left(0);
+        appliedSpeedTimer.unref();
+    }
+
+    appliedSpeedLock.unlock();
+}
+
+// Main event handler when speed force expires
+void PlatformerPackage3D::on_speed_force_expire() {
+    appliedSpeedLock.lock();
+
+    // Set flag off
+    appliedSpeedActive = false;
+
+    // Unref the timer
+    if (appliedSpeedTimer.is_valid()) {
+        appliedSpeedTimer.unref();
+    }
+
+
+    appliedSpeedLock.unlock();
 }
 
 
@@ -249,12 +334,18 @@ Vector3 PlatformerPackage3D::calculate_vertical_velocity(double delta) {
     }
 
     // Put fall velocity in a vector
-    return Vector3(0, Math::max(currentVerticalSpeed, -maxFallSpeed), 0);
+    double curMaxSpeed = (grabbingWall) ? maxWallGrabFallSpeed : maxFallSpeed;
+    return Vector3(0, Math::max(currentVerticalSpeed, -curMaxSpeed), 0);
 }
 
 
 // Main private helper function to calculate the XZ component of velocity
 Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
+    // If grabbing wall, return zero vector
+    if (grabbingWall) {
+        return Vector3(0, 0, 0);
+    }
+
     double maxRunningSpeed = max_walking_speed;
 
     // If you're actually moving, adjust currentGroundMovement
@@ -290,6 +381,7 @@ Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
     }
 
     Vector3 curHorizontalDelta = (grounded) ? currentGroundMovement : walking_air_reduction * currentGroundMovement;
+    curHorizontalDelta += appliedSpeedVector;
     return player_feet->project_movement_on_ground(curHorizontalDelta);
 }
 

@@ -8,7 +8,6 @@ using namespace godot;
 
 // Main constructor
 PlatformerFeetSensor::PlatformerFeetSensor() {
-    numGroundSensed = 0;
     coyoteTimeDuration = 2.0;
 
     curCoyoteTimer.unref();
@@ -59,13 +58,13 @@ void PlatformerFeetSensor::on_body_enter(Node3D* body) {
         groundLock.lock();
 
         // If landed, emit signal and cancel current coyote timer
-        if (numGroundSensed == 0) {
+        if (groundSensed.size() == 0) {
             emit_signal("landed");
 
             cancel_coyote_timer();
             coyoteTimeDisabled = false;
         }
-        numGroundSensed++;
+        groundSensed.insert(body);
 
         groundLock.unlock();
     }
@@ -79,12 +78,13 @@ void PlatformerFeetSensor::on_body_exit(Node3D* body) {
     double curAngle = Math::rad_to_deg(collisionNormal.angle_to(upVector));
 
     // Only decrement counter if ground is actually valid ground (THIS WILL BE A BUG IF THE GROUND YOU'RE STANDING ON TURNS INTO A WALL LIKE WALKING OFF A STEEP SLOPE.)
-    if (curAngle <= floorMaxAngle) {
-        groundLock.lock();
-        numGroundSensed--;
+    groundLock.lock();
+
+    if (groundSensed.find(body) != groundSensed.end()) {
+        groundSensed.erase(body);
 
         // If no ground left to stand, cancel coyote timer if any exist and start a new timer
-        if (numGroundSensed == 0) {
+        if (groundSensed.size() == 0) {
             cancel_coyote_timer();
 
             if (coyoteTimeDisabled) {
@@ -93,9 +93,9 @@ void PlatformerFeetSensor::on_body_exit(Node3D* body) {
                 start_coyote_timer();
             }
         }
-
-        groundLock.unlock();
     }
+
+    groundLock.unlock();
 }
 
 
@@ -119,7 +119,7 @@ Vector3 PlatformerFeetSensor::get_overall_ground_normal() {
     Vector3 upVector = Vector3(0, 1, 0);
 
     groundLock.lock();
-    tempNumGround = numGroundSensed;
+    tempNumGround = groundSensed.size();
     groundLock.unlock();
 
     // If grounded, apply raycast check. else, return default normal (Vector3.up)
@@ -155,7 +155,7 @@ Vector3 PlatformerFeetSensor::get_collision_normal(Node3D* collidedGround) {
     // Set up query and fire ray cast
     PhysicsDirectSpaceState3D* spaceState = get_world_3d()->get_direct_space_state();
     Ref<PhysicsRayQueryParameters3D> rayCastQuery = PhysicsRayQueryParameters3D::create(
-        get_global_position(),
+        get_parent_node_3d()->get_global_position(),
         collidedGround->get_global_position()
     );
 
@@ -239,8 +239,8 @@ void PlatformerFeetSensor::on_coyote_timeout() {
     coyoteTimeLock.lock();
     groundLock.lock();
 
-    // If coyote timer is non-null and numGroundSensed is still 0, emit signal
-    if (curCoyoteTimer.is_valid() && numGroundSensed == 0) {
+    // If coyote timer is non-null and num GroundSensed is still 0, emit signal
+    if (curCoyoteTimer.is_valid() && groundSensed.size() == 0) {
         emit_signal("fall_begin");
         curCoyoteTimer.unref();
     }

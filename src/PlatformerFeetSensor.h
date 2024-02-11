@@ -8,6 +8,7 @@
 #include <godot_cpp/classes/physics_ray_query_parameters3d.hpp>
 #include <godot_cpp/classes/physics_direct_space_state3d.hpp>
 #include <mutex>
+#include <unordered_set>
 
 namespace godot {
 class PlatformerFeetSensor : public Area3D {
@@ -15,7 +16,7 @@ class PlatformerFeetSensor : public Area3D {
 
     private:
         // Core ground sensor
-        int numGroundSensed;
+        std::unordered_set<Node3D*> groundSensed;
         std::mutex groundLock;
 
         // Coyote time variable

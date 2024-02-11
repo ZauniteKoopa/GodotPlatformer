@@ -70,6 +70,23 @@ class PlatformerPackage3D : public CharacterBody3D {
         BufferTimer* jumpBufferTimer;
         double bufferedJumpHeight;
 
+        // Wall slide / jump
+        bool grabbingWall = false;
+        double maxWallGrabFallSpeed = 3;
+        double wallJumpSpeedForceMagnitude = 3.5;
+        double wallJumpSpeedDuration = 0.6;
+        double wallJumpHeight = 2;
+
+        // Applied forces
+        std::mutex appliedSpeedLock;
+        double appliedSpeedDuration;
+        Vector3 appliedSpeedVector;
+        double appliedSpeedDecayRate;
+        Ref<SceneTreeTimer> appliedSpeedTimer;
+        bool appliedSpeedActive = false;
+        Callable appliedSpeedTimeoutListener;
+
+
     protected:
         // Main function to bind methods to class
         void static _bind_methods();
@@ -101,6 +118,17 @@ class PlatformerPackage3D : public CharacterBody3D {
 
         // Event handler for when the unit begins to fall
         void on_fall_begin();
+
+        // Main function to apply speed force
+        //  Pre: speedForceVector is the direction and magnitude of the speed force affecting character,
+        //       duration is the duration of the force before decaying
+        void apply_speed_force(Vector3 speedForceVector, double duration);
+
+        // Main function to cancel speed force
+        void cancel_speed_force();
+
+        // Main event handler when speed force expires
+        void on_speed_force_expire();
 
 
         // --------------------------
