@@ -22,3 +22,6 @@ func _process(delta):
 		start_jump()
 	if (Input.is_action_just_released("Jump")):
 		cancel_jump()
+		
+	if (Input.is_action_just_pressed("dash")):
+		dash()

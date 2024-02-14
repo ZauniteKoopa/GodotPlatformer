@@ -52,6 +52,18 @@ class PlatformerPackage3D : public CharacterBody3D {
         
         int curExtraJumpsDone;
 
+        
+        // Dashing
+        int maxNumAirDashes = 1;                   // maximum number of dashes you can do in the air
+        double dashSpeed = 12;                  // Dash speed
+        double dashDistance = 2.5;              // Dash distance before speed decays off
+        double timeBetweenDashes = 0.4;         // Time between dashes
+        int curDashesUsed = 0;                  // Current amount of dashes used
+        Ref<SceneTreeTimer> dashCooldownTimer;  // Dash cooldown timer
+        bool canDash = true;                    // Can dash flag
+        Callable dashCooldownListener;          // Main dash listener
+        std::mutex dashLock;                    // Mutex dash used
+
         // General wall behavior
         double maxWallGrabVerticalSpeed;    // The maximum vertical speed to begin clining on to a wall (you cannot be more)
         double maxWallGrabAngleRequirement; // The maximum angle to hang on to a wall (a straight wall is 0 degrees)
@@ -113,6 +125,9 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Main function to cancel a jump in midair
         void cancel_jump();
 
+        // Main function to dash if you're able to
+        void dash();
+
         // Event handler for when the unit lands on the ground
         void on_landed();
 
@@ -129,6 +144,9 @@ class PlatformerPackage3D : public CharacterBody3D {
 
         // Main event handler when speed force expires
         void on_speed_force_expire();
+
+        // Main event handler for when dash is re-enabled
+        void on_dash_regained();
 
 
         // --------------------------
@@ -244,6 +262,22 @@ class PlatformerPackage3D : public CharacterBody3D {
         double get_max_wall_jump_angle_variant() const;
 
 
+        // -------------------------------
+        // Dash properties
+        // -------------------------------
+
+        void set_max_num_air_dashes(const int p_value);
+        int get_max_num_air_dashes() const;
+
+        void set_dash_speed(const double p_value);
+        double get_dash_speed() const;
+
+        void set_dash_distance(const double p_value);
+        double get_dash_distance() const;
+
+        void set_time_between_dashes(const double p_value);
+        double get_time_between_dashes() const;
+
     private:
         // Initializers
         void static bind_properties();
@@ -282,6 +316,10 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Main shape accessor functions
         double get_collider_shape_height();
         double get_collider_shape_radius();
+
+
+        // Dash speed accessor functions
+        double get_dash_duration();
 };
 };
 

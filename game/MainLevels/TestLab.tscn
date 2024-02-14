@@ -1,10 +1,11 @@
-[gd_scene load_steps=15 format=3 uid="uid://dh3qn6y4att5h"]
+[gd_scene load_steps=18 format=3 uid="uid://dh3qn6y4att5h"]
 
 [ext_resource type="Script" path="res://Scripts/PlatformerPackage3D.gd" id="1_3ylhl"]
 [ext_resource type="Script" path="res://Scripts/CameraSystem.gd" id="2_ydapg"]
 [ext_resource type="AudioStream" uid="uid://d2fdowpk0k2ui" path="res://Audio/Player_Jump.wav" id="3_5cp4s"]
 [ext_resource type="AudioStream" uid="uid://c4cfp564qe7be" path="res://Audio/Player_Land.wav" id="4_ui6ct"]
 [ext_resource type="AudioStream" uid="uid://cuwqqpv04k64o" path="res://Audio/Ledge_Snap.wav" id="5_vj3dj"]
+[ext_resource type="AudioStream" uid="uid://clxcjjd0xhjtn" path="res://Audio/Player_Dash.wav" id="6_ib0ke"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1ec5k"]
 size = Vector3(0.8, 0.180371, 0.8)
@@ -17,6 +18,13 @@ height = 1.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_70anq"]
 albedo_color = Color(0, 0.776471, 0.156863, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wta8c"]
+albedo_color = Color(0.67451, 0.384314, 0.192157, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_r4ct1"]
+material = SubResource("StandardMaterial3D_wta8c")
+size = Vector3(0.3, 0.3, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e8lsg"]
 albedo_color = Color(0, 0, 0, 1)
@@ -93,11 +101,15 @@ shape = SubResource("BoxShape3D_1ec5k")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlatformerPackage3D"]
 shape = SubResource("CapsuleShape3D_4sdtt")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PlatformerPackage3D/CollisionShape3D"]
+[node name="MeshBody" type="MeshInstance3D" parent="PlatformerPackage3D/CollisionShape3D"]
 transform = Transform3D(1, 0, 1.86265e-09, 0, 1, 0, -1.86265e-09, 0, 1, 0, 0, 0)
 mesh = SubResource("CapsuleMesh_4iwko")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_70anq")
+
+[node name="MeshNose" type="MeshInstance3D" parent="PlatformerPackage3D/CollisionShape3D/MeshBody"]
+transform = Transform3D(1, 0, -1.86265e-09, 0, 1, 0, 1.86265e-09, 0, 1, 0, 0, -0.488384)
+mesh = SubResource("BoxMesh_r4ct1")
 
 [node name="AudioCenter" type="Node3D" parent="PlatformerPackage3D"]
 
@@ -113,6 +125,9 @@ volume_db = -10.0
 
 [node name="LedgeSnapSpeaker" type="AudioStreamPlayer3D" parent="PlatformerPackage3D/AudioCenter"]
 stream = ExtResource("5_vj3dj")
+
+[node name="PlayerDashSpeaker" type="AudioStreamPlayer3D" parent="PlatformerPackage3D/AudioCenter"]
+stream = ExtResource("6_ib0ke")
 
 [node name="SpotShadow" type="SpotShadow" parent="PlatformerPackage3D"]
 max_shadow_scale = 1.2
@@ -182,6 +197,7 @@ material = SubResource("StandardMaterial3D_rw3qs")
 transform = Transform3D(1, 8.30751e-08, -5.72763e-08, 1.13225e-07, 1, -2.14204e-08, 6.17001e-08, -1.98372e-07, 1, 0, 0, 0)
 shape = SubResource("BoxShape3D_i8aj4")
 
+[connection signal="dash_started" from="PlatformerPackage3D" to="PlatformerPackage3D/AudioCenter/PlayerDashSpeaker" method="play"]
 [connection signal="jump_begin" from="PlatformerPackage3D" to="PlatformerPackage3D/PlatformerFeetSensor" method="disable_coyote_time"]
 [connection signal="jump_begin" from="PlatformerPackage3D" to="PlatformerPackage3D/AudioCenter/PlayerJumpSpeaker" method="play"]
 [connection signal="ledge_grab_begin" from="PlatformerPackage3D" to="PlatformerPackage3D/AudioCenter/LedgeSnapSpeaker" method="play"]

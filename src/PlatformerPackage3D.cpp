@@ -16,15 +16,18 @@ void PlatformerPackage3D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("start_jump"), &PlatformerPackage3D::start_jump);
     ClassDB::bind_method(D_METHOD("cancel_jump"), &PlatformerPackage3D::cancel_jump);
     ClassDB::bind_method(D_METHOD("process_timers"), &PlatformerPackage3D::process_timers);
+    ClassDB::bind_method(D_METHOD("dash"), &PlatformerPackage3D::dash);
 
     // Listeners to bind
     ClassDB::bind_method(D_METHOD("on_landed"), &PlatformerPackage3D::on_landed);
     ClassDB::bind_method(D_METHOD("on_fall_begin"), &PlatformerPackage3D::on_fall_begin);
     ClassDB::bind_method(D_METHOD("on_speed_force_expire"), &PlatformerPackage3D::on_speed_force_expire);
+    ClassDB::bind_method(D_METHOD("on_dash_regained"), &PlatformerPackage3D::on_dash_regained);
 
     // Signals to bind
     ADD_SIGNAL(MethodInfo("jump_begin"));
     ADD_SIGNAL(MethodInfo("ledge_grab_begin"));
+    ADD_SIGNAL(MethodInfo("dash_started"));
 
     // Bind properties
     bind_properties();
@@ -74,6 +77,9 @@ PlatformerPackage3D::PlatformerPackage3D() {
     appliedSpeedVector = Vector3(0, 0, 0);
     appliedSpeedActive = false;
     appliedSpeedTimeoutListener = Callable(this, "on_speed_force_expire");
+
+    // Dashing
+    dashCooldownListener = Callable(this, "on_dash_regained");
 
     // Reference nodes (MUST BE SET TO NULL ON CONSTRUCTION)
     current_camera = nullptr;
@@ -159,6 +165,8 @@ void PlatformerPackage3D::start_jump() {
     // If you have extra jumps left, launch_jump and increment
     } else if (curExtraJumpsDone < maxExtraJumps) {
         launch_jump(extraJumpHeight);
+        cancel_speed_force();
+        currentGroundMovement = Vector3(0, 0, 0);
         curExtraJumpsDone++;
 
     // Else, activate the buffer timer and initialize
@@ -209,6 +217,33 @@ void PlatformerPackage3D::relative_run(Vector2 controller_vector, double time_de
     if (!is_zero(controller_vector.x) || !is_zero(controller_vector.y)) {
         currentGroundInputDirection.normalize();
     }
+}
+
+
+// Main function to dash if you're able to dash 
+void PlatformerPackage3D::dash() {
+    dashLock.lock();
+
+    if (canDash && (grounded || curDashesUsed < maxNumAirDashes)) {
+        // Clear ground and vertical movement and set up dash dir to either the direction you're moving or the forward
+        currentGroundMovement = Vector3(0, 0, 0);
+        currentVerticalSpeed = 0;
+        Vector3 dashDir = (currentGroundInputDirection.length() < 0.01) ? -character_body->get_global_transform().get_basis().get_column(2) : currentGroundInputDirection.normalized();
+
+        // Apply speed force
+        apply_speed_force(dashDir * dashSpeed, get_dash_duration());
+        emit_signal("dash_started");
+
+        // Set up flags and timers
+        if (!grounded) {
+            curDashesUsed++;
+        }
+        canDash = false;
+        dashCooldownTimer = get_tree()->create_timer(get_dash_duration() + timeBetweenDashes);
+        dashCooldownTimer->connect("timeout", dashCooldownListener);
+    }
+
+    dashLock.unlock();
 }
 
 
@@ -293,10 +328,31 @@ void PlatformerPackage3D::on_speed_force_expire() {
 }
 
 
+// Main event handler when dash cooldown ends
+void PlatformerPackage3D::on_dash_regained() {
+    dashLock.lock();
+
+    // set up flag
+    canDash = true;
+
+    // Unref dash cooldown timer
+    if (dashCooldownTimer.is_valid()) {
+        dashCooldownTimer.unref();
+    }
+
+    dashLock.unlock();
+}
+
+
 // Event handler for when the unit lands on the ground
 void PlatformerPackage3D::on_landed() {
     // Reset curExtraJumpsDone each time
     curExtraJumpsDone = 0;
+
+    // reset dashing
+    dashLock.lock();
+    curDashesUsed = 0;
+    dashLock.unlock();
 
     // If jump buffering still active, just launch jump and cancel jump
     if (jumpBufferTimer->isRunning()) {
@@ -432,6 +488,7 @@ double PlatformerPackage3D::calculate_starting_jump_velocity(double curGravity, 
     return Math::sqrt(2.0 * curGravity * targetedHeight);
 }
 
+
 // Main function to check if you can grab the current wall
 bool PlatformerPackage3D::can_interact_with_wall() {
     // Check if there's a wall to interact with. if not, you can't interact with anything
@@ -455,6 +512,12 @@ bool PlatformerPackage3D::can_interact_with_wall() {
 // Main helper function to check if a number is close enough to zero
 bool PlatformerPackage3D::is_zero(double num) {
     return (num > -0.001) && (num < 0.001);
+}
+
+
+// Main helper function to access dash speed
+double PlatformerPackage3D::get_dash_duration() {
+    return dashDistance / dashSpeed;
 }
 
 
@@ -790,6 +853,50 @@ double PlatformerPackage3D::get_max_wall_jump_angle_variant() const {
 }
 
 
+// -------------------------------
+// Dash properties
+// -------------------------------
+
+
+void PlatformerPackage3D::set_max_num_air_dashes(const int p_value) {
+    maxNumAirDashes = p_value;
+}
+
+int PlatformerPackage3D::get_max_num_air_dashes() const {
+    return maxNumAirDashes;
+}
+
+
+void PlatformerPackage3D::set_dash_distance(const double p_value) {
+    dashDistance = p_value;
+}
+
+double PlatformerPackage3D::get_dash_distance() const {
+    return dashDistance;
+}
+
+
+void PlatformerPackage3D::set_dash_speed(const double p_value) {
+    dashSpeed = p_value;
+}
+
+double PlatformerPackage3D::get_dash_speed() const {
+    return dashSpeed;
+}
+
+
+void PlatformerPackage3D::set_time_between_dashes(const double p_value) {
+    timeBetweenDashes = p_value;
+}
+
+double PlatformerPackage3D::get_time_between_dashes() const {
+    return timeBetweenDashes;
+}
+
+
+
+
+
 // General call to bind properties from the parent bind methods
 void PlatformerPackage3D::bind_properties() {
     ClassDB::bind_method(D_METHOD("get_max_walking_speed"), &PlatformerPackage3D::get_max_walking_speed);
@@ -903,4 +1010,20 @@ void PlatformerPackage3D::bind_properties() {
     ClassDB::bind_method(D_METHOD("get_max_wall_jump_angle_variant"), &PlatformerPackage3D::get_max_wall_jump_angle_variant);
     ClassDB::bind_method(D_METHOD("set_max_wall_jump_angle_variant"), &PlatformerPackage3D::set_max_wall_jump_angle_variant);
     ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "max_wall_jump_angle_variant"), "set_max_wall_jump_angle_variant", "get_max_wall_jump_angle_variant");
+
+    ClassDB::bind_method(D_METHOD("get_max_num_air_dashes"), &PlatformerPackage3D::get_max_num_air_dashes);
+    ClassDB::bind_method(D_METHOD("set_max_num_air_dashes"), &PlatformerPackage3D::set_max_num_air_dashes);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::INT, "max_num_air_dashes"), "set_max_num_air_dashes", "get_max_num_air_dashes");
+
+    ClassDB::bind_method(D_METHOD("get_dash_speed"), &PlatformerPackage3D::get_dash_speed);
+    ClassDB::bind_method(D_METHOD("set_dash_speed"), &PlatformerPackage3D::set_dash_speed);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "dash_speed"), "set_dash_speed", "get_dash_speed");
+
+    ClassDB::bind_method(D_METHOD("get_dash_distance"), &PlatformerPackage3D::get_dash_distance);
+    ClassDB::bind_method(D_METHOD("set_dash_distance"), &PlatformerPackage3D::set_dash_distance);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "dash_distance"), "set_dash_distance", "get_dash_distance");
+
+    ClassDB::bind_method(D_METHOD("get_time_between_dashes"), &PlatformerPackage3D::get_time_between_dashes);
+    ClassDB::bind_method(D_METHOD("set_time_between_dashes"), &PlatformerPackage3D::set_time_between_dashes);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "time_between_dashes"), "set_time_between_dashes", "get_time_between_dashes");
 }
