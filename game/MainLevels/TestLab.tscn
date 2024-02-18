@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dh3qn6y4att5h"]
+[gd_scene load_steps=19 format=3 uid="uid://dh3qn6y4att5h"]
 
 [ext_resource type="Script" path="res://Scripts/PlatformerPackage3D.gd" id="1_3ylhl"]
 [ext_resource type="Script" path="res://Scripts/CameraSystem.gd" id="2_ydapg"]
@@ -36,11 +36,14 @@ top_radius = 0.7
 bottom_radius = 0.7
 height = 0.05
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_86le5"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_520i1"]
 albedo_color = Color(0.505882, 0.278431, 0.101961, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_i8aj4"]
 size = Vector3(10, 1, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_86le5"]
+albedo_color = Color(0.505882, 0.278431, 0.101961, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rw3qs"]
 albedo_color = Color(0, 0.635294, 0.537255, 1)
@@ -76,7 +79,7 @@ script = ExtResource("1_3ylhl")
 metadata/_edit_group_ = true
 
 [node name="CameraSystem" type="Node3D" parent="PlatformerPackage3D"]
-transform = Transform3D(0.965017, -0.0620964, 0.25473, 0, 0.971549, 0.236838, -0.262189, -0.228553, 0.937562, 0.0163549, 0.498002, 0.000288617)
+transform = Transform3D(0.965017, -0.0620964, 0.25473, 0, 0.971549, 0.236838, -0.262189, -0.228553, 0.937562, 0, 0.498, 0)
 script = ExtResource("2_ydapg")
 
 [node name="SpringArm3D" type="SpringArm3D" parent="PlatformerPackage3D/CameraSystem"]
@@ -147,13 +150,13 @@ collision_mask = 3
 
 [node name="Floor" type="CSGBox3D" parent="StaticBody3D"]
 size = Vector3(10, 1, 10)
-material = SubResource("StandardMaterial3D_86le5")
+material = SubResource("StandardMaterial3D_520i1")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("BoxShape3D_i8aj4")
 
 [node name="StaticBody3D2" type="StaticBody3D" parent="."]
-transform = Transform3D(3, 0, 0, 0, 2.99978, -0.036651, 0, 0.036651, 2.99978, 70.4575, 1.52488, 0.363195)
+transform = Transform3D(3, 0, 0, 0, 2.99978, -0.036651, 0, 0.036651, 2.99978, 18.305, 0.833222, 0.858089)
 disable_mode = 2
 collision_mask = 3
 metadata/_edit_group_ = true
@@ -196,6 +199,12 @@ material = SubResource("StandardMaterial3D_rw3qs")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Wall2"]
 transform = Transform3D(1, 8.30751e-08, -5.72763e-08, 1.13225e-07, 1, -2.14204e-08, 6.17001e-08, -1.98372e-07, 1, 0, 0, 0)
 shape = SubResource("BoxShape3D_i8aj4")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.223233, -0.843157, 0.489135, 1.49012e-08, 0.501798, 0.864985, -0.974765, 0.193093, -0.112018, 11.5887, 12.351, 0)
+sky_mode = 1
+
+[node name="DynamicCameraPivot" type="DynamicCameraPivot" parent="."]
 
 [connection signal="dash_started" from="PlatformerPackage3D" to="PlatformerPackage3D/AudioCenter/PlayerDashSpeaker" method="play"]
 [connection signal="jump_begin" from="PlatformerPackage3D" to="PlatformerPackage3D/PlatformerFeetSensor" method="disable_coyote_time"]
