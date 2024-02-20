@@ -953,7 +953,7 @@ void PlatformerPackage3D::bind_properties() {
 
     ClassDB::bind_method(D_METHOD("get_extra_jump_height"), &PlatformerPackage3D::get_extra_jump_height);
     ClassDB::bind_method(D_METHOD("set_extra_jump_height"), &PlatformerPackage3D::set_extra_jump_height);
-    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "extra_jump_height"), "set_extra_jump_heightt", "get_extra_jump_height");
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "extra_jump_height"), "set_extra_jump_height", "get_extra_jump_height");
 
     ClassDB::bind_method(D_METHOD("get_player_gravity"), &PlatformerPackage3D::get_player_gravity);
     ClassDB::bind_method(D_METHOD("set_player_gravity"), &PlatformerPackage3D::set_player_gravity);

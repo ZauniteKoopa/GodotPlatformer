@@ -58,7 +58,7 @@ walking_acceleration = 1000.0
 walking_deceleration = 800.0
 immediate_stop_speed = 1.0
 walking_air_reduction = 0.5
-camera_node_path = NodePath("CameraSystem/SpringArm3D/PlayerCamera")
+camera_node_path = NodePath("../DynamicCameraPivot/SpringArm3D/PlayerCamera")
 character_body_path = NodePath("CollisionShape3D")
 player_feet_path = NodePath("PlatformerFeetSensor")
 player_gravity = 20.0
@@ -69,7 +69,7 @@ jump_buffer_duration = 0.1
 wall_jump_speed_force_magnitude = 4.0
 wall_jump_speed_duration = 0.5
 wall_jump_height = 1.75
-transform = Transform3D(0.999844, 0, 0.0176444, 0, 1, 0, -0.0176444, 0, 0.999844, 0.0660276, 1.44413, 0.0244875)
+transform = Transform3D(0.999844, 0, 0.0176444, 0, 1, 0, -0.0176444, 0, 0.999844, 0, 0.170738, 0)
 collision_layer = 2
 collision_mask = 3
 velocity = Vector3(0, -10, 0)
@@ -77,20 +77,6 @@ floor_max_angle = 0.872665
 safe_margin = 0.01
 script = ExtResource("1_3ylhl")
 metadata/_edit_group_ = true
-
-[node name="CameraSystem" type="Node3D" parent="PlatformerPackage3D"]
-transform = Transform3D(0.965017, -0.0620964, 0.25473, 0, 0.971549, 0.236838, -0.262189, -0.228553, 0.937562, 0, 0.498, 0)
-script = ExtResource("2_ydapg")
-
-[node name="SpringArm3D" type="SpringArm3D" parent="PlatformerPackage3D/CameraSystem"]
-transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 3.37604e-09, 0.661284, -1.11759e-08)
-collision_mask = 7
-spring_length = 4.0
-
-[node name="PlayerCamera" type="Camera3D" parent="PlatformerPackage3D/CameraSystem/SpringArm3D"]
-transform = Transform3D(1, -4.65662e-10, -8.32667e-17, 4.65661e-10, 1, 8.94069e-08, 0, -8.9407e-08, 1, -1.11759e-08, 1.19209e-07, 4.85626)
-rotation_edit_mode = 2
-fov = 62.3
 
 [node name="PlatformerFeetSensor" type="PlatformerFeetSensor" parent="PlatformerPackage3D"]
 coyote_time_duration = 0.2
@@ -205,6 +191,22 @@ transform = Transform3D(-0.223233, -0.843157, 0.489135, 1.49012e-08, 0.501798, 0
 sky_mode = 1
 
 [node name="DynamicCameraPivot" type="DynamicCameraPivot" parent="."]
+vertical_position_offset = 0.75
+vertical_free_space_buffer = 1.25
+target = NodePath("../PlatformerPackage3D")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0248103, 0.214611, -0.0368707)
+script = ExtResource("2_ydapg")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="DynamicCameraPivot"]
+transform = Transform3D(0.96024, -0.0661193, 0.271233, 0, 0.971548, 0.236838, -0.279175, -0.227421, 0.93292, 0, 0, 0)
+collision_mask = 7
+spring_length = 5.0
+
+[node name="PlayerCamera" type="Camera3D" parent="DynamicCameraPivot/SpringArm3D"]
+transform = Transform3D(1, 1.49012e-07, -9.23872e-07, -7.45058e-09, 1, -7.45058e-08, -2.98023e-08, -1.19209e-07, 1, 0, 0, 5)
+rotation_edit_mode = 2
+fov = 67.5
+near = 0.039
 
 [connection signal="dash_started" from="PlatformerPackage3D" to="PlatformerPackage3D/AudioCenter/PlayerDashSpeaker" method="play"]
 [connection signal="jump_begin" from="PlatformerPackage3D" to="PlatformerPackage3D/PlatformerFeetSensor" method="disable_coyote_time"]
@@ -215,3 +217,4 @@ sky_mode = 1
 [connection signal="fall_begin" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D" method="on_fall_begin"]
 [connection signal="landed" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D" method="on_landed"]
 [connection signal="landed" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/AudioCenter/PlayerLandSpeaker" method="play"]
+[connection signal="landed" from="PlatformerPackage3D/PlatformerFeetSensor" to="DynamicCameraPivot" method="on_landed"]

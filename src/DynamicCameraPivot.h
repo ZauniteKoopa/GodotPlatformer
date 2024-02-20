@@ -2,6 +2,7 @@
 #define DYNAMICCAMERAPIVOT_H
 
 #include <godot_cpp/classes/node3d.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 using namespace godot;
 
@@ -13,6 +14,16 @@ class DynamicCameraPivot : public Node3D {
         // Vertical offseting
         double verticalPositionOffset = 0.5;        // Main offset from the target that the camera should be placed
         double verticalFreeSpaceBuffer = 1.5;       // The amount of free space afforded to the player's before moving the camera
+        double currentYPivot;                       // Current Y pivot
+
+        // Main function to Y pivot transition quickly
+        double transitionHeightSpeed = 5;
+        double startYPosition;
+        double finalYPosition;
+        double heightTransitionTimer = 0;
+        double transitionDuration;
+        bool isTransitioningY = false;
+
 
         // Pointers to target for camera to follow
         NodePath target_path;
@@ -50,6 +61,13 @@ class DynamicCameraPivot : public Node3D {
 
         void set_target(NodePath p_value);
         NodePath get_target() const;
+
+    private:
+        // Main helper function to get the current Y position of camera
+        double get_current_y_position(double delta);
+
+        // Main helper function to initialize node pointers
+        void initialize_current_node_pointers();
 
 };
 }
