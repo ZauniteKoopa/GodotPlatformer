@@ -17,6 +17,7 @@ void PlatformerPackage3D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("cancel_jump"), &PlatformerPackage3D::cancel_jump);
     ClassDB::bind_method(D_METHOD("process_timers"), &PlatformerPackage3D::process_timers);
     ClassDB::bind_method(D_METHOD("dash"), &PlatformerPackage3D::dash);
+    ClassDB::bind_method(D_METHOD("get_current_vertical_speed"), &PlatformerPackage3D::get_current_vertical_speed);
 
     // Listeners to bind
     ClassDB::bind_method(D_METHOD("on_landed"), &PlatformerPackage3D::on_landed);
@@ -506,6 +507,11 @@ bool PlatformerPackage3D::can_interact_with_wall() {
     } else {
         return false;
     }
+}
+
+// Main function to get current falling speed
+double PlatformerPackage3D::get_current_vertical_speed() const {
+    return (grounded) ? 0 : currentVerticalSpeed;
 }
 
 

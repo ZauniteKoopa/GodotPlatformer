@@ -148,6 +148,9 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Main event handler for when dash is re-enabled
         void on_dash_regained();
 
+        // Main function to get current falling speed
+        double get_current_vertical_speed() const;
+
 
         // --------------------------
         // PROPERTIES

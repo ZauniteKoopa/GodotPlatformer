@@ -1,4 +1,4 @@
-extends Node3D
+extends DynamicCameraPivot
 
 const MOUSE_SENSITIVITY = 0.003;
 const X_ROTATION_LIMIT = 45.0;
@@ -13,13 +13,11 @@ func _input(event):
 		var mouseDelta = event.relative
 		
 		# horizontal rotation
-		var yEulerAngle = transform.basis.get_euler().y + (MOUSE_SENSITIVITY * -mouseDelta.x)
-		
+		var deltaY = (MOUSE_SENSITIVITY * -mouseDelta.x)
+	
 		# vertical rotation
-		var xEulerAngle = transform.basis.get_euler().x + (MOUSE_SENSITIVITY * -mouseDelta.y)
-		xEulerAngle = clamp(xEulerAngle, deg_to_rad(-X_ROTATION_LIMIT), deg_to_rad(X_ROTATION_LIMIT))
+		var deltaX = (MOUSE_SENSITIVITY * -mouseDelta.y)
 		
-		# apply rotation
-		transform.basis = transform.basis.from_euler(Vector3(xEulerAngle, yEulerAngle, 0))
+		rotate_camera(deltaX, deltaY);
 		pass
 	pass
