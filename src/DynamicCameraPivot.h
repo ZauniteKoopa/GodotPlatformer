@@ -53,7 +53,7 @@ class DynamicCameraPivot : public Node3D {
         ~DynamicCameraPivot();
 
         // On game start
-        void _ready() override;
+        void _enter_tree() override;
 
         // On update, move the camera with the target
         void _process(double delta) override;

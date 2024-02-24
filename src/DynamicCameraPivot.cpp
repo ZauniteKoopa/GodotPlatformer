@@ -30,7 +30,7 @@ DynamicCameraPivot::~DynamicCameraPivot() {
 
 
 // Main function to call on start
-void DynamicCameraPivot::_ready() {
+void DynamicCameraPivot::_enter_tree() {
     initialize_current_node_pointers();
 
     set_position(target->get_global_position());
@@ -47,7 +47,6 @@ void DynamicCameraPivot::_process(double delta) {
     if (!Engine::get_singleton()->is_editor_hint()) {
 
         // Set position
-        initialize_current_node_pointers();
         Vector3 currentPosition = Vector3(
             target->get_global_position()[Vector3::AXIS_X],
             get_current_y_position(delta),
@@ -248,35 +247,35 @@ NodePath DynamicCameraPivot::get_target() const {
 void DynamicCameraPivot::bind_properties() {
     ClassDB::bind_method(D_METHOD("get_vertical_position_offset"), &DynamicCameraPivot::get_vertical_position_offset);
     ClassDB::bind_method(D_METHOD("set_vertical_position_offset"), &DynamicCameraPivot::set_vertical_position_offset);
-    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "vertical_position_offset"), "set_vertical_position_offset", "get_vertical_position_offset");
+    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "vertical_offsetting/vertical_position_offset"), "set_vertical_position_offset", "get_vertical_position_offset");
 
     ClassDB::bind_method(D_METHOD("get_vertical_free_space_buffer"), &DynamicCameraPivot::get_vertical_free_space_buffer);
     ClassDB::bind_method(D_METHOD("set_vertical_free_space_buffer"), &DynamicCameraPivot::set_vertical_free_space_buffer);
-    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "vertical_free_space_buffer"), "set_vertical_free_space_buffer", "get_vertical_free_space_buffer");
+    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "vertical_offsetting/vertical_free_space_buffer"), "set_vertical_free_space_buffer", "get_vertical_free_space_buffer");
 
     ClassDB::bind_method(D_METHOD("get_transition_height_speed"), &DynamicCameraPivot::get_transition_height_speed);
     ClassDB::bind_method(D_METHOD("set_transition_height_speed"), &DynamicCameraPivot::set_transition_height_speed);
-    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "transition_height_speed"), "set_transition_height_speed", "get_transition_height_speed");
+    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "vertical_offsetting/transition_height_speed"), "set_transition_height_speed", "get_transition_height_speed");
 
     ClassDB::bind_method(D_METHOD("get_yaw_max_pivot"), &DynamicCameraPivot::get_yaw_max_pivot);
     ClassDB::bind_method(D_METHOD("set_yaw_max_pivot"), &DynamicCameraPivot::set_yaw_max_pivot);
-    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "yaw_max_pivot"), "set_yaw_max_pivot", "get_yaw_max_pivot");
+    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "yaw_pivoting/yaw_max_pivot"), "set_yaw_max_pivot", "get_yaw_max_pivot");
 
     ClassDB::bind_method(D_METHOD("get_yaw_min_pivot"), &DynamicCameraPivot::get_yaw_min_pivot);
     ClassDB::bind_method(D_METHOD("set_yaw_min_pivot"), &DynamicCameraPivot::set_yaw_min_pivot);
-    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "yaw_min_pivot"), "set_yaw_min_pivot", "get_yaw_min_pivot");
+    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "yaw_pivoting/yaw_min_pivot"), "set_yaw_min_pivot", "get_yaw_min_pivot");
 
     ClassDB::bind_method(D_METHOD("get_falling_angle_adjustment"), &DynamicCameraPivot::get_falling_angle_adjustment);
     ClassDB::bind_method(D_METHOD("set_falling_angle_adjustment"), &DynamicCameraPivot::set_falling_angle_adjustment);
-    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "falling_angle_adjustment"), "set_falling_angle_adjustment", "get_falling_angle_adjustment");
+    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "yaw_pivoting/falling_angle_adjustment"), "set_falling_angle_adjustment", "get_falling_angle_adjustment");
 
     ClassDB::bind_method(D_METHOD("get_angle_transition_speed"), &DynamicCameraPivot::get_angle_transition_speed);
     ClassDB::bind_method(D_METHOD("set_angle_transition_speed"), &DynamicCameraPivot::set_angle_transition_speed);
-    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "angle_transition_speed"), "set_angle_transition_speed", "get_angle_transition_speed");
+    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "yaw_pivoting/angle_transition_speed"), "set_angle_transition_speed", "get_angle_transition_speed");
 
     ClassDB::bind_method(D_METHOD("get_adjustment_speed_limit"), &DynamicCameraPivot::get_adjustment_speed_limit);
     ClassDB::bind_method(D_METHOD("set_adjustment_speed_limit"), &DynamicCameraPivot::set_adjustment_speed_limit);
-    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "adjustment_speed_limit"), "set_adjustment_speed_limit", "get_adjustment_speed_limit");
+    ClassDB::add_property("DynamicCameraPivot", PropertyInfo(Variant::FLOAT, "yaw_pivoting/adjustment_speed_limit"), "set_adjustment_speed_limit", "get_adjustment_speed_limit");
 
     ClassDB::bind_method(D_METHOD("get_target"), &DynamicCameraPivot::get_target);
     ClassDB::bind_method(D_METHOD("set_target"), &DynamicCameraPivot::set_target);

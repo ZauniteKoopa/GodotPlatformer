@@ -108,7 +108,7 @@ class PlatformerPackage3D : public CharacterBody3D {
         ~PlatformerPackage3D();
 
         // On game start
-        void _ready() override;
+        void _enter_tree() override;
 
         // On frame update
         void process_timers(double delta);
