@@ -25,6 +25,14 @@ void PlatformerPackage3D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("on_speed_force_expire"), &PlatformerPackage3D::on_speed_force_expire);
     ClassDB::bind_method(D_METHOD("on_dash_regained"), &PlatformerPackage3D::on_dash_regained);
 
+    // Animator accessors
+    ClassDB::bind_method(D_METHOD("is_grounded"), &PlatformerPackage3D::is_grounded);
+    ClassDB::bind_method(D_METHOD("is_dashing"), &PlatformerPackage3D::is_dashing);
+    ClassDB::bind_method(D_METHOD("is_wall_grabbing"), &PlatformerPackage3D::is_wall_grabbing);
+    ClassDB::bind_method(D_METHOD("is_ledge_grabbing"), &PlatformerPackage3D::is_ledge_grabbing);
+    ClassDB::bind_method(D_METHOD("is_skidding"), &PlatformerPackage3D::is_skidding);
+    ClassDB::bind_method(D_METHOD("get_current_horizontal_speed"), &PlatformerPackage3D::get_current_horizontal_speed);
+
     // Signals to bind
     ADD_SIGNAL(MethodInfo("jump_begin"));
     ADD_SIGNAL(MethodInfo("ledge_grab_begin"));
@@ -451,7 +459,8 @@ Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
         }
 
         // Rotate
-        character_body->look_at(get_global_position() + currentGroundMovement);
+        Plane surfacePlane = Plane(Vector3(0, 1, 0), Vector3(0, 0, 0));
+        character_body->look_at(surfacePlane.project(get_global_position() + currentGroundMovement));
 
     // If you're not moving, decelerate
     } else {
@@ -559,9 +568,35 @@ double PlatformerPackage3D::get_collider_shape_radius() {
 
 
 // Main definition on whether or not the payer is skidding or not
-bool PlatformerPackage3D::is_skidding() {
+bool PlatformerPackage3D::is_skidding() const {
     return Math::rad_to_deg(currentGroundInputDirection.angle_to(currentGroundMovement)) > 120;
 }
+
+
+bool PlatformerPackage3D::is_grounded() const {
+    return grounded;
+}
+
+
+bool PlatformerPackage3D::is_dashing() const {
+    return false;
+}
+
+
+bool PlatformerPackage3D::is_wall_grabbing() const {
+    return grabbingWall;
+}
+
+
+bool PlatformerPackage3D::is_ledge_grabbing() const {
+    return grabbingLedge;
+}
+
+
+double PlatformerPackage3D::get_current_horizontal_speed() const {
+    return currentGroundMovement.length();
+}
+
 
 
 

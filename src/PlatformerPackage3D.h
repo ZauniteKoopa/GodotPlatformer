@@ -148,8 +148,14 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Main event handler for when dash is re-enabled
         void on_dash_regained();
 
-        // Main function to get current falling speed
+        // Accessor functions for animations
+        bool is_grounded() const;
+        bool is_dashing() const;
+        bool is_skidding() const;
+        bool is_wall_grabbing() const;
+        bool is_ledge_grabbing() const;
         double get_current_vertical_speed() const;
+        double get_current_horizontal_speed() const;
 
 
         // --------------------------
@@ -299,9 +305,6 @@ class PlatformerPackage3D : public CharacterBody3D {
 
         // Main function to check if you can grab the current wall
         bool can_interact_with_wall();
-
-        // Function to check if you're skidding
-        bool is_skidding();
 
         // Main helper function to handle ledge grab
         //  Pre: assumes that is_on_wall() is true
