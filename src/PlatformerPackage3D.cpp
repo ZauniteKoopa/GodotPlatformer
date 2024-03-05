@@ -173,7 +173,7 @@ void PlatformerPackage3D::start_jump() {
         launch_jump(wallJumpHeight);
 
     // If you have extra jumps left, launch_jump and increment
-    } else if (curExtraJumpsDone < maxExtraJumps) {
+    } else if (curExtraJumpsDone < maxExtraJumps && !doesBufferOverrideExtraJump()) {
         launch_jump(extraJumpHeight);
         cancel_speed_force();
         currentGroundMovement = Vector3(0, 0, 0);
@@ -182,7 +182,11 @@ void PlatformerPackage3D::start_jump() {
     // Else, activate the buffer timer and initialize
     } else {
         jumpBufferTimer->reset();
-        bufferedJumpHeight = longJumpHeight;
+
+        // jump height is based on current consecutive ground jump
+        currentConsecutiveGroundJump = (currentConsecutiveGroundJump + 1) % maxConsecutiveGroundJumps;
+        double groundJumpHeight = longJumpHeight + (groundJumpHeightIncrease * currentConsecutiveGroundJump);
+        bufferedJumpHeight = groundJumpHeight;
     }
 }
 
@@ -198,6 +202,17 @@ void PlatformerPackage3D::cancel_jump() {
             bufferedJumpHeight = shortJumpHeight;
         }
     }
+}
+
+
+// Helper function to check if  jumpBuffer overrides extraJump (you jump on the ground via jump buffer instead of doing the extra jump)
+bool PlatformerPackage3D::doesBufferOverrideExtraJump() {
+    // Raycast underneath given that you know how fast you're going and how long the jump buffer timer is. If it hits something, let jump buffer take over. Else, apply extra jump
+    Vector3 raySrc = player_feet->get_global_position();
+    Vector3 rayDest = raySrc + (currentVerticalSpeed * jumpBufferDuration) * Vector3(0, 1, 0);
+    Dictionary rayHitInfo = cast_ray(raySrc, rayDest);
+
+    return !rayHitInfo.is_empty();
 }
 
 
@@ -465,7 +480,7 @@ Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
 
         // Rotate
         Plane surfacePlane = Plane(Vector3(0, 1, 0), Vector3(0, 0, 0));
-        character_body->look_at(character_body->get_global_position() + surfacePlane.project(currentGroundMovement.normalized()));
+        character_body->look_at(character_body->get_global_position() + surfacePlane.project((currentGroundMovement + appliedSpeedVector).normalized()));
 
     // If you're not moving, decelerate
     } else {
@@ -575,7 +590,7 @@ double PlatformerPackage3D::get_collider_shape_radius() {
 
 // Main definition on whether or not the payer is skidding or not
 bool PlatformerPackage3D::is_skidding() const {
-    return Math::rad_to_deg(currentGroundInputDirection.angle_to(currentGroundMovement)) > 120;
+    return Math::rad_to_deg(currentGroundInputDirection.angle_to(currentGroundMovement + appliedSpeedVector)) > 120;
 }
 
 

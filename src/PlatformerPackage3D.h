@@ -52,6 +52,11 @@ class PlatformerPackage3D : public CharacterBody3D {
         
         int curExtraJumpsDone;
 
+
+        // Ground triple jump
+        int currentConsecutiveGroundJump = 0;
+        int maxConsecutiveGroundJumps = 3;
+        double groundJumpHeightIncrease = 1.5;
         
         // Dashing
         int maxNumAirDashes = 1;                   // maximum number of dashes you can do in the air
@@ -314,6 +319,9 @@ class PlatformerPackage3D : public CharacterBody3D {
 
         // Main helper function to calculate the wall jump normal
         Vector3 calculate_wall_jump_force(Vector3 playerWorldInput);
+
+        // Helper function to check if  jumpBuffer overrides extraJump (you jump on the ground via jump buffer instead of doing the extra jump)
+        bool doesBufferOverrideExtraJump();
 
         // Velocity calculation
         Vector3 calculate_vertical_velocity(double delta);

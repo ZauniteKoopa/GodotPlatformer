@@ -35,13 +35,14 @@ func update_animation_parameters():
 	var isMoving = get_current_horizontal_speed() > 0.01
 	var isJumpingUp = get_current_vertical_speed() > 0
 	var doingOverridingAction = is_ledge_grabbing() or is_wall_grabbing() or is_dashing()
+	var skidDashing = is_skidding() && is_dashing() && is_grounded()
 	
 	animation_tree["parameters/conditions/idle"] = is_grounded() and !isMoving and !doingOverridingAction
 	animation_tree["parameters/conditions/moving"] = is_grounded() and isMoving and !is_skidding() and !doingOverridingAction
-	animation_tree["parameters/conditions/skidding"] = is_grounded() and isMoving and is_skidding() and !doingOverridingAction
+	animation_tree["parameters/conditions/skidding"] = is_grounded() and isMoving and is_skidding() and (!doingOverridingAction or skidDashing)
 	animation_tree["parameters/conditions/jumping"] = !is_grounded() and isJumpingUp and !doingOverridingAction
 	animation_tree["parameters/conditions/falling"] = !is_grounded() and !isJumpingUp and !doingOverridingAction
 	animation_tree["parameters/conditions/wallGrabbing"] = is_wall_grabbing()
 	animation_tree["parameters/conditions/ledgeGrabbing"] = is_ledge_grabbing()
-	animation_tree["parameters/conditions/dashing"] = is_dashing()
+	animation_tree["parameters/conditions/dashing"] = is_dashing() and !skidDashing
 	

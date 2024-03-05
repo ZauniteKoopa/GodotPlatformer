@@ -75,6 +75,11 @@ void DynamicCameraPivot::on_landed() {
 
 // Main helper function to get the current Y position of camera
 double DynamicCameraPivot::get_current_y_position(double delta) {
+    // If you're not grounded, set isTransitioningToGroundHeight to false (why transition to ground if you're not grounded anymore)
+    if (!target->is_grounded()) {
+        isTransitioningToGroundHeight = false;
+    }
+
     // If transitioning Y, gradually transition to position
     if (isTransitioningToGroundHeight) {
         // Increment timer and lerp
