@@ -59,10 +59,12 @@ class PlatformerPackage3D : public CharacterBody3D {
         double dashDistance = 2.5;              // Dash distance before speed decays off
         double timeBetweenDashes = 0.4;         // Time between dashes
         int curDashesUsed = 0;                  // Current amount of dashes used
+        Ref<SceneTreeTimer> dashAnimationTimer; // Timer for when dash animation is active
         Ref<SceneTreeTimer> dashCooldownTimer;  // Dash cooldown timer
         bool canDash = true;                    // Can dash flag
         Callable dashCooldownListener;          // Main dash listener
         std::mutex dashLock;                    // Mutex dash used
+        bool dashing = false;
 
         // General wall behavior
         double maxWallGrabVerticalSpeed;    // The maximum vertical speed to begin clining on to a wall (you cannot be more)

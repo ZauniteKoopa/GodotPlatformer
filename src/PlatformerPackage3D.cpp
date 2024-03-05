@@ -139,6 +139,7 @@ void PlatformerPackage3D::_physics_process(double delta) {
 
             // If you didn't grab the ledge, slide on the wall
             grabbingWall = !grabbingLedge;
+            dashing = false;
             if (!grabbingLedge) {
                 currentGroundMovement = Vector3(0, 0, 0);
             }
@@ -247,7 +248,10 @@ void PlatformerPackage3D::dash() {
         if (!grounded) {
             curDashesUsed++;
         }
+
+        // Set flags and timers
         canDash = false;
+        dashing = true;
         dashCooldownTimer = get_tree()->create_timer(get_dash_duration() + timeBetweenDashes);
         dashCooldownTimer->connect("timeout", dashCooldownListener);
     }
@@ -332,7 +336,8 @@ void PlatformerPackage3D::on_speed_force_expire() {
         appliedSpeedTimer.unref();
     }
 
-
+    // Set dashing flag to false for animation (if you were wall jumping, dashing would've always been false)
+    dashing = false;
     appliedSpeedLock.unlock();
 }
 
@@ -460,7 +465,7 @@ Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
 
         // Rotate
         Plane surfacePlane = Plane(Vector3(0, 1, 0), Vector3(0, 0, 0));
-        character_body->look_at(surfacePlane.project(get_global_position() + currentGroundMovement));
+        character_body->look_at(character_body->get_global_position() + surfacePlane.project(currentGroundMovement.normalized()));
 
     // If you're not moving, decelerate
     } else {
@@ -487,12 +492,13 @@ void PlatformerPackage3D::snap_to_ledge(Vector3 ledgePosition, Vector3 wallNorma
     Plane flatPlane = Plane(Vector3(0, 1, 0), Vector3(0, 0, 0));
 
     set_global_position(positionToSnapTo);
-    character_body->look_at(get_global_position() - flatPlane.project(wallNormal));
+    character_body->look_at(character_body->get_global_position() - flatPlane.project(wallNormal));
     currentGroundMovement = Vector3(0, 0, 0);
 
     set_velocity(Vector3(0, 0, 0));
     cancel_speed_force();
     currentVerticalSpeed = 0;
+    dashing = false;
 }
 
 
@@ -579,7 +585,7 @@ bool PlatformerPackage3D::is_grounded() const {
 
 
 bool PlatformerPackage3D::is_dashing() const {
-    return false;
+    return dashing;
 }
 
 
