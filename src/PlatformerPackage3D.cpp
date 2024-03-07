@@ -32,6 +32,7 @@ void PlatformerPackage3D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("is_ledge_grabbing"), &PlatformerPackage3D::is_ledge_grabbing);
     ClassDB::bind_method(D_METHOD("is_skidding"), &PlatformerPackage3D::is_skidding);
     ClassDB::bind_method(D_METHOD("get_current_horizontal_speed"), &PlatformerPackage3D::get_current_horizontal_speed);
+    ClassDB::bind_method(D_METHOD("on_ground_jump_timeout"), &PlatformerPackage3D::on_ground_jump_timeout);
 
     // Signals to bind
     ADD_SIGNAL(MethodInfo("jump_begin"));
@@ -68,6 +69,9 @@ PlatformerPackage3D::PlatformerPackage3D() {
 
     grounded = false;
     currentVerticalSpeed = 0;
+
+    // Triple jump
+    groundJumpTimeoutListener = Callable(this, "on_ground_jump_timeout");
 
     // Main jump buffer
     jumpBufferDuration = 0.01;
@@ -164,7 +168,7 @@ void PlatformerPackage3D::_physics_process(double delta) {
 void PlatformerPackage3D::start_jump() {
     // If already grounded, jump immediately
     if (grounded || grabbingLedge) {
-        double curJumpHeight = (grounded && is_skidding()) ? skidJumpHeight : longJumpHeight;
+        double curJumpHeight = (grounded && is_skidding()) ? skidJumpHeight : get_current_ground_jump_height();
         launch_jump(curJumpHeight);
 
     // If grabbing wall, do a wall jump
@@ -184,9 +188,7 @@ void PlatformerPackage3D::start_jump() {
         jumpBufferTimer->reset();
 
         // jump height is based on current consecutive ground jump
-        currentConsecutiveGroundJump = (currentConsecutiveGroundJump + 1) % maxConsecutiveGroundJumps;
-        double groundJumpHeight = longJumpHeight + (groundJumpHeightIncrease * currentConsecutiveGroundJump);
-        bufferedJumpHeight = groundJumpHeight;
+        bufferedJumpHeight = get_current_ground_jump_height();
     }
 }
 
@@ -348,12 +350,51 @@ void PlatformerPackage3D::on_speed_force_expire() {
 
     // Unref the timer
     if (appliedSpeedTimer.is_valid()) {
+        appliedSpeedTimer->disconnect("timeout", appliedSpeedTimeoutListener);
+        appliedSpeedTimer->set_time_left(0);
         appliedSpeedTimer.unref();
     }
 
     // Set dashing flag to false for animation (if you were wall jumping, dashing would've always been false)
     dashing = false;
     appliedSpeedLock.unlock();
+}
+
+
+// Main event handler for when consecutive ground jump timer times out
+void PlatformerPackage3D::on_ground_jump_timeout() {
+    groundJumpLock.lock();
+
+    // Clear timer
+    if (consecutiveGroundJumpTimer.is_valid()) {
+        consecutiveGroundJumpTimer.unref();
+    }
+
+    // Reset consecutive ground jump
+    currentConsecutiveGroundJump = 0;
+
+    groundJumpLock.unlock();
+}
+
+
+// Helper function to calculate the height of the ground jump. After triggering this, the current consequetive jump will be incremented by 1
+double PlatformerPackage3D::get_current_ground_jump_height() {
+    groundJumpLock.lock();
+
+    // Calculate current jump height
+    double groundJumpHeight = longJumpHeight + (groundJumpHeightIncrease * currentConsecutiveGroundJump);
+
+    // Update flag variables and remove timer
+    currentConsecutiveGroundJump = (currentConsecutiveGroundJump + 1) % maxConsecutiveGroundJumps;
+    if (consecutiveGroundJumpTimer.is_valid()) {
+        consecutiveGroundJumpTimer->disconnect("timeout", groundJumpTimeoutListener);
+        consecutiveGroundJumpTimer->set_time_left(0);
+        consecutiveGroundJumpTimer.unref();
+    }
+
+    groundJumpLock.unlock();
+
+    return groundJumpHeight;
 }
 
 
@@ -388,10 +429,16 @@ void PlatformerPackage3D::on_landed() {
         launch_jump(Math::max(bufferedJumpHeight, shortJumpHeight + 0.5));
         jumpBufferTimer->cancel();
 
-    // Else, just land on the ground
+    // Else, just land on the ground and trigger consecutive groundJump timer
     } else {
         currentVerticalSpeed = 0;
         grounded = true;
+
+        // Create timer and connect
+        groundJumpLock.lock();
+        consecutiveGroundJumpTimer = get_tree()->create_timer(GROUND_JUMP_TIMER_DURATION);
+        consecutiveGroundJumpTimer->connect("timeout", groundJumpTimeoutListener);
+        groundJumpLock.unlock();
     }
 }
 
@@ -960,6 +1007,28 @@ double PlatformerPackage3D::get_time_between_dashes() const {
 
 
 
+// -------------------------------
+// Consecutive Ground Jump Properties
+// -------------------------------
+
+
+void PlatformerPackage3D::set_max_consecutive_ground_jumps(const int p_value) {
+    maxConsecutiveGroundJumps = p_value;
+}
+
+int PlatformerPackage3D::get_max_consecutive_ground_jumps() const {
+    return maxConsecutiveGroundJumps;
+}
+
+
+void PlatformerPackage3D::set_ground_jump_height_increase(const double p_value) {
+    groundJumpHeightIncrease = p_value;
+}
+
+double PlatformerPackage3D::get_ground_jump_height_increase() const {
+    return groundJumpHeightIncrease;
+}
+
 
 
 // General call to bind properties from the parent bind methods
@@ -1091,4 +1160,12 @@ void PlatformerPackage3D::bind_properties() {
     ClassDB::bind_method(D_METHOD("get_time_between_dashes"), &PlatformerPackage3D::get_time_between_dashes);
     ClassDB::bind_method(D_METHOD("set_time_between_dashes"), &PlatformerPackage3D::set_time_between_dashes);
     ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "dashing/time_between_dashes"), "set_time_between_dashes", "get_time_between_dashes");
+
+    ClassDB::bind_method(D_METHOD("get_max_consecutive_ground_jumps"), &PlatformerPackage3D::get_max_consecutive_ground_jumps);
+    ClassDB::bind_method(D_METHOD("set_max_consecutive_ground_jumps"), &PlatformerPackage3D::set_max_consecutive_ground_jumps);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::INT, "consecutive_ground_jumps/max_consecutive_ground_jumps"), "set_max_consecutive_ground_jumps", "get_max_consecutive_ground_jumps");
+
+    ClassDB::bind_method(D_METHOD("get_ground_jump_height_increase"), &PlatformerPackage3D::get_ground_jump_height_increase);
+    ClassDB::bind_method(D_METHOD("set_ground_jump_height_increase"), &PlatformerPackage3D::set_ground_jump_height_increase);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "consecutive_ground_jumps/ground_jump_height_increase"), "set_ground_jump_height_increase", "get_ground_jump_height_increase");
 }

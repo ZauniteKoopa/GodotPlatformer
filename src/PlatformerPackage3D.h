@@ -54,9 +54,13 @@ class PlatformerPackage3D : public CharacterBody3D {
 
 
         // Ground triple jump
-        int currentConsecutiveGroundJump = 0;
-        int maxConsecutiveGroundJumps = 3;
-        double groundJumpHeightIncrease = 1.5;
+        int currentConsecutiveGroundJump = 0;               // Current consecutive jump
+        int maxConsecutiveGroundJumps = 3;                  // Max number of consecutive jump
+        double groundJumpHeightIncrease = 1.5;              // Jump height increase
+        const double GROUND_JUMP_TIMER_DURATION = 0.4;      // Duration of ground jump timer (you must jump within the next X seconds to get a consecutive jump)
+        Ref<SceneTreeTimer> consecutiveGroundJumpTimer;     // Main timer to track when on ground
+        Callable groundJumpTimeoutListener;                 // Main listener for ground jump timer timeout
+        std::mutex groundJumpLock;                          // Ground jump lock
         
         // Dashing
         int maxNumAirDashes = 1;                   // maximum number of dashes you can do in the air
@@ -154,6 +158,9 @@ class PlatformerPackage3D : public CharacterBody3D {
 
         // Main event handler for when dash is re-enabled
         void on_dash_regained();
+
+        // Main event handler for when consecutive ground jump timer runs out
+        void on_ground_jump_timeout();
 
         // Accessor functions for animations
         bool is_grounded() const;
@@ -294,6 +301,16 @@ class PlatformerPackage3D : public CharacterBody3D {
         void set_time_between_dashes(const double p_value);
         double get_time_between_dashes() const;
 
+        // -------------------------------
+        // Consecutive Ground Jump Properties
+        // -------------------------------
+
+        void set_max_consecutive_ground_jumps(const int p_value);
+        int get_max_consecutive_ground_jumps() const;
+
+        void set_ground_jump_height_increase(const double p_value);
+        double get_ground_jump_height_increase() const;
+
     private:
         // Initializers
         void static bind_properties();
@@ -323,6 +340,10 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Helper function to check if  jumpBuffer overrides extraJump (you jump on the ground via jump buffer instead of doing the extra jump)
         bool doesBufferOverrideExtraJump();
 
+        // Helper function to calculate the height of the ground jump. After triggering this, the current consequetive jump will be incremented by 1
+        double get_current_ground_jump_height();
+
+
         // Velocity calculation
         Vector3 calculate_vertical_velocity(double delta);
         Vector3 calculate_horizontal_velocity(double delta);
@@ -332,7 +353,6 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Main shape accessor functions
         double get_collider_shape_height();
         double get_collider_shape_radius();
-
 
         // Dash speed accessor functions
         double get_dash_duration();
