@@ -283,14 +283,26 @@ void PlatformerPackage3D::apply_speed_force(Vector3 speedForceVector, double dur
 
     appliedSpeedLock.lock();
 
-    // Set speed
-    appliedSpeedVector = speedForceVector;
-    appliedSpeedActive = true;
+    // Calculate vector properties
+    Plane flatPlane = Plane(Vector3(0, 1, 0), Vector3(0, 0, 0));
+    double verticalForce = speedForceVector[Vector3::AXIS_Y];
+    Vector3 flattenedForce = flatPlane.project(speedForceVector);
 
-    // Create timer and connect
-    appliedSpeedTimer = get_tree()->create_timer(duration);
-    appliedSpeedTimer->connect("timeout", appliedSpeedTimeoutListener);
-    
+    // Apply vertical force if high enough (jumpHeight == force / (0.5 * gravity))
+    if (verticalForce > 0.1) {
+        launch_jump(verticalForce / (0.06 * playerGravity));
+    }
+
+    // Set flattened force if magnitude is high enough
+    if (flattenedForce.length() > 0.1) {
+        appliedSpeedVector = speedForceVector;
+        appliedSpeedActive = true;
+
+        // Create timer and connect
+        appliedSpeedTimer = get_tree()->create_timer(duration);
+        appliedSpeedTimer->connect("timeout", appliedSpeedTimeoutListener);
+    }
+
     appliedSpeedLock.unlock();
 }
 
