@@ -109,6 +109,12 @@ class PlatformerPackage3D : public CharacterBody3D {
         bool appliedSpeedActive = false;             // Flag for if applied Speed force is active
         Callable appliedSpeedTimeoutListener;        // Main listener for appliedSeedTimeout
 
+        
+        // Respawn system
+        Vector3 currentCheckpointPosition;
+        double deathPlaneHeight = -6;
+        bool dying = false;
+
 
     protected:
         // Main function to bind methods to class
@@ -161,6 +167,9 @@ class PlatformerPackage3D : public CharacterBody3D {
 
         // Main event handler for when consecutive ground jump timer runs out
         void on_ground_jump_timeout();
+
+        // Main function to respawn
+        void respawn();
 
         // Accessor functions for animations
         bool is_grounded() const;

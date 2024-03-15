@@ -29,6 +29,7 @@ func _process(delta):
 		dash()
 		
 	update_animation_parameters()
+	pass
 		
 
 func update_animation_parameters():
@@ -45,4 +46,9 @@ func update_animation_parameters():
 	animation_tree["parameters/conditions/wallGrabbing"] = is_wall_grabbing()
 	animation_tree["parameters/conditions/ledgeGrabbing"] = is_ledge_grabbing()
 	animation_tree["parameters/conditions/dashing"] = is_dashing() and !skidDashing
-	
+	pass
+
+
+func _on_death():
+	respawn()
+	pass # Replace with function body.

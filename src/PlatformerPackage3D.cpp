@@ -18,6 +18,7 @@ void PlatformerPackage3D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("process_timers"), &PlatformerPackage3D::process_timers);
     ClassDB::bind_method(D_METHOD("dash"), &PlatformerPackage3D::dash);
     ClassDB::bind_method(D_METHOD("get_current_vertical_speed"), &PlatformerPackage3D::get_current_vertical_speed);
+    ClassDB::bind_method(D_METHOD("respawn"), &PlatformerPackage3D::respawn);
 
     // Listeners to bind
     ClassDB::bind_method(D_METHOD("on_landed"), &PlatformerPackage3D::on_landed);
@@ -38,6 +39,8 @@ void PlatformerPackage3D::_bind_methods() {
     ADD_SIGNAL(MethodInfo("jump_begin"));
     ADD_SIGNAL(MethodInfo("ledge_grab_begin"));
     ADD_SIGNAL(MethodInfo("dash_started"));
+    ADD_SIGNAL(MethodInfo("death"));
+    ADD_SIGNAL(MethodInfo("respawned"));
 
     // Bind properties
     bind_properties();
@@ -110,6 +113,8 @@ PlatformerPackage3D::~PlatformerPackage3D() {
 
 // Main function that plays on game start
 void PlatformerPackage3D::_enter_tree() {
+    currentCheckpointPosition = get_global_position();
+
     initialize_current_node_pointers();
     currentVerticalSpeed = 0;
 }
@@ -160,6 +165,12 @@ void PlatformerPackage3D::_physics_process(double delta) {
             appliedSpeedVector = appliedSpeedVector.normalized() * newAppliedSpeed;
         }
         appliedSpeedLock.unlock();
+
+        // Check if you died
+        if (!dying && get_global_position()[Vector3::AXIS_Y] < deathPlaneHeight) {
+            dying = true;
+            emit_signal("death");
+        }
     }
 }
 
@@ -475,7 +486,7 @@ void PlatformerPackage3D::handle_ledge_grab() {
     Dictionary rayLimitResults = cast_ray(verticalLedgeGrabLimitPosition, maximumLedgeFrabReachPosition);
     if (rayLimitResults.is_empty()) {
         // From maximum ledge grab reach position, move down to see if you're able to hit a ledge
-        Vector3 lowerledgeGrabHorizontalReachPosition = maximumLedgeFrabReachPosition + (Vector3(0, -(halfColliderHeight + ledgeGrabVerticalReach), 0));
+        Vector3 lowerledgeGrabHorizontalReachPosition = maximumLedgeFrabReachPosition + (Vector3(0, -(2 * halfColliderHeight + ledgeGrabVerticalReach), 0));
         Dictionary rayCollision = cast_ray(maximumLedgeFrabReachPosition, lowerledgeGrabHorizontalReachPosition);
         grabbingLedge = !rayCollision.is_empty();
 
@@ -573,6 +584,21 @@ void PlatformerPackage3D::snap_to_ledge(Vector3 ledgePosition, Vector3 wallNorma
     cancel_speed_force();
     currentVerticalSpeed = 0;
     dashing = false;
+}
+
+
+// Main function to respawn
+void PlatformerPackage3D::respawn() {
+    // Set dying flag to false
+    dying = false;
+
+    // Reset variables
+    currentVerticalSpeed = 0;
+    currentConsecutiveGroundJump = 0;
+    cancel_speed_force();
+
+    // teleport
+    emit_signal("respawned");
 }
 
 
