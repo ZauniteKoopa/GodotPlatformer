@@ -6,6 +6,7 @@ const X_ROTATION_LIMIT = 45.0;
 # On game ready
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	pass
 
 # main input function to handle mouse events
 func _input(event):

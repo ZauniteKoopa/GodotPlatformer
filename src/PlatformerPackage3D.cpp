@@ -533,14 +533,29 @@ Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
 
     // If you're actually moving, adjust currentGroundMovement
     if (currentGroundInputDirection.length() > 0.01f && !grabbingLedge) {
-        // If you're going really fast or you going in the same general direction as curGroundMovement, accelerate in that direction
-        if (currentGroundMovement.length() > immediate_stop_speed || Math::rad_to_deg(currentGroundMovement.angle_to(currentGroundInputDirection)) < 60) {
-            // Adjust currentGroundMovement
-            currentGroundMovement += (delta * delta * walking_acceleration * currentGroundInputDirection);
+        // If you're going really fast move accordingly
+        if (currentGroundMovement.length() > immediate_stop_speed) {
+            // Check if you're turning
+            double dirDeltaAngle =  Math::rad_to_deg(currentGroundMovement.angle_to(currentGroundInputDirection));
+            bool isTurning = (dirDeltaAngle > 60 && dirDeltaAngle < 120);
 
-            // If accelerating past maxSpeed, restrict it
-            if (currentGroundMovement.length() > maxRunningSpeed) {
-                currentGroundMovement = maxRunningSpeed * currentGroundMovement.normalized();
+            // If turning, adjust speed and increase acceleration for sharper turns, a minimum radius: R = V^2 / A
+            if (isTurning) {
+                double currentSpeed = currentGroundMovement.length();
+
+                // Adjust currentGroundMovement direction but not speed
+                currentGroundMovement += (delta * delta * 7 * walking_acceleration * currentGroundInputDirection);
+                currentGroundMovement = currentGroundMovement.normalized() * currentSpeed;
+
+            // Else, just do linear accelelration
+            } else {
+                // Adjust currentGroundMovement
+                currentGroundMovement += (delta * delta * walking_acceleration * currentGroundInputDirection);
+
+                // If accelerating past maxSpeed, restrict it
+                if (currentGroundMovement.length() > maxRunningSpeed) {
+                    currentGroundMovement = maxRunningSpeed * currentGroundMovement.normalized();
+                }
             }
 
         // Else, you can just make a hard turn
@@ -595,6 +610,8 @@ void PlatformerPackage3D::respawn() {
     // Reset variables
     currentVerticalSpeed = 0;
     currentConsecutiveGroundJump = 0;
+    currentGroundMovement = Vector3(0, 0, 0);
+    currentGroundInputDirection = Vector3(0, 0, 0);
     cancel_speed_force();
 
     // teleport

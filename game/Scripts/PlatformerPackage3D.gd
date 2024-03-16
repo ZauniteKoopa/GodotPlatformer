@@ -1,32 +1,37 @@
 extends PlatformerPackage3D
 
-# Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
-
 # Get animation tree
+@export var mainPlayerUi: Control
+@export var deathBlackoutTransitionTime: float
+@export var deathBlackoutDurationTime: float
+@export var reviveScreenTransitionTime: float
+@onready var inputEnabled: bool = true
 @onready var animation_tree: AnimationTree = $CollisionShape3D/zephAnimated/AnimationTree
 
 func _process(delta):
 	process_timers(delta)
-		
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var input_dir = Input.get_vector(
-		"move_left",
-		"move_right",
-		"move_backwards",
-		"move_forward"
-	)
 	
-	relative_run(input_dir, delta);
-	
-	if (Input.is_action_just_pressed("Jump")):
-		start_jump()
-	if (Input.is_action_just_released("Jump")):
-		cancel_jump()
+	# Only go in here for inputEnabled
+	if inputEnabled == true:
+		# Get the input direction and handle the movement/deceleration.
+		# As good practice, you should replace UI actions with custom gameplay actions.
+		var input_dir = Input.get_vector(
+			"move_left",
+			"move_right",
+			"move_backwards",
+			"move_forward"
+		)
 		
-	if (Input.is_action_just_pressed("dash")):
-		dash()
+		relative_run(input_dir, delta);
+		
+		if (Input.is_action_just_pressed("Jump")):
+			start_jump()
+		if (Input.is_action_just_released("Jump")):
+			cancel_jump()
+			
+		if (Input.is_action_just_pressed("dash")):
+			dash()
+		pass
 		
 	update_animation_parameters()
 	pass
@@ -50,5 +55,18 @@ func update_animation_parameters():
 
 
 func _on_death():
+	# black out immediately
+	inputEnabled = false
+	mainPlayerUi._transition_color_screen(Color.BLACK, deathBlackoutTransitionTime)
+	await get_tree().create_timer(deathBlackoutTransitionTime).timeout
+	
+	# Teleport to spawn point during blackout and wait out blackout duration
 	respawn()
+	await get_tree().create_timer(deathBlackoutDurationTime).timeout
+	
+	# wake up
+	mainPlayerUi._transition_color_screen(Color(0, 0, 0, 0), deathBlackoutTransitionTime)
+	await get_tree().create_timer(deathBlackoutTransitionTime).timeout
+	inputEnabled = true
+	
 	pass # Replace with function body.
