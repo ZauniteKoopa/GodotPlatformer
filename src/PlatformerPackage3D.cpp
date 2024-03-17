@@ -34,6 +34,7 @@ void PlatformerPackage3D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("is_skidding"), &PlatformerPackage3D::is_skidding);
     ClassDB::bind_method(D_METHOD("get_current_horizontal_speed"), &PlatformerPackage3D::get_current_horizontal_speed);
     ClassDB::bind_method(D_METHOD("on_ground_jump_timeout"), &PlatformerPackage3D::on_ground_jump_timeout);
+    ClassDB::bind_method(D_METHOD("get_current_walking_animation_speed"), &PlatformerPackage3D::get_current_walking_animation_speed);
 
     // Signals to bind
     ADD_SIGNAL(MethodInfo("jump_begin"));
@@ -68,7 +69,7 @@ PlatformerPackage3D::PlatformerPackage3D() {
     playerGravity = 5;
     gravityApexModifier = 0.5;
     apexSpeedDefinition = 1.5;
-    maxFallSpeed = 10;
+    maxFallSpeed = 12;
 
     grounded = false;
     currentVerticalSpeed = 0;
@@ -187,12 +188,24 @@ void PlatformerPackage3D::start_jump() {
         apply_speed_force(calculate_wall_jump_force(currentGroundInputDirection), wallJumpSpeedDuration);
         launch_jump(wallJumpHeight);
 
-    // If you have extra jumps left, launch_jump and increment
+    // If you have extra jumps left, launch_jump and increment. If consecurive jump timer, going, disable
     } else if (curExtraJumpsDone < maxExtraJumps && !doesBufferOverrideExtraJump()) {
         launch_jump(extraJumpHeight);
         cancel_speed_force();
         currentGroundMovement = Vector3(0, 0, 0);
         curExtraJumpsDone++;
+
+        // Disable consecutive ground jump
+        groundJumpLock.lock();
+        currentConsecutiveGroundJump = 0;
+        if (consecutiveGroundJumpTimer.is_valid()) {
+            consecutiveGroundJumpTimer->disconnect("timeout", groundJumpTimeoutListener);
+            consecutiveGroundJumpTimer->set_time_left(0);
+            consecutiveGroundJumpTimer.unref();
+        }
+
+        groundJumpLock.unlock();
+
 
     // Else, activate the buffer timer and initialize
     } else {
@@ -721,6 +734,9 @@ double PlatformerPackage3D::get_current_horizontal_speed() const {
 }
 
 
+double PlatformerPackage3D::get_current_walking_animation_speed() const {
+    return (get_current_horizontal_speed() - immediate_stop_speed) / (max_walking_speed - immediate_stop_speed);
+}
 
 
 // ------------------------------------------------

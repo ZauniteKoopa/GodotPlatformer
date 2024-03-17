@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://dh3qn6y4att5h"]
+[gd_scene load_steps=8 format=3 uid="uid://dh3qn6y4att5h"]
 
 [ext_resource type="PackedScene" uid="uid://dcwy0io0dfh0m" path="res://Prefabs/core_player_package.tscn" id="1_7le36"]
+[ext_resource type="PackedScene" uid="uid://cdxttr165quh7" path="res://Prefabs/trampoline.tscn" id="1_p1ljr"]
 [ext_resource type="PackedScene" uid="uid://bh5ia6w25v03o" path="res://Prefabs/checkpoint.tscn" id="2_x0lre"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_520i1"]
@@ -14,15 +15,6 @@ albedo_color = Color(0.505882, 0.278431, 0.101961, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rw3qs"]
 albedo_color = Color(0, 0.635294, 0.537255, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_dnrtp"]
-size = Vector3(1, 0.6, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_fowjm"]
-size = Vector3(1, 0.6, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_q3jya"]
-size = Vector3(1.25, 1, 1.25)
 
 [node name="TestLab" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0248103, 0.0438733, -0.0368707)
@@ -88,27 +80,7 @@ shape = SubResource("BoxShape3D_i8aj4")
 transform = Transform3D(-0.223233, -0.843157, 0.489135, 1.49012e-08, 0.501798, 0.864985, -0.974765, 0.193093, -0.112018, 11.5887, 12.351, 0)
 sky_mode = 1
 
-[node name="SpeedRamp" type="StaticBody3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 16.257, 5.00078, 7.37705)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="SpeedRamp"]
-transform = Transform3D(3, 0, 0, 0, 2.99999, -8.94068e-08, 0, 8.94068e-08, 2.99999, 0, 0, 0)
-shape = SubResource("BoxShape3D_dnrtp")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="SpeedRamp/CollisionShape3D"]
-mesh = SubResource("BoxMesh_fowjm")
-
-[node name="ForceArea" type="ForceArea" parent="SpeedRamp"]
-force_duration = 0.5
-force_magnitude = 20.0
-force_direction = Vector3(0, 1, 0)
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.645011, 0)
-collision_layer = 3
-collision_mask = 3
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="SpeedRamp/ForceArea"]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
-shape = SubResource("BoxShape3D_q3jya")
+[node name="Trampoline" parent="." instance=ExtResource("1_p1ljr")]
 
 [node name="CorePlayerPackage" parent="." instance=ExtResource("1_7le36")]
 
@@ -116,5 +88,3 @@ shape = SubResource("BoxShape3D_q3jya")
 
 [node name="Checkpoint2" parent="." instance=ExtResource("2_x0lre")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.16737, 4.0408, -6.40158)
-
-[connection signal="body_entered" from="SpeedRamp/ForceArea" to="SpeedRamp/ForceArea" method="on_body_enter"]

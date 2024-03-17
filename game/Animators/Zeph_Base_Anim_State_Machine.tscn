@@ -1,4 +1,4 @@
-[gd_scene load_steps=59 format=3 uid="uid://grqbovr18i83"]
+[gd_scene load_steps=61 format=3 uid="uid://grqbovr18i83"]
 
 [sub_resource type="Animation" id="Animation_i8j8w"]
 resource_name = "Dash"
@@ -2337,8 +2337,18 @@ animation = &"LedgeGrab"
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6ft2s"]
 animation = &"Skid"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_oy3fo"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6xefu"]
 animation = &"Walk"
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_uaath"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_5nn56"]
+graph_offset = Vector2(-214, 53)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_6xefu")
+nodes/Animation/position = Vector2(-100, 140)
+nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_uaath")
+nodes/TimeScale/position = Vector2(100, 140)
+node_connections = [&"TimeScale", 0, &"Animation", &"output", 0, &"TimeScale"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xj8qn"]
 animation = &"WallGrab"
@@ -2346,34 +2356,10 @@ animation = &"WallGrab"
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_p5ma1"]
 advance_mode = 2
 
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_kp7wv"]
-xfade_time = 0.2
-advance_mode = 2
-advance_condition = &"moving"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_48k4o"]
-xfade_time = 0.2
-advance_mode = 2
-advance_condition = &"idle"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1gp1h"]
-xfade_time = 0.1
-advance_mode = 2
-advance_condition = &"skidding"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tm22n"]
-xfade_time = 0.1
-advance_mode = 2
-advance_condition = &"moving"
-
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_cpfty"]
 xfade_time = 0.1
 advance_mode = 2
 advance_condition = &"idle"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pi7vq"]
-advance_mode = 2
-advance_condition = &"jumping"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dmapw"]
 advance_mode = 2
@@ -2384,10 +2370,6 @@ advance_mode = 2
 advance_condition = &"jumping"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1skfo"]
-advance_mode = 2
-advance_condition = &"falling"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_q8yd6"]
 advance_mode = 2
 advance_condition = &"falling"
 
@@ -2404,17 +2386,9 @@ advance_condition = &"falling"
 advance_mode = 2
 advance_condition = &"idle"
 
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pntp8"]
-advance_mode = 2
-advance_condition = &"moving"
-
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_lux1h"]
 advance_mode = 2
 advance_condition = &"idle"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pplbg"]
-advance_mode = 2
-advance_condition = &"moving"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_c0ndk"]
 advance_mode = 2
@@ -2428,16 +2402,7 @@ advance_condition = &"ledgeGrabbing"
 advance_mode = 2
 advance_condition = &"idle"
 
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_4wgnd"]
-advance_mode = 2
-advance_condition = &"moving"
-
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_v2e7u"]
-xfade_time = 0.05
-advance_mode = 2
-advance_condition = &"dashing"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_rj361"]
 xfade_time = 0.05
 advance_mode = 2
 advance_condition = &"dashing"
@@ -2469,11 +2434,6 @@ advance_condition = &"dashing"
 xfade_time = 0.05
 advance_mode = 2
 advance_condition = &"dashing"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tyolx"]
-xfade_time = 0.2
-advance_mode = 2
-advance_condition = &"moving"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_w24f2"]
 xfade_time = 0.2
@@ -2513,6 +2473,60 @@ advance_condition = &"skidding"
 advance_mode = 2
 advance_condition = &"ledgeGrabbing"
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ul23a"]
+xfade_time = 0.3
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_h8ogc"]
+xfade_time = 0.3
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_q56sd"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"skidding"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_safhb"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_hoebi"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"dashing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_31my1"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pjw6r"]
+xfade_time = 0.25
+advance_mode = 2
+advance_condition = &"falling"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_arooh"]
+xfade_time = 0.25
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_b6lyv"]
+advance_mode = 2
+advance_condition = &"jumping"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_hsfev"]
+xfade_time = 0.2
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dpuff"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"moving"
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_303lc"]
 states/Dash/node = SubResource("AnimationNodeAnimation_2h64t")
 states/Dash/position = Vector2(385, -174)
@@ -2528,12 +2542,12 @@ states/LedgeGrab/position = Vector2(640, 258)
 states/Skid/node = SubResource("AnimationNodeAnimation_6ft2s")
 states/Skid/position = Vector2(-178, -117)
 states/Start/position = Vector2(-25, 212)
-states/Walk/node = SubResource("AnimationNodeAnimation_oy3fo")
-states/Walk/position = Vector2(60, -42)
+states/WalkTree/node = SubResource("AnimationNodeBlendTree_5nn56")
+states/WalkTree/position = Vector2(122, -20)
 states/WallGrab/node = SubResource("AnimationNodeAnimation_xj8qn")
-states/WallGrab/position = Vector2(728, -3)
-transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_p5ma1"), "Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_kp7wv"), "Walk", "Idle", SubResource("AnimationNodeStateMachineTransition_48k4o"), "Walk", "Skid", SubResource("AnimationNodeStateMachineTransition_1gp1h"), "Skid", "Walk", SubResource("AnimationNodeStateMachineTransition_tm22n"), "Skid", "Idle", SubResource("AnimationNodeStateMachineTransition_cpfty"), "Walk", "JumpUp", SubResource("AnimationNodeStateMachineTransition_pi7vq"), "Idle", "JumpUp", SubResource("AnimationNodeStateMachineTransition_dmapw"), "Skid", "JumpUp", SubResource("AnimationNodeStateMachineTransition_rg5uu"), "Skid", "JumpDown", SubResource("AnimationNodeStateMachineTransition_1skfo"), "Walk", "JumpDown", SubResource("AnimationNodeStateMachineTransition_q8yd6"), "Idle", "JumpDown", SubResource("AnimationNodeStateMachineTransition_wfu81"), "JumpUp", "JumpDown", SubResource("AnimationNodeStateMachineTransition_8c1wl"), "JumpUp", "Idle", SubResource("AnimationNodeStateMachineTransition_hwjlb"), "JumpUp", "Walk", SubResource("AnimationNodeStateMachineTransition_pntp8"), "JumpDown", "Idle", SubResource("AnimationNodeStateMachineTransition_lux1h"), "JumpDown", "Walk", SubResource("AnimationNodeStateMachineTransition_pplbg"), "JumpDown", "WallGrab", SubResource("AnimationNodeStateMachineTransition_c0ndk"), "JumpDown", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_1561j"), "WallGrab", "Idle", SubResource("AnimationNodeStateMachineTransition_hh4iy"), "WallGrab", "Walk", SubResource("AnimationNodeStateMachineTransition_4wgnd"), "Skid", "Dash", SubResource("AnimationNodeStateMachineTransition_v2e7u"), "Walk", "Dash", SubResource("AnimationNodeStateMachineTransition_rj361"), "LedgeGrab", "JumpUp", SubResource("AnimationNodeStateMachineTransition_ji6g1"), "WallGrab", "JumpUp", SubResource("AnimationNodeStateMachineTransition_m51xc"), "JumpDown", "Dash", SubResource("AnimationNodeStateMachineTransition_gxcgw"), "Idle", "Dash", SubResource("AnimationNodeStateMachineTransition_hovx6"), "WallGrab", "Dash", SubResource("AnimationNodeStateMachineTransition_gl3uq"), "JumpUp", "Dash", SubResource("AnimationNodeStateMachineTransition_b57sn"), "Dash", "Walk", SubResource("AnimationNodeStateMachineTransition_tyolx"), "Dash", "JumpDown", SubResource("AnimationNodeStateMachineTransition_w24f2"), "Dash", "WallGrab", SubResource("AnimationNodeStateMachineTransition_c1xd3"), "Dash", "Idle", SubResource("AnimationNodeStateMachineTransition_p6vjl"), "Dash", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_gkbf5"), "JumpUp", "WallGrab", SubResource("AnimationNodeStateMachineTransition_7iktj"), "JumpUp", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_t7cps"), "JumpDown", "JumpUp", SubResource("AnimationNodeStateMachineTransition_0xxgf"), "Dash", "Skid", SubResource("AnimationNodeStateMachineTransition_txjxm"), "WallGrab", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_4bd8l")]
-graph_offset = Vector2(-53, 66)
+states/WallGrab/position = Vector2(729, 54)
+transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_p5ma1"), "Skid", "Idle", SubResource("AnimationNodeStateMachineTransition_cpfty"), "Idle", "JumpUp", SubResource("AnimationNodeStateMachineTransition_dmapw"), "Skid", "JumpUp", SubResource("AnimationNodeStateMachineTransition_rg5uu"), "Skid", "JumpDown", SubResource("AnimationNodeStateMachineTransition_1skfo"), "Idle", "JumpDown", SubResource("AnimationNodeStateMachineTransition_wfu81"), "JumpUp", "JumpDown", SubResource("AnimationNodeStateMachineTransition_8c1wl"), "JumpUp", "Idle", SubResource("AnimationNodeStateMachineTransition_hwjlb"), "JumpDown", "Idle", SubResource("AnimationNodeStateMachineTransition_lux1h"), "JumpDown", "WallGrab", SubResource("AnimationNodeStateMachineTransition_c0ndk"), "JumpDown", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_1561j"), "WallGrab", "Idle", SubResource("AnimationNodeStateMachineTransition_hh4iy"), "Skid", "Dash", SubResource("AnimationNodeStateMachineTransition_v2e7u"), "LedgeGrab", "JumpUp", SubResource("AnimationNodeStateMachineTransition_ji6g1"), "WallGrab", "JumpUp", SubResource("AnimationNodeStateMachineTransition_m51xc"), "JumpDown", "Dash", SubResource("AnimationNodeStateMachineTransition_gxcgw"), "Idle", "Dash", SubResource("AnimationNodeStateMachineTransition_hovx6"), "WallGrab", "Dash", SubResource("AnimationNodeStateMachineTransition_gl3uq"), "JumpUp", "Dash", SubResource("AnimationNodeStateMachineTransition_b57sn"), "Dash", "JumpDown", SubResource("AnimationNodeStateMachineTransition_w24f2"), "Dash", "WallGrab", SubResource("AnimationNodeStateMachineTransition_c1xd3"), "Dash", "Idle", SubResource("AnimationNodeStateMachineTransition_p6vjl"), "Dash", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_gkbf5"), "JumpUp", "WallGrab", SubResource("AnimationNodeStateMachineTransition_7iktj"), "JumpUp", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_t7cps"), "JumpDown", "JumpUp", SubResource("AnimationNodeStateMachineTransition_0xxgf"), "Dash", "Skid", SubResource("AnimationNodeStateMachineTransition_txjxm"), "WallGrab", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_4bd8l"), "Idle", "WalkTree", SubResource("AnimationNodeStateMachineTransition_ul23a"), "WalkTree", "Idle", SubResource("AnimationNodeStateMachineTransition_h8ogc"), "WalkTree", "Skid", SubResource("AnimationNodeStateMachineTransition_q56sd"), "Skid", "WalkTree", SubResource("AnimationNodeStateMachineTransition_safhb"), "WalkTree", "Dash", SubResource("AnimationNodeStateMachineTransition_hoebi"), "Dash", "WalkTree", SubResource("AnimationNodeStateMachineTransition_31my1"), "WalkTree", "JumpDown", SubResource("AnimationNodeStateMachineTransition_pjw6r"), "JumpDown", "WalkTree", SubResource("AnimationNodeStateMachineTransition_arooh"), "WalkTree", "JumpUp", SubResource("AnimationNodeStateMachineTransition_b6lyv"), "JumpUp", "WalkTree", SubResource("AnimationNodeStateMachineTransition_hsfev"), "WallGrab", "WalkTree", SubResource("AnimationNodeStateMachineTransition_dpuff")]
+graph_offset = Vector2(-243, -35)
 
 [node name="AnimationTree" type="AnimationTree"]
 libraries = {
@@ -2549,3 +2563,4 @@ parameters/conditions/ledgeGrabbing = false
 parameters/conditions/moving = false
 parameters/conditions/skidding = false
 parameters/conditions/wallGrabbing = false
+parameters/WalkTree/TimeScale/scale = 1.0

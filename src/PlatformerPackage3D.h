@@ -179,6 +179,7 @@ class PlatformerPackage3D : public CharacterBody3D {
         bool is_ledge_grabbing() const;
         double get_current_vertical_speed() const;
         double get_current_horizontal_speed() const;
+        double get_current_walking_animation_speed() const;
 
 
         // --------------------------
