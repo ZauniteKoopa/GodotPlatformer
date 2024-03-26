@@ -19,6 +19,7 @@ class DynamicCameraPivot : public Node3D {
 
         // Main transitioning flags
         bool isTransitioningToGroundHeight = false;       // main flag for transitioning to ground height
+        bool isYawTransitioning = false;                  // Main flag for when yaw is transitioning
 
         // Main function to Y pivot transition quickly
         double transitionHeightSpeed = 5;           // Transition speed

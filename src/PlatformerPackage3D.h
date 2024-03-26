@@ -18,12 +18,14 @@ class PlatformerPackage3D : public CharacterBody3D {
 
     private:
         // Horizontal movement
-        double max_walking_speed;       // Max walking speed given no additional force is added (MAX)
-        double walking_air_reduction;   // Movement reduction when in the air
-        double starting_walking_speed;  // The starting walking speed when you first walk 
-        double walking_acceleration;    // The rate at which you accelerate to max speed as you move
-        double walking_deceleration;    // The rate at which you decelerate when not inputing but your character moves
-        double immediate_stop_speed;    //  The minimum speed before you stop to a stand still
+        double max_walking_speed = 10;       // Max walking speed given no additional force is added (MAX)
+        double walking_air_reduction = 0.7;   // Movement reduction when in the air
+        double starting_walking_speed = 3;  // The starting walking speed when you first walk 
+        double walking_acceleration = 750;    // The rate at which you accelerate to max speed as you move
+        double walking_deceleration = 400;    // The rate at which you decelerate when not inputing but your character moves
+        double immediate_stop_speed = 3;    //  The minimum speed before you stop to a stand still
+        double turning_angle = 30;                  // The angle the player needs to move in to be considered "turning" (between 90 - x and 90 + x)
+        double turning_acceleration_multiplier = 7; // Multiplier applied to acceleration to make turns sharp (Increase to make turning sharper. decrease to make it wider)
         Vector3 currentGroundInputDirection;
         Vector3 currentGroundMovement;
 
@@ -40,15 +42,15 @@ class PlatformerPackage3D : public CharacterBody3D {
         class PlatformerFeetSensor* player_feet;
 
         // Vertical movement
-        double longJumpHeight;          // Max jump height
-        double shortJumpHeight;         // Tap jump height
-        double skidJumpHeight;          // Skid jump height
-        int maxExtraJumps;                 // Number of extra jumps afforded
-        double extraJumpHeight;         // The height of the double jump
-        double playerGravity;           // Gravity affecting the player, affects how heavy a jump feels
-        double gravityApexModifier;     // Apex modifiers when a player is at the apex of the jump
-        double apexSpeedDefinition;     // Vertical speed at which the player should be in to be considered in the apex of a jump
-        double maxFallSpeed;            // Max fall speed
+        double longJumpHeight = 2.5;          // Max jump height
+        double shortJumpHeight = 1;         // Tap jump height
+        double skidJumpHeight = 3.5;          // Skid jump height
+        int maxExtraJumps = 1;                 // Number of extra jumps afforded
+        double extraJumpHeight = 1.2;         // The height of the double jump
+        double playerGravity = 5;           // Gravity affecting the player, affects how heavy a jump feels
+        double gravityApexModifier = 0.5;     // Apex modifiers when a player is at the apex of the jump
+        double apexSpeedDefinition = 1.5;     // Vertical speed at which the player should be in to be considered in the apex of a jump
+        double maxFallSpeed = 12;            // Max fall speed
         
         int curExtraJumpsDone;
 
@@ -57,10 +59,11 @@ class PlatformerPackage3D : public CharacterBody3D {
         int currentConsecutiveGroundJump = 0;               // Current consecutive jump
         int maxConsecutiveGroundJumps = 3;                  // Max number of consecutive jump
         double groundJumpHeightIncrease = 1.5;              // Jump height increase
-        const double GROUND_JUMP_TIMER_DURATION = 0.4;      // Duration of ground jump timer (you must jump within the next X seconds to get a consecutive jump)
+        const double GROUND_JUMP_TIMER_DURATION = 0.05;      // Duration of ground jump timer (you must jump within the next X seconds to get a consecutive jump)
         Ref<SceneTreeTimer> consecutiveGroundJumpTimer;     // Main timer to track when on ground
         Callable groundJumpTimeoutListener;                 // Main listener for ground jump timer timeout
         std::mutex groundJumpLock;                          // Ground jump lock
+        bool inConsecutiveJump = false;                     // Flag for whether or not you're in a consecutive jump
         
         // Dashing
         int maxNumAirDashes = 1;                   // maximum number of dashes you can do in the air
@@ -80,16 +83,16 @@ class PlatformerPackage3D : public CharacterBody3D {
         double maxWallGrabAngleRequirement; // The maximum angle to hang on to a wall (a straight wall is 0 degrees)
 
         // Ledge grab handling
-        double ledgeGrabVerticalReach;      // How far up the player could reach for a ledge
-        double ledgeGrabHorizontalReach;    // How far forward the player could reach for a ledge
-        double autoGrabVerticalOffset;      // The offset to snap to from the ledge
-        bool grabbingLedge;
+        double ledgeGrabVerticalReach = 0.2;      // How far up the player could reach for a ledge
+        double ledgeGrabHorizontalReach = 0.5;    // How far forward the player could reach for a ledge
+        double autoGrabVerticalOffset = 0.3;      // The offset to snap to from the ledge
+        bool grabbingLedge = false;
 
-        bool grounded;
-        double currentVerticalSpeed;
+        bool grounded = false;
+        double currentVerticalSpeed = 0;
 
         // Jump Buffering
-        double jumpBufferDuration;          // How long the jump buffer time is
+        double jumpBufferDuration = 0.01;          // How long the jump buffer time is
         BufferTimer* jumpBufferTimer;
         double bufferedJumpHeight;
 
@@ -104,14 +107,13 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Applied forces
         std::mutex appliedSpeedLock;                 // Lock for applying speed forces
         Vector3 appliedSpeedVector;                  // Current applied speed force vector
-        double appliedSpeedDecayRate;                // Once flag is off, rate at which speed decays
+        double appliedSpeedDecayRate = 20;                // Once flag is off, rate at which speed decays
         Ref<SceneTreeTimer> appliedSpeedTimer;       // current applied speed force timer
         bool appliedSpeedActive = false;             // Flag for if applied Speed force is active
         Callable appliedSpeedTimeoutListener;        // Main listener for appliedSeedTimeout
 
         
         // Respawn system
-        Vector3 currentCheckpointPosition;
         double deathPlaneHeight = -6;
         bool dying = false;
 
@@ -202,6 +204,12 @@ class PlatformerPackage3D : public CharacterBody3D {
         void set_immediate_stop_speed(const double p_value);
         double get_immediate_stop_speed() const;
 
+        void set_turning_angle(const double p_value);
+        double get_turning_angle() const;
+
+        void set_turning_acceleration_multiplier(const double p_value);
+        double get_turning_acceleration_multiplier() const;
+
         // Air reduction on walking
         void set_walking_air_reduction(const double reduction);
         double get_walking_air_reduction() const;
@@ -227,6 +235,9 @@ class PlatformerPackage3D : public CharacterBody3D {
 
         void set_skid_jump_height(const double p_value);
         double get_skid_jump_height() const;
+
+        void set_max_fall_speed(const double p_value);
+        double get_max_fall_speed() const;
 
         // Extra jumps
         void set_max_extra_jumps(const int p_value);
@@ -320,6 +331,14 @@ class PlatformerPackage3D : public CharacterBody3D {
 
         void set_ground_jump_height_increase(const double p_value);
         double get_ground_jump_height_increase() const;
+
+
+        // -------------------------------
+        // Death Properties
+        // -------------------------------
+
+        void set_death_plane_height(const double p_value);
+        double get_death_plane_height() const;
 
     private:
         // Initializers

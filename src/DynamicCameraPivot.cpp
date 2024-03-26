@@ -69,7 +69,9 @@ void DynamicCameraPivot::on_landed() {
     finalYPosition = target->get_global_position()[Vector3::AXIS_Y];
     heightTransitionTimer = 0;
     transitionDuration = Math::abs(finalYPosition - currentYPivot) / transitionHeightSpeed;
+
     isTransitioningToGroundHeight = true;
+    isYawTransitioning = true;
 }
 
 
@@ -129,17 +131,27 @@ void DynamicCameraPivot::rotate_camera(double deltaX, double deltaY) {
 
 // Main helper function to get transitioning yaw
 double DynamicCameraPivot::get_transitioning_yaw(double delta) {
-    double targetYaw = yaw + get_yaw_adjustment();
-    double currentYaw = get_global_basis().get_euler()[Vector3::AXIS_X];
-    double yawTransitionDelta = angleTransitionSpeed * delta;
+    double currentYawAdjustment = get_yaw_adjustment();
 
-    // If distance between current yaw and target yaw is less than delta, just return target yaw
-    if (Math::abs(targetYaw - currentYaw) <= yawTransitionDelta) {
-        return targetYaw;
+    if (isYawTransitioning || (currentYawAdjustment > 0.01 || currentYawAdjustment < -0.01)) {
+        double targetYaw = yaw + get_yaw_adjustment();
+        double currentYaw = get_global_basis().get_euler()[Vector3::AXIS_X];
+        double yawTransitionDelta = angleTransitionSpeed * delta;
 
-    // Else, return a transitioning yaw
+        // If distance between current yaw and target yaw is less than delta, just return target yaw
+        if (Math::abs(targetYaw - currentYaw) <= yawTransitionDelta) {
+            if (isYawTransitioning) {
+                isYawTransitioning = false;
+            }
+
+            return targetYaw;
+
+        // Else, return a transitioning yaw
+        } else {
+            return currentYaw + (Math::sign(targetYaw - currentYaw) * yawTransitionDelta);
+        }
     } else {
-        return currentYaw + (Math::sign(targetYaw - currentYaw) * yawTransitionDelta);
+        return yaw;
     }
 }
 

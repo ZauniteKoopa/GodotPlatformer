@@ -50,49 +50,17 @@ void PlatformerPackage3D::_bind_methods() {
 // General constructor
 PlatformerPackage3D::PlatformerPackage3D() {
     // Starting grounded movement
-    max_walking_speed = 10;
-    starting_walking_speed = 3;
     currentGroundInputDirection = Vector3(0, 0, 0);
     currentGroundMovement = Vector3(0, 0, 0);
-    walking_acceleration = 750;
-    walking_deceleration = 400;
-    immediate_stop_speed = 3;
-
-    // Starting vertical movement
-    longJumpHeight = 2.5;
-    skidJumpHeight = 3.5;
-    shortJumpHeight = 1;
-    extraJumpHeight = 1;
-
-    maxExtraJumps = 1;
-    curExtraJumpsDone = 0;
-    playerGravity = 5;
-    gravityApexModifier = 0.5;
-    apexSpeedDefinition = 1.5;
-    maxFallSpeed = 12;
-
-    grounded = false;
-    currentVerticalSpeed = 0;
 
     // Triple jump
     groundJumpTimeoutListener = Callable(this, "on_ground_jump_timeout");
 
     // Main jump buffer
-    jumpBufferDuration = 0.01;
     jumpBufferTimer = new BufferTimer(jumpBufferDuration);
 
-    // Ledge grab variables
-    grabbingLedge = false;
-    ledgeGrabHorizontalReach = 0.5;
-    ledgeGrabVerticalReach = 0.2;
-    maxWallGrabVerticalSpeed = 1;
-    maxWallGrabAngleRequirement = 10;
-    autoGrabVerticalOffset = 0.3;
-
     // Applied forces
-    appliedSpeedDecayRate = 20;
     appliedSpeedVector = Vector3(0, 0, 0);
-    appliedSpeedActive = false;
     appliedSpeedTimeoutListener = Callable(this, "on_speed_force_expire");
 
     // Dashing
@@ -114,8 +82,6 @@ PlatformerPackage3D::~PlatformerPackage3D() {
 
 // Main function that plays on game start
 void PlatformerPackage3D::_enter_tree() {
-    currentCheckpointPosition = get_global_position();
-
     initialize_current_node_pointers();
     currentVerticalSpeed = 0;
 }
@@ -219,7 +185,7 @@ void PlatformerPackage3D::start_jump() {
 
 // Main function to cancel a jump in midair 
 void PlatformerPackage3D::cancel_jump() {
-    if (!grounded) {
+    if (!grounded && inConsecutiveJump) {
         double shortJumpVelocity = calculate_starting_jump_velocity(playerGravity, shortJumpHeight);
         currentVerticalSpeed = Math::min(currentVerticalSpeed, shortJumpVelocity);
 
@@ -419,6 +385,7 @@ double PlatformerPackage3D::get_current_ground_jump_height() {
 
     // Calculate current jump height
     double groundJumpHeight = longJumpHeight + (groundJumpHeightIncrease * currentConsecutiveGroundJump);
+    inConsecutiveJump = currentConsecutiveGroundJump == 0;
 
     // Update flag variables and remove timer
     currentConsecutiveGroundJump = (currentConsecutiveGroundJump + 1) % maxConsecutiveGroundJumps;
@@ -550,14 +517,14 @@ Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
         if (currentGroundMovement.length() > immediate_stop_speed) {
             // Check if you're turning
             double dirDeltaAngle =  Math::rad_to_deg(currentGroundMovement.angle_to(currentGroundInputDirection));
-            bool isTurning = (dirDeltaAngle > 60 && dirDeltaAngle < 120);
+            bool isTurning = (dirDeltaAngle > (90 - turning_angle) && dirDeltaAngle < (90 + turning_angle));
 
             // If turning, adjust speed and increase acceleration for sharper turns, a minimum radius: R = V^2 / A
             if (isTurning) {
                 double currentSpeed = currentGroundMovement.length();
 
                 // Adjust currentGroundMovement direction but not speed
-                currentGroundMovement += (delta * delta * 7 * walking_acceleration * currentGroundInputDirection);
+                currentGroundMovement += (delta * delta * turning_acceleration_multiplier * walking_acceleration * currentGroundInputDirection);
                 currentGroundMovement = currentGroundMovement.normalized() * currentSpeed;
 
             // Else, just do linear accelelration
@@ -789,6 +756,24 @@ double PlatformerPackage3D::get_immediate_stop_speed() const {
 }
 
 
+void PlatformerPackage3D::set_turning_angle(const double p_value) {
+    turning_angle = p_value;
+}
+
+double PlatformerPackage3D::get_turning_angle() const {
+    return turning_angle;
+}
+
+
+void PlatformerPackage3D::set_turning_acceleration_multiplier(const double p_value) {
+    turning_acceleration_multiplier = p_value;
+}
+
+double PlatformerPackage3D::get_turning_acceleration_multiplier() const {
+    return turning_acceleration_multiplier;
+}
+
+
 // Air reduction on walking
 void PlatformerPackage3D::set_walking_air_reduction(const double reduction) {
     walking_air_reduction = reduction;
@@ -872,6 +857,16 @@ void PlatformerPackage3D::set_skid_jump_height(const double p_value) {
 
 double PlatformerPackage3D::get_skid_jump_height() const {
     return skidJumpHeight;
+}
+
+
+// Fall speed
+void PlatformerPackage3D::set_max_fall_speed(const double p_value) {
+    maxFallSpeed = p_value;
+}
+
+double PlatformerPackage3D::get_max_fall_speed() const {
+    return maxFallSpeed;
 }
 
 
@@ -1101,6 +1096,19 @@ double PlatformerPackage3D::get_ground_jump_height_increase() const {
 }
 
 
+// -------------------------------
+// Death properties
+// -------------------------------
+
+void PlatformerPackage3D::set_death_plane_height(const double p_value) {
+    deathPlaneHeight = p_value;
+}
+
+double PlatformerPackage3D::get_death_plane_height() const {
+    return deathPlaneHeight;
+}
+
+
 
 // General call to bind properties from the parent bind methods
 void PlatformerPackage3D::bind_properties() {
@@ -1239,4 +1247,20 @@ void PlatformerPackage3D::bind_properties() {
     ClassDB::bind_method(D_METHOD("get_ground_jump_height_increase"), &PlatformerPackage3D::get_ground_jump_height_increase);
     ClassDB::bind_method(D_METHOD("set_ground_jump_height_increase"), &PlatformerPackage3D::set_ground_jump_height_increase);
     ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "consecutive_ground_jumps/ground_jump_height_increase"), "set_ground_jump_height_increase", "get_ground_jump_height_increase");
+
+    ClassDB::bind_method(D_METHOD("get_max_fall_speed"), &PlatformerPackage3D::get_max_fall_speed);
+    ClassDB::bind_method(D_METHOD("set_max_fall_speed"), &PlatformerPackage3D::set_max_fall_speed);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "jumping/max_fall_speed"), "set_max_fall_speed", "get_max_fall_speed");
+
+    ClassDB::bind_method(D_METHOD("get_death_plane_height"), &PlatformerPackage3D::get_death_plane_height);
+    ClassDB::bind_method(D_METHOD("set_death_plane_height"), &PlatformerPackage3D::set_death_plane_height);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "death/death_plane_height"), "set_death_plane_height", "get_death_plane_height");
+
+    ClassDB::bind_method(D_METHOD("get_turning_angle"), &PlatformerPackage3D::get_turning_angle);
+    ClassDB::bind_method(D_METHOD("set_turning_angle"), &PlatformerPackage3D::set_turning_angle);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "walking/turning_angle"), "set_turning_angle", "get_turning_angle");
+
+    ClassDB::bind_method(D_METHOD("get_turning_acceleration_multiplier"), &PlatformerPackage3D::get_turning_acceleration_multiplier);
+    ClassDB::bind_method(D_METHOD("set_turning_acceleration_multiplier"), &PlatformerPackage3D::set_turning_acceleration_multiplier);
+    ClassDB::add_property("PlatformerPackage3D", PropertyInfo(Variant::FLOAT, "walking/turning_acceleration_multiplier"), "set_turning_acceleration_multiplier", "get_turning_acceleration_multiplier");
 }
