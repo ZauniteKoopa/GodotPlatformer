@@ -5,9 +5,11 @@ extends PlatformerPackage3D
 @export var deathBlackoutTransitionTime: float
 @export var deathBlackoutDurationTime: float
 @export var reviveScreenTransitionTime: float
+@export var spawnInAnimationTime: float
 @onready var inputEnabled: bool = true
 @onready var animation_tree: AnimationTree = $CollisionShape3D/zephAnimated/AnimationTree
 @onready var animation_player: AnimationPlayer = $CollisionShape3D/zephAnimated/AnimationPlayer
+var spawningIn = false
 
 func _process(delta):
 	process_timers(delta)
@@ -41,7 +43,7 @@ func _process(delta):
 func update_animation_parameters(delta: float):
 	var isMoving = get_current_horizontal_speed() > 0.01
 	var isJumpingUp = get_current_vertical_speed() > 0
-	var doingOverridingAction = is_ledge_grabbing() or is_wall_grabbing() or is_dashing()
+	var doingOverridingAction = is_ledge_grabbing() or is_wall_grabbing() or is_dashing() or spawningIn
 	var skidDashing = is_skidding() && is_dashing() && is_grounded()
 	
 	# Set animation transition variables
@@ -53,9 +55,13 @@ func update_animation_parameters(delta: float):
 	animation_tree["parameters/conditions/wallGrabbing"] = is_wall_grabbing()
 	animation_tree["parameters/conditions/ledgeGrabbing"] = is_ledge_grabbing()
 	animation_tree["parameters/conditions/dashing"] = is_dashing() and !skidDashing
+	animation_tree["parameters/conditions/spawning"] = spawningIn
 	
 	# Set animation speed
 	animation_tree["parameters/WalkTree/TimeScale/scale"] = get_current_walking_animation_speed()
+	
+	# Set jump
+	animation_tree["parameters/JumpUp/doubleJump/transition_request"] = get_current_ground_jump_number()
 	pass
 
 
@@ -67,11 +73,14 @@ func _on_death():
 	
 	# Teleport to spawn point during blackout and wait out blackout duration
 	respawn()
+	spawningIn = true
 	await get_tree().create_timer(deathBlackoutDurationTime).timeout
 	
 	# wake up
 	mainPlayerUi._transition_color_screen(Color(0, 0, 0, 0), deathBlackoutTransitionTime)
 	await get_tree().create_timer(deathBlackoutTransitionTime).timeout
+	await get_tree().create_timer(spawnInAnimationTime - deathBlackoutDurationTime - deathBlackoutTransitionTime).timeout
+	spawningIn = false
 	inputEnabled = true
 	
 	pass # Replace with function body.

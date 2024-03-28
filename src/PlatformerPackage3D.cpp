@@ -35,6 +35,7 @@ void PlatformerPackage3D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_current_horizontal_speed"), &PlatformerPackage3D::get_current_horizontal_speed);
     ClassDB::bind_method(D_METHOD("on_ground_jump_timeout"), &PlatformerPackage3D::on_ground_jump_timeout);
     ClassDB::bind_method(D_METHOD("get_current_walking_animation_speed"), &PlatformerPackage3D::get_current_walking_animation_speed);
+    ClassDB::bind_method(D_METHOD("get_current_ground_jump_number"), &PlatformerPackage3D::get_current_ground_jump_number);
 
     // Signals to bind
     ADD_SIGNAL(MethodInfo("jump_begin"));
@@ -120,6 +121,9 @@ void PlatformerPackage3D::_physics_process(double delta) {
                 currentGroundMovement = Vector3(0, 0, 0);
             }
 
+            // Set consecutive jump to 0
+            currentConsecutiveGroundJump = 0;
+
         // Else, set grabbingWall to false
         } else {
             grabbingWall = false;
@@ -144,6 +148,9 @@ void PlatformerPackage3D::_physics_process(double delta) {
 
 // Main function to start a jump
 void PlatformerPackage3D::start_jump() {
+    // Set jump type flag
+    didGroundJump = grounded;
+
     // If already grounded, jump immediately
     if (grounded || grabbingLedge) {
         double curJumpHeight = (grounded && is_skidding()) ? skidJumpHeight : get_current_ground_jump_height();
@@ -430,6 +437,7 @@ void PlatformerPackage3D::on_landed() {
     // If jump buffering still active, just launch jump and cancel jump
     if (jumpBufferTimer->isRunning()) {
         launch_jump(Math::max(bufferedJumpHeight, shortJumpHeight + 0.5));
+        didGroundJump = true;
         jumpBufferTimer->cancel();
 
     // Else, just land on the ground and trigger consecutive groundJump timer
@@ -703,6 +711,12 @@ double PlatformerPackage3D::get_current_horizontal_speed() const {
 
 double PlatformerPackage3D::get_current_walking_animation_speed() const {
     return (get_current_horizontal_speed() - immediate_stop_speed) / (max_walking_speed - immediate_stop_speed);
+}
+
+
+int PlatformerPackage3D::get_current_ground_jump_number() const {
+    // If consecutive ground jump is 0, just use default jump. 
+    return (!didGroundJump) ? 0 : (currentConsecutiveGroundJump - 1 + maxConsecutiveGroundJumps) % maxConsecutiveGroundJumps;
 }
 
 

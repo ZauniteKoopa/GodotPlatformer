@@ -54,6 +54,9 @@ class PlatformerPackage3D : public CharacterBody3D {
         
         int curExtraJumpsDone;
 
+        // Flags for jump type (will turn to enum)
+        bool didGroundJump = false;
+
 
         // Ground triple jump
         int currentConsecutiveGroundJump = 0;               // Current consecutive jump
@@ -182,6 +185,7 @@ class PlatformerPackage3D : public CharacterBody3D {
         double get_current_vertical_speed() const;
         double get_current_horizontal_speed() const;
         double get_current_walking_animation_speed() const;
+        int get_current_ground_jump_number() const;
 
 
         // --------------------------
