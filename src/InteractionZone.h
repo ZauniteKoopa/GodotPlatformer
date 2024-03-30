@@ -3,6 +3,7 @@
 
 #include <godot_cpp/classes/area3d.hpp>
 #include <unordered_set>
+#include <mutex>
 #include "Interactable.h"
 
 namespace godot {
@@ -10,8 +11,11 @@ class InteractionZone : public Area3D {
     GDCLASS(InteractionZone, Area3D)
 
     std::unordered_set<Interactable*> nearbyInteractables;
+    std::mutex interactableProximityLock;
     Callable interactableDestroyedListener;
+    Callable interactionSequenceEndListener;
     Interactable* curTarget = nullptr;
+    bool canInteract = true;
 
     protected:
         void static _bind_methods();
@@ -36,7 +40,11 @@ class InteractionZone : public Area3D {
 
 
         // Main event handler for when interactable is destroyed
-        void on_interactable_destroyed();
+        void on_interactable_destroyed(Node* interactable);
+
+
+        // Main event handler for when interaction sequence ends
+        void on_interaction_sequence_end(Node* interactable);
 
     private:
         Interactable* get_nearest_interactable();
