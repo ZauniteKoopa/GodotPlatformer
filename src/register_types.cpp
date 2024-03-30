@@ -5,6 +5,8 @@
 #include "SpotShadow.h"
 #include "DynamicCameraPivot.h"
 #include "ForceArea.h"
+#include "Interactable.h"
+#include "InteractionZone.h"
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
@@ -22,6 +24,8 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<SpotShadow>();
 	ClassDB::register_class<DynamicCameraPivot>();
 	ClassDB::register_class<ForceArea>();
+	ClassDB::register_class<InteractionZone>();
+	ClassDB::register_class<Interactable>();
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {
