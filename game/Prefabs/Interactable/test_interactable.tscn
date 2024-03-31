@@ -1,0 +1,37 @@
+[gd_scene load_steps=7 format=3 uid="uid://bg1avvb6cxaog"]
+
+[ext_resource type="Script" path="res://Scripts/Interactable/TestInteractable.gd" id="1_65hlm"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uunvt"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ckpey"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j0ihl"]
+resource_local_to_scene = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_4iw0v"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_boixt"]
+albedo_color = Color(0, 0.854902, 0.45098, 1)
+
+[node name="TestInteractable2" type="Interactable"]
+indicator_path = NodePath("Indicator")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.3386, 5.01382, 10.8689)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("1_65hlm")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_uunvt")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("BoxMesh_ckpey")
+surface_material_override/0 = SubResource("StandardMaterial3D_j0ihl")
+
+[node name="Indicator" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.56225, 0)
+visible = false
+mesh = SubResource("SphereMesh_4iw0v")
+surface_material_override/0 = SubResource("StandardMaterial3D_boixt")
+
+[connection signal="interaction_sequence_start" from="." to="." method="interact_behavior"]

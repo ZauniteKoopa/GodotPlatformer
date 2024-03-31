@@ -1,6 +1,7 @@
 #include "InteractionZone.h"
 
 #include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/classes/input.hpp>
 
@@ -31,28 +32,30 @@ InteractionZone::~InteractionZone() {
 
 // Main process function for highlighting
 void InteractionZone::_process(double delta) {
-    // Get current interactable for this frame and compare with current interactable for previous frame
-    Interactable* newTarget = get_nearest_interactable();
+    if (!Engine::get_singleton()->is_editor_hint()) {
+        // Get current interactable for this frame and compare with current interactable for previous frame
+        Interactable* newTarget = get_nearest_interactable();
 
-    // If they're not the same, change the highlighting
-    if (newTarget != curTarget) {
-        if (newTarget != nullptr) {
-            newTarget->highlight();
+        // If they're not the same, change the highlighting
+        if (newTarget != curTarget) {
+            if (newTarget != nullptr) {
+                newTarget->highlight();
+            }
+
+            if (curTarget != nullptr) {
+                curTarget->remove_highlight();
+            }
         }
 
-        if (curTarget != nullptr) {
-            curTarget->remove_highlight();
+        // Update curTarget
+        curTarget = newTarget;
+
+        // Input handling
+        if (Input::get_singleton()->is_action_just_pressed("interact")) {
+            interact_with_target();
         }
+
     }
-
-    // Update curTarget
-    curTarget = newTarget;
-
-    // Input handling
-    if (Input::get_singleton()->is_action_just_pressed("interact")) {
-        interact_with_target();
-    }
-
 }
 
 

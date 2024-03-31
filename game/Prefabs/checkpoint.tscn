@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bh5ia6w25v03o"]
+[gd_scene load_steps=9 format=3 uid="uid://bh5ia6w25v03o"]
 
 [ext_resource type="Script" path="res://Scripts/Checkpoint.gd" id="1_txrsq"]
 
@@ -18,6 +18,15 @@ size = Vector3(0.1, 1.5, 2)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_38blx"]
 resource_local_to_scene = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_q6cww"]
+top_radius = 1.0
+bottom_radius = 1.0
+height = 0.05
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0dhjv"]
+transparency = 1
+albedo_color = Color(0, 0, 0, 0.815686)
 
 [node name="Checkpoint" type="Area3D" node_paths=PackedStringArray("flagMesh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.6364, 3.80713, 0)
@@ -41,5 +50,10 @@ surface_material_override/0 = SubResource("StandardMaterial3D_nil1l")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.28532, 0.88101)
 mesh = SubResource("BoxMesh_3gin3")
 surface_material_override/0 = SubResource("StandardMaterial3D_38blx")
+
+[node name="Shadow" type="MeshInstance3D" parent="FlagPole"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.96966, 0)
+mesh = SubResource("CylinderMesh_q6cww")
+surface_material_override/0 = SubResource("StandardMaterial3D_0dhjv")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

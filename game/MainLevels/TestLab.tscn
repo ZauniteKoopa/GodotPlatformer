@@ -1,9 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://dh3qn6y4att5h"]
+[gd_scene load_steps=10 format=3 uid="uid://dh3qn6y4att5h"]
 
 [ext_resource type="PackedScene" uid="uid://dcwy0io0dfh0m" path="res://Prefabs/core_player_package.tscn" id="1_7le36"]
 [ext_resource type="PackedScene" uid="uid://cdxttr165quh7" path="res://Prefabs/trampoline.tscn" id="1_p1ljr"]
 [ext_resource type="PackedScene" uid="uid://bh5ia6w25v03o" path="res://Prefabs/checkpoint.tscn" id="2_x0lre"]
-[ext_resource type="Script" path="res://Scripts/Interactable/TestInteractable.gd" id="4_xs6lj"]
+[ext_resource type="PackedScene" uid="uid://nfabhwnhm663" path="res://Prefabs/Interactable/onboarding_sign.tscn" id="4_iv2nw"]
+[ext_resource type="PackedScene" uid="uid://bg1avvb6cxaog" path="res://Prefabs/Interactable/test_interactable.tscn" id="5_55ys6"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_520i1"]
 albedo_color = Color(0.505882, 0.278431, 0.101961, 1)
@@ -16,18 +17,6 @@ albedo_color = Color(0.505882, 0.278431, 0.101961, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rw3qs"]
 albedo_color = Color(0, 0.635294, 0.537255, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_uunvt"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_ckpey"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j0ihl"]
-resource_local_to_scene = true
-
-[sub_resource type="SphereMesh" id="SphereMesh_4iw0v"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_boixt"]
-albedo_color = Color(0, 0.854902, 0.45098, 1)
 
 [node name="TestLab" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0248103, 0.0438733, -0.0368707)
@@ -90,7 +79,7 @@ transform = Transform3D(1, 8.30751e-08, -5.72763e-08, 1.13225e-07, 1, -2.14204e-
 shape = SubResource("BoxShape3D_i8aj4")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.223233, -0.843157, 0.489135, 1.49012e-08, 0.501798, 0.864985, -0.974765, 0.193093, -0.112018, 11.5887, 12.351, 0)
+transform = Transform3D(-0.223233, -0.970962, 0.0860245, 1.49012e-08, 0.0882515, 0.996098, -0.974765, 0.222362, -0.0197006, 12.4273, 12.351, 3.6619)
 sky_mode = 1
 
 [node name="Trampoline" parent="." instance=ExtResource("1_p1ljr")]
@@ -99,49 +88,12 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 16.257
 [node name="CorePlayerPackage" parent="." instance=ExtResource("1_7le36")]
 
 [node name="Checkpoint" parent="." instance=ExtResource("2_x0lre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.6364, 3.94095, 0)
 
 [node name="Checkpoint2" parent="." instance=ExtResource("2_x0lre")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.16737, 4.0408, -6.40158)
 
-[node name="TestInteractable" type="Interactable" parent="."]
-indicator_path = NodePath("Indicator")
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.4028, 5.01382, 10.8689)
-collision_layer = 4
-collision_mask = 4
-script = ExtResource("4_xs6lj")
+[node name="OnboardingSign" parent="." instance=ExtResource("4_iv2nw")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="TestInteractable"]
-shape = SubResource("BoxShape3D_uunvt")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="TestInteractable/CollisionShape3D"]
-mesh = SubResource("BoxMesh_ckpey")
-surface_material_override/0 = SubResource("StandardMaterial3D_j0ihl")
-
-[node name="Indicator" type="MeshInstance3D" parent="TestInteractable"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.56225, 0)
+[node name="TestInteractable2" parent="." instance=ExtResource("5_55ys6")]
 visible = false
-mesh = SubResource("SphereMesh_4iw0v")
-surface_material_override/0 = SubResource("StandardMaterial3D_boixt")
-
-[node name="TestInteractable2" type="Interactable" parent="."]
-indicator_path = NodePath("Indicator")
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.3386, 5.01382, 10.8689)
-collision_layer = 4
-collision_mask = 4
-script = ExtResource("4_xs6lj")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="TestInteractable2"]
-shape = SubResource("BoxShape3D_uunvt")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="TestInteractable2/CollisionShape3D"]
-mesh = SubResource("BoxMesh_ckpey")
-surface_material_override/0 = SubResource("StandardMaterial3D_j0ihl")
-
-[node name="Indicator" type="MeshInstance3D" parent="TestInteractable2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.56225, 0)
-visible = false
-mesh = SubResource("SphereMesh_4iw0v")
-surface_material_override/0 = SubResource("StandardMaterial3D_boixt")
-
-[connection signal="interaction_sequence_start" from="TestInteractable" to="TestInteractable" method="interact_behavior"]
-[connection signal="interaction_sequence_start" from="TestInteractable2" to="TestInteractable2" method="interact_behavior"]

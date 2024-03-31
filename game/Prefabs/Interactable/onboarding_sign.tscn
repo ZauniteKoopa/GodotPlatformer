@@ -1,0 +1,144 @@
+[gd_scene load_steps=12 format=3 uid="uid://nfabhwnhm663"]
+
+[ext_resource type="Script" path="res://Scripts/Interactable/OnboardingSign.gd" id="1_2h0id"]
+[ext_resource type="AudioStream" uid="uid://b07gq4ki7r6ya" path="res://Audio/WoodSignOpen.ogg" id="2_5oudm"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uunvt"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_cloik"]
+top_radius = 0.1
+bottom_radius = 0.2
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j0ihl"]
+resource_local_to_scene = true
+albedo_color = Color(0.364706, 0.364706, 0.364706, 1)
+metallic = 0.7
+metallic_specular = 0.85
+
+[sub_resource type="BoxMesh" id="BoxMesh_agssq"]
+size = Vector3(0.1, 1, 1.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qkhrc"]
+albedo_color = Color(0.537255, 0.380392, 0.164706, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wal8a"]
+top_radius = 1.0
+bottom_radius = 1.0
+height = 0.05
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sbp0m"]
+transparency = 1
+albedo_color = Color(0, 0, 0, 0.815686)
+
+[sub_resource type="SphereMesh" id="SphereMesh_4iw0v"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_boixt"]
+albedo_color = Color(0, 0.854902, 0.45098, 1)
+
+[node name="OnboardingSign" type="Interactable" node_paths=PackedStringArray("signUI")]
+indicator_path = NodePath("Indicator")
+process_mode = 3
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.4028, 4.32338, 10.8689)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("1_2h0id")
+signUI = NodePath("")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_uunvt")
+
+[node name="SignPole" type="MeshInstance3D" parent="CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0614476, 0)
+mesh = SubResource("CylinderMesh_cloik")
+surface_material_override/0 = SubResource("StandardMaterial3D_j0ihl")
+
+[node name="SignPost" type="MeshInstance3D" parent="CollisionShape3D/SignPole"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.11096, 0.731369, 0)
+mesh = SubResource("BoxMesh_agssq")
+surface_material_override/0 = SubResource("StandardMaterial3D_qkhrc")
+
+[node name="Shadow" type="MeshInstance3D" parent="CollisionShape3D/SignPole"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.505256, 0)
+mesh = SubResource("CylinderMesh_wal8a")
+surface_material_override/0 = SubResource("StandardMaterial3D_sbp0m")
+
+[node name="Indicator" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.06892, 0)
+visible = false
+mesh = SubResource("SphereMesh_4iw0v")
+surface_material_override/0 = SubResource("StandardMaterial3D_boixt")
+
+[node name="Sign UI" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="Sign UI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 15.0
+offset_right = 400.0
+offset_bottom = 265.0
+grow_horizontal = 2
+pivot_offset = Vector2(400, 125)
+color = Color(0.294118, 0.215686, 0.0705882, 1)
+
+[node name="SignInsides" type="ColorRect" parent="Sign UI/Background"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -373.0
+offset_top = -100.0
+offset_right = 377.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.690196, 0.611765, 0.443137, 1)
+
+[node name="SignContent" type="RichTextLabel" parent="Sign UI/Background/SignInsides"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -82.0
+offset_right = 350.0
+offset_bottom = 68.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+text = "[color=black]This is tutorial information[/color]"
+
+[node name="SignInstructions" type="RichTextLabel" parent="Sign UI/Background/SignInsides"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -25.0
+offset_right = 150.0
+grow_horizontal = 2
+grow_vertical = 0
+bbcode_enabled = true
+text = "[center][color=black]Press E to Continue[/color][/center]"
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_5oudm")
+
+[connection signal="interaction_sequence_start" from="." to="." method="on_interaction_sequence_start"]
+[connection signal="interaction_sequence_start" from="." to="AudioStreamPlayer3D" method="play"]
