@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://dh3qn6y4att5h"]
+[gd_scene load_steps=11 format=3 uid="uid://dh3qn6y4att5h"]
 
 [ext_resource type="PackedScene" uid="uid://dcwy0io0dfh0m" path="res://Prefabs/core_player_package.tscn" id="1_7le36"]
 [ext_resource type="PackedScene" uid="uid://cdxttr165quh7" path="res://Prefabs/trampoline.tscn" id="1_p1ljr"]
 [ext_resource type="PackedScene" uid="uid://bh5ia6w25v03o" path="res://Prefabs/checkpoint.tscn" id="2_x0lre"]
 [ext_resource type="PackedScene" uid="uid://nfabhwnhm663" path="res://Prefabs/Interactable/onboarding_sign.tscn" id="4_iv2nw"]
 [ext_resource type="PackedScene" uid="uid://bg1avvb6cxaog" path="res://Prefabs/Interactable/test_interactable.tscn" id="5_55ys6"]
+[ext_resource type="PackedScene" uid="uid://edx16gu2i42y" path="res://Prefabs/death_platform.tscn" id="6_73hu4"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_520i1"]
 albedo_color = Color(0.505882, 0.278431, 0.101961, 1)
@@ -97,3 +98,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.16737, 4.0408, -6.40158)
 
 [node name="TestInteractable2" parent="." instance=ExtResource("5_55ys6")]
 visible = false
+
+[node name="DeathPlatform" parent="." instance=ExtResource("6_73hu4")]

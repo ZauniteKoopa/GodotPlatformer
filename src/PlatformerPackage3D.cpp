@@ -19,6 +19,7 @@ void PlatformerPackage3D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("dash"), &PlatformerPackage3D::dash);
     ClassDB::bind_method(D_METHOD("get_current_vertical_speed"), &PlatformerPackage3D::get_current_vertical_speed);
     ClassDB::bind_method(D_METHOD("respawn"), &PlatformerPackage3D::respawn);
+    ClassDB::bind_method(D_METHOD("kill"), &PlatformerPackage3D::kill);
 
     // Listeners to bind
     ClassDB::bind_method(D_METHOD("on_landed"), &PlatformerPackage3D::on_landed);
@@ -139,8 +140,7 @@ void PlatformerPackage3D::_physics_process(double delta) {
 
         // Check if you died
         if (!dying && get_global_position()[Vector3::AXIS_Y] < deathPlaneHeight) {
-            dying = true;
-            emit_signal("death");
+            kill();
         }
     }
 }
@@ -590,10 +590,20 @@ void PlatformerPackage3D::snap_to_ledge(Vector3 ledgePosition, Vector3 wallNorma
 }
 
 
+// Main function to kill. If already in the process of dying do nothing
+void PlatformerPackage3D::kill() {
+    if (!dying) {
+        dying = true;
+        emit_signal("death");
+    }
+}
+
+
 // Main function to respawn
 void PlatformerPackage3D::respawn() {
-    // Set dying flag to false
+    // reset flags
     dying = false;
+    grabbingLedge = false;
 
     // Reset variables
     currentVerticalSpeed = 0;

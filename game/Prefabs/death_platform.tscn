@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://edx16gu2i42y"]
+
+[ext_resource type="Script" path="res://Scripts/DeathTrigger.gd" id="1_24nwg"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_t32i4"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_64y5q"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kcw38"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rjk53"]
+
+[node name="DeathPlatform" type="StaticBody3D"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 31.2054, 6.19166, 0)
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_t32i4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("BoxMesh_64y5q")
+surface_material_override/0 = SubResource("StandardMaterial3D_kcw38")
+
+[node name="DeathTrigger" type="Area3D" parent="."]
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("1_24nwg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeathTrigger"]
+transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 0, 0)
+shape = SubResource("BoxShape3D_rjk53")
+
+[connection signal="body_entered" from="DeathTrigger" to="DeathTrigger" method="_on_body_entered"]

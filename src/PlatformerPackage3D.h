@@ -173,6 +173,9 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Main event handler for when consecutive ground jump timer runs out
         void on_ground_jump_timeout();
 
+        // Main function to kill the player
+        void kill();
+
         // Main function to respawn
         void respawn();
 
