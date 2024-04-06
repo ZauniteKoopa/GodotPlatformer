@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://bh5ia6w25v03o"]
 
-[ext_resource type="Script" path="res://Scripts/Checkpoint.gd" id="1_txrsq"]
+[ext_resource type="Script" path="res://Scripts/Interactable/Checkpoint.gd" id="1_txrsq"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_qx67b"]
 radius = 4.0

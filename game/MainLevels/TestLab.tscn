@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dh3qn6y4att5h"]
+[gd_scene load_steps=17 format=3 uid="uid://dh3qn6y4att5h"]
 
 [ext_resource type="PackedScene" uid="uid://dcwy0io0dfh0m" path="res://Prefabs/core_player_package.tscn" id="1_7le36"]
 [ext_resource type="PackedScene" uid="uid://cdxttr165quh7" path="res://Prefabs/trampoline.tscn" id="1_p1ljr"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://nfabhwnhm663" path="res://Prefabs/Interactable/onboarding_sign.tscn" id="4_iv2nw"]
 [ext_resource type="PackedScene" uid="uid://bg1avvb6cxaog" path="res://Prefabs/Interactable/test_interactable.tscn" id="5_55ys6"]
 [ext_resource type="PackedScene" uid="uid://edx16gu2i42y" path="res://Prefabs/death_platform.tscn" id="6_73hu4"]
+[ext_resource type="Script" path="res://Scripts/GoalTrigger.gd" id="7_pthj7"]
+[ext_resource type="Script" path="res://Scripts/Effects/Rotator.gd" id="7_ttu46"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_520i1"]
 albedo_color = Color(0.505882, 0.278431, 0.101961, 1)
@@ -18,6 +20,15 @@ albedo_color = Color(0.505882, 0.278431, 0.101961, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rw3qs"]
 albedo_color = Color(0, 0.635294, 0.537255, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_t32i4"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_64y5q"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_75ci5"]
+albedo_color = Color(0.717647, 0.694118, 0, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rjk53"]
 
 [node name="TestLab" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0248103, 0.0438733, -0.0368707)
@@ -100,3 +111,27 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.16737, 4.0408, -6.40158)
 visible = false
 
 [node name="DeathPlatform" parent="." instance=ExtResource("6_73hu4")]
+
+[node name="GoalPlatform" type="StaticBody3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 31.2054, 6.19166, 8.22845)
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("7_ttu46")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GoalPlatform"]
+shape = SubResource("BoxShape3D_t32i4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="GoalPlatform/CollisionShape3D"]
+mesh = SubResource("BoxMesh_64y5q")
+surface_material_override/0 = SubResource("StandardMaterial3D_75ci5")
+
+[node name="GoalTrigger" type="Area3D" parent="GoalPlatform"]
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("7_pthj7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GoalPlatform/GoalTrigger"]
+transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 0, 0)
+shape = SubResource("BoxShape3D_rjk53")
+
+[connection signal="body_entered" from="GoalPlatform/GoalTrigger" to="GoalPlatform/GoalTrigger" method="_on_body_entered"]

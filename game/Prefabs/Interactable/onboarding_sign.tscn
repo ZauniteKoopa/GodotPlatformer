@@ -43,7 +43,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.4028, 4.32338, 10.8689)
 collision_layer = 4
 collision_mask = 4
 script = ExtResource("1_2h0id")
-signUI = NodePath("")
+signUI = NodePath("Sign UI")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_uunvt")

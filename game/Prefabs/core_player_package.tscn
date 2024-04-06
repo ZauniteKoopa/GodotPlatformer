@@ -1,16 +1,20 @@
-[gd_scene load_steps=36 format=3 uid="uid://dcwy0io0dfh0m"]
+[gd_scene load_steps=111 format=3 uid="uid://dcwy0io0dfh0m"]
 
 [ext_resource type="Script" path="res://Scripts/PlatformerPackage3D.gd" id="1_k1vwv"]
 [ext_resource type="PackedScene" uid="uid://wg84utt21gkw" path="res://Meshes/zephAnimated.glb" id="2_ua8sf"]
-[ext_resource type="PackedScene" uid="uid://grqbovr18i83" path="res://Animators/Zeph_Base_Anim_State_Machine.tscn" id="3_lfdts"]
+[ext_resource type="Texture2D" uid="uid://dohfuip007hlg" path="res://resources/spotlight_1.png" id="3_xadc3"]
 [ext_resource type="AudioStream" uid="uid://d2fdowpk0k2ui" path="res://Audio/Player_Jump.wav" id="4_664ea"]
+[ext_resource type="Script" path="res://Scripts/Effects/DashUsedParticles.gd" id="4_x57ql"]
 [ext_resource type="AudioStream" uid="uid://c4cfp564qe7be" path="res://Audio/Player_Land.wav" id="5_2b6o7"]
 [ext_resource type="AudioStream" uid="uid://cuwqqpv04k64o" path="res://Audio/Ledge_Snap.wav" id="6_0u5ed"]
 [ext_resource type="AudioStream" uid="uid://clxcjjd0xhjtn" path="res://Audio/Player_Dash.wav" id="7_4k4iy"]
 [ext_resource type="Script" path="res://Scripts/CameraSystem.gd" id="8_rrfxe"]
 [ext_resource type="AudioStream" uid="uid://bihqjx6irpksu" path="res://Audio/Player_Death.mp3" id="8_u5s0f"]
-[ext_resource type="Script" path="res://Scripts/DynamicLine.gd" id="9_gs7qi"]
-[ext_resource type="Script" path="res://Scripts/MainPlayerUI.gd" id="9_j8ci4"]
+[ext_resource type="Script" path="res://Scripts/Effects/DynamicLine.gd" id="9_gs7qi"]
+[ext_resource type="Script" path="res://Scripts/UI/MainPlayerUI.gd" id="9_j8ci4"]
+[ext_resource type="Script" path="res://Scripts/UI/PauseMenu.gd" id="12_3wb0a"]
+[ext_resource type="Texture2D" uid="uid://csqie433jgbm" path="res://resources/effect_4.png" id="14_nlnsq"]
+[ext_resource type="Script" path="res://Scripts/Effects/DashScreenEffect.gd" id="15_e11dj"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1ec5k"]
 size = Vector3(1, 0.18, 1)
@@ -3125,6 +3129,342 @@ _data = {
 "WallGrab": SubResource("Animation_yd1pe")
 }
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2h64t"]
+animation = &"Dash"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_bqwrn"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_idhrt"]
+animation = &"JumpDown"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7bwjo"]
+animation = &"JumpUp"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7plb1"]
+animation = &"JumpUpSecondary"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_00dge"]
+animation = &"JumpUpTriple"
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_ykjvp"]
+
+[sub_resource type="AnimationNodeTransition" id="AnimationNodeTransition_fmc7m"]
+input_0/name = "0"
+input_0/auto_advance = false
+input_0/reset = true
+input_1/name = "1"
+input_1/auto_advance = false
+input_1/reset = true
+input_2/name = "2"
+input_2/auto_advance = false
+input_2/reset = true
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_37n24"]
+graph_offset = Vector2(-215, 92)
+nodes/Jump1/node = SubResource("AnimationNodeAnimation_7bwjo")
+nodes/Jump1/position = Vector2(-80, -60)
+nodes/Jump2/node = SubResource("AnimationNodeAnimation_7plb1")
+nodes/Jump2/position = Vector2(-80, 140)
+nodes/Jump3/node = SubResource("AnimationNodeAnimation_00dge")
+nodes/Jump3/position = Vector2(-140, 380)
+nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_ykjvp")
+nodes/TimeScale/position = Vector2(40, 380)
+nodes/doubleJump/node = SubResource("AnimationNodeTransition_fmc7m")
+nodes/doubleJump/position = Vector2(280, 140)
+nodes/output/position = Vector2(540, 180)
+node_connections = [&"TimeScale", 0, &"Jump3", &"doubleJump", 0, &"Jump1", &"doubleJump", 1, &"Jump2", &"doubleJump", 2, &"TimeScale", &"output", 0, &"doubleJump"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jlvss"]
+animation = &"LedgeGrab"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6ft2s"]
+animation = &"Skid"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xisxa"]
+animation = &"SpawnIn"
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_84rtc"]
+nodes/Animation/node = SubResource("AnimationNodeAnimation_xisxa")
+nodes/Animation/position = Vector2(220, 80)
+nodes/output/position = Vector2(500, 160)
+node_connections = [&"output", 0, &"Animation"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6xefu"]
+animation = &"Walk"
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_uaath"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_5nn56"]
+graph_offset = Vector2(-214, 53)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_6xefu")
+nodes/Animation/position = Vector2(-100, 140)
+nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_uaath")
+nodes/TimeScale/position = Vector2(100, 140)
+node_connections = [&"TimeScale", 0, &"Animation", &"output", 0, &"TimeScale"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xj8qn"]
+animation = &"WallGrab"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_p5ma1"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_cpfty"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1skfo"]
+advance_mode = 2
+advance_condition = &"falling"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_wfu81"]
+advance_mode = 2
+advance_condition = &"falling"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_lux1h"]
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_c0ndk"]
+advance_mode = 2
+advance_condition = &"wallGrabbing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1561j"]
+advance_mode = 2
+advance_condition = &"ledgeGrabbing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_hh4iy"]
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_v2e7u"]
+xfade_time = 0.05
+advance_mode = 2
+advance_condition = &"dashing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_gxcgw"]
+xfade_time = 0.05
+advance_mode = 2
+advance_condition = &"dashing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_hovx6"]
+xfade_time = 0.05
+advance_mode = 2
+advance_condition = &"dashing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_gl3uq"]
+xfade_time = 0.05
+advance_mode = 2
+advance_condition = &"dashing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_w24f2"]
+xfade_time = 0.2
+advance_mode = 2
+advance_condition = &"falling"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_c1xd3"]
+advance_mode = 2
+advance_condition = &"wallGrabbing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_p6vjl"]
+xfade_time = 0.2
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_gkbf5"]
+advance_mode = 2
+advance_condition = &"ledgeGrabbing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_txjxm"]
+advance_mode = 2
+advance_condition = &"skidding"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_4bd8l"]
+advance_mode = 2
+advance_condition = &"ledgeGrabbing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ul23a"]
+xfade_time = 0.3
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_h8ogc"]
+xfade_time = 0.3
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_q56sd"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"skidding"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_safhb"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_hoebi"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"dashing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_31my1"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pjw6r"]
+xfade_time = 0.25
+advance_mode = 2
+advance_condition = &"falling"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_arooh"]
+xfade_time = 0.25
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dpuff"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5lgj1"]
+advance_mode = 2
+advance_condition = &"spawning"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_g5yac"]
+advance_mode = 2
+advance_condition = &"spawning"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2n7jg"]
+advance_mode = 2
+advance_condition = &"spawning"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_npaux"]
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_w4fpk"]
+advance_mode = 2
+advance_condition = &"spawning"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_qq3wq"]
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_jdrfk"]
+xfade_time = 0.2
+advance_mode = 2
+advance_condition = &"falling"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_kpfum"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"wallGrabbing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_v756f"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"dashing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_uwd7w"]
+xfade_time = 0.2
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ilw60"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"skidding"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_c5yf0"]
+advance_mode = 2
+advance_condition = &"ledgeGrabbing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_v0xdp"]
+advance_mode = 2
+advance_condition = &"jumping"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t66b3"]
+advance_mode = 2
+advance_condition = &"jumping"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_0x2jk"]
+advance_mode = 2
+advance_condition = &"jumping"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_urixy"]
+advance_mode = 2
+advance_condition = &"jumping"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_myfke"]
+advance_mode = 2
+advance_condition = &"jumping"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_wbo8s"]
+advance_mode = 2
+advance_condition = &"jumping"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_uynjf"]
+advance_mode = 2
+advance_condition = &"jumping"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_4ynh4"]
+advance_mode = 2
+advance_condition = &"spawning"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_owhu7"]
+advance_mode = 2
+advance_condition = &"spawning"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_yclbe"]
+advance_mode = 2
+advance_condition = &"spawning"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_303lc"]
+states/Dash/node = SubResource("AnimationNodeAnimation_2h64t")
+states/Dash/position = Vector2(385, -174)
+states/End/position = Vector2(972, 108)
+states/Idle/node = SubResource("AnimationNodeAnimation_bqwrn")
+states/Idle/position = Vector2(115, 200)
+states/JumpDown/node = SubResource("AnimationNodeAnimation_idhrt")
+states/JumpDown/position = Vector2(465, -20)
+states/JumpUp/node = SubResource("AnimationNodeBlendTree_37n24")
+states/JumpUp/position = Vector2(452, 200)
+states/LedgeGrab/node = SubResource("AnimationNodeAnimation_jlvss")
+states/LedgeGrab/position = Vector2(682, 288)
+states/Skid/node = SubResource("AnimationNodeAnimation_6ft2s")
+states/Skid/position = Vector2(-178, -117)
+states/SpawnIn/node = SubResource("AnimationNodeBlendTree_84rtc")
+states/SpawnIn/position = Vector2(288, 335)
+states/Start/position = Vector2(-158, 200)
+states/WalkTree/node = SubResource("AnimationNodeBlendTree_5nn56")
+states/WalkTree/position = Vector2(95, 92)
+states/WallGrab/node = SubResource("AnimationNodeAnimation_xj8qn")
+states/WallGrab/position = Vector2(762, 118)
+transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_p5ma1"), "Skid", "Idle", SubResource("AnimationNodeStateMachineTransition_cpfty"), "Skid", "JumpDown", SubResource("AnimationNodeStateMachineTransition_1skfo"), "Idle", "JumpDown", SubResource("AnimationNodeStateMachineTransition_wfu81"), "JumpDown", "Idle", SubResource("AnimationNodeStateMachineTransition_lux1h"), "JumpDown", "WallGrab", SubResource("AnimationNodeStateMachineTransition_c0ndk"), "JumpDown", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_1561j"), "WallGrab", "Idle", SubResource("AnimationNodeStateMachineTransition_hh4iy"), "Skid", "Dash", SubResource("AnimationNodeStateMachineTransition_v2e7u"), "JumpDown", "Dash", SubResource("AnimationNodeStateMachineTransition_gxcgw"), "Idle", "Dash", SubResource("AnimationNodeStateMachineTransition_hovx6"), "WallGrab", "Dash", SubResource("AnimationNodeStateMachineTransition_gl3uq"), "Dash", "JumpDown", SubResource("AnimationNodeStateMachineTransition_w24f2"), "Dash", "WallGrab", SubResource("AnimationNodeStateMachineTransition_c1xd3"), "Dash", "Idle", SubResource("AnimationNodeStateMachineTransition_p6vjl"), "Dash", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_gkbf5"), "Dash", "Skid", SubResource("AnimationNodeStateMachineTransition_txjxm"), "WallGrab", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_4bd8l"), "Idle", "WalkTree", SubResource("AnimationNodeStateMachineTransition_ul23a"), "WalkTree", "Idle", SubResource("AnimationNodeStateMachineTransition_h8ogc"), "WalkTree", "Skid", SubResource("AnimationNodeStateMachineTransition_q56sd"), "Skid", "WalkTree", SubResource("AnimationNodeStateMachineTransition_safhb"), "WalkTree", "Dash", SubResource("AnimationNodeStateMachineTransition_hoebi"), "Dash", "WalkTree", SubResource("AnimationNodeStateMachineTransition_31my1"), "WalkTree", "JumpDown", SubResource("AnimationNodeStateMachineTransition_pjw6r"), "JumpDown", "WalkTree", SubResource("AnimationNodeStateMachineTransition_arooh"), "WallGrab", "WalkTree", SubResource("AnimationNodeStateMachineTransition_dpuff"), "JumpDown", "SpawnIn", SubResource("AnimationNodeStateMachineTransition_5lgj1"), "Dash", "SpawnIn", SubResource("AnimationNodeStateMachineTransition_g5yac"), "WallGrab", "SpawnIn", SubResource("AnimationNodeStateMachineTransition_2n7jg"), "SpawnIn", "Idle", SubResource("AnimationNodeStateMachineTransition_npaux"), "JumpUp", "SpawnIn", SubResource("AnimationNodeStateMachineTransition_w4fpk"), "JumpUp", "Idle", SubResource("AnimationNodeStateMachineTransition_qq3wq"), "JumpUp", "JumpDown", SubResource("AnimationNodeStateMachineTransition_jdrfk"), "JumpUp", "WallGrab", SubResource("AnimationNodeStateMachineTransition_kpfum"), "JumpUp", "Dash", SubResource("AnimationNodeStateMachineTransition_v756f"), "JumpUp", "WalkTree", SubResource("AnimationNodeStateMachineTransition_uwd7w"), "JumpUp", "Skid", SubResource("AnimationNodeStateMachineTransition_ilw60"), "JumpUp", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_c5yf0"), "Idle", "JumpUp", SubResource("AnimationNodeStateMachineTransition_v0xdp"), "WalkTree", "JumpUp", SubResource("AnimationNodeStateMachineTransition_t66b3"), "Skid", "JumpUp", SubResource("AnimationNodeStateMachineTransition_0x2jk"), "Dash", "JumpUp", SubResource("AnimationNodeStateMachineTransition_urixy"), "JumpDown", "JumpUp", SubResource("AnimationNodeStateMachineTransition_myfke"), "WallGrab", "JumpUp", SubResource("AnimationNodeStateMachineTransition_wbo8s"), "LedgeGrab", "JumpUp", SubResource("AnimationNodeStateMachineTransition_uynjf"), "LedgeGrab", "SpawnIn", SubResource("AnimationNodeStateMachineTransition_4ynh4"), "WalkTree", "SpawnIn", SubResource("AnimationNodeStateMachineTransition_owhu7"), "Idle", "SpawnIn", SubResource("AnimationNodeStateMachineTransition_yclbe")]
+graph_offset = Vector2(-25, 137)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ov1il"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 0.227451, 0.298039, 1)
+albedo_texture = ExtResource("3_xadc3")
+billboard_mode = 1
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_b5p22"]
+lifetime_randomness = 0.3
+direction = Vector3(0, 1, 0)
+spread = 60.0
+initial_velocity_min = 10.0
+initial_velocity_max = 15.0
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="QuadMesh" id="QuadMesh_h101y"]
+
 [sub_resource type="SphereShape3D" id="SphereShape3D_j6xqe"]
 radius = 5.0
 
@@ -3146,6 +3486,9 @@ height = 8.0
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bkfc2"]
 transparency = 1
 albedo_color = Color(0, 0, 0, 0.419608)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_d8k0k"]
+blend_mode = 1
 
 [node name="CorePlayerPackage" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.492008, 2.15596, 0.15137)
@@ -3221,41 +3564,41 @@ mesh = SubResource("BoxMesh_r4ct1")
 transform = Transform3D(-1.16415e-08, 0, 0.25, 0, 0.25, 0, -0.25, 0, -1.16415e-08, 3.72529e-09, -1.40602, 0.0368737)
 
 [node name="Skeleton3D" parent="PlatformerPackage3D/CollisionShape3D/zephAnimated/Armature" index="0"]
-bones/0/position = Vector3(4.56117e-09, -0.961203, 2.20746e-09)
-bones/0/rotation = Quaternion(4.14626e-08, 1.12666e-07, -0.0836454, 0.996496)
-bones/1/rotation = Quaternion(-9.94322e-09, -4.67435e-08, -0.128629, 0.991693)
-bones/1/scale = Vector3(1.01894, 1.01894, 1.01894)
+bones/0/position = Vector3(-4.30843e-09, -1.03541, 8.93296e-11)
+bones/0/rotation = Quaternion(4.11666e-08, 1.12678e-07, -0.0862961, 0.99627)
+bones/1/rotation = Quaternion(-9.60668e-09, -4.67595e-08, -0.13382, 0.991006)
+bones/1/scale = Vector3(1.00076, 1.00076, 1.00076)
 bones/2/rotation = Quaternion(2.15116e-08, 5.90887e-08, -0.0718671, 0.997414)
 bones/3/rotation = Quaternion(-1.14515e-08, 4.96244e-08, 0.138317, 0.990388)
 bones/3/scale = Vector3(1, 1, 1)
-bones/4/rotation = Quaternion(-0.904493, -0.0436046, 0.301309, 0.298672)
-bones/5/rotation = Quaternion(-0.573204, 0.0185289, -0.356466, 0.737581)
-bones/6/rotation = Quaternion(-0.0488126, 0.112035, 0.0277027, 0.992118)
+bones/4/rotation = Quaternion(-0.89689, -0.0664857, 0.345835, 0.267519)
+bones/5/rotation = Quaternion(-0.553689, 0.0196683, -0.305179, 0.774537)
+bones/6/rotation = Quaternion(-0.0488125, 0.112035, 0.0277027, 0.992118)
 bones/7/rotation = Quaternion(0.175071, 0.0829399, -0.409184, 0.89165)
 bones/7/scale = Vector3(1, 1, 1)
-bones/8/rotation = Quaternion(0.836665, -0.384054, 0.199558, 0.335664)
-bones/9/rotation = Quaternion(0.495662, -0.0129, -0.453279, 0.740737)
+bones/8/rotation = Quaternion(0.874756, -0.368516, 0.188003, 0.252295)
+bones/9/rotation = Quaternion(0.335444, -0.0146097, -0.502955, 0.796429)
 bones/10/rotation = Quaternion(0.0150876, 0.0101706, -0.12389, 0.992129)
 bones/10/scale = Vector3(1, 1, 1)
-bones/11/rotation = Quaternion(0.000391463, -0.160389, -0.385469, 0.908674)
+bones/11/rotation = Quaternion(0.000391462, -0.160389, -0.385469, 0.908674)
 bones/11/scale = Vector3(1, 1, 1)
-bones/12/rotation = Quaternion(-1.9218e-07, 4.26441e-08, 0.963155, 0.268947)
+bones/12/rotation = Quaternion(-1.91606e-07, 4.42986e-08, 0.965831, 0.259175)
 bones/12/scale = Vector3(1, 1, 1)
-bones/13/rotation = Quaternion(7.90017e-09, -6.81428e-09, -0.12974, 0.991548)
-bones/14/rotation = Quaternion(1.09127e-08, -4.23056e-09, -0.298899, 0.954285)
-bones/15/rotation = Quaternion(3.62747e-09, -4.83216e-10, -0.0571214, 0.998367)
-bones/16/position = Vector3(-2.23306e-08, -0.959675, -0.787712)
-bones/16/rotation = Quaternion(0.954079, 0.115636, -0.253735, -0.109456)
+bones/13/rotation = Quaternion(7.89827e-09, -6.81264e-09, -0.159686, 0.987168)
+bones/14/rotation = Quaternion(1.08725e-08, -4.21498e-09, -0.184154, 0.982897)
+bones/15/rotation = Quaternion(3.62747e-09, -4.83217e-10, -0.0571214, 0.998367)
+bones/16/position = Vector3(-4.28075e-08, -1.10506, -0.787712)
+bones/16/rotation = Quaternion(0.953501, 0.126934, -0.249192, -0.112367)
 bones/16/scale = Vector3(1, 1, 1)
-bones/17/rotation = Quaternion(0.157047, 0.0130517, 0.640939, 0.751241)
+bones/17/rotation = Quaternion(0.167077, 0.0137351, 0.675025, 0.718497)
 bones/17/scale = Vector3(1, 1, 1)
-bones/18/rotation = Quaternion(-0.143251, 0.14586, -0.631535, 0.747909)
+bones/18/rotation = Quaternion(-0.154718, 0.133635, -0.69068, 0.69366)
 bones/19/rotation = Quaternion(0.0632648, -0.0251321, -0.397437, 0.915101)
-bones/20/position = Vector3(4.92396e-08, -0.959675, 0.787712)
-bones/20/rotation = Quaternion(0.950088, 0.308445, 0.0467902, 0.00218416)
+bones/20/position = Vector3(4.69616e-08, -1.10506, 0.787712)
+bones/20/rotation = Quaternion(0.934366, 0.353089, 0.0474921, 0.0058124)
 bones/20/scale = Vector3(1, 1, 1)
-bones/21/rotation = Quaternion(0.0186371, 0.00486222, 0.401281, 0.915753)
-bones/22/rotation = Quaternion(0.0405636, -0.0115538, -0.476053, 0.878405)
+bones/21/rotation = Quaternion(0.0226492, 0.00479006, 0.477487, 0.878334)
+bones/22/rotation = Quaternion(0.0409947, -0.0099162, -0.510929, 0.858588)
 bones/22/scale = Vector3(1, 1, 1)
 bones/23/rotation = Quaternion(-0.20368, -0.00505072, -0.374036, 0.904758)
 bones/23/scale = Vector3(1, 1, 1)
@@ -3265,11 +3608,11 @@ bones/24/scale = Vector3(1, 1, 1)
 bones/25/position = Vector3(-1.44465, -3.41254, -0.924193)
 bones/25/rotation = Quaternion(1.81238e-07, 1.47852e-07, -0.78108, 0.624431)
 bones/25/scale = Vector3(1, 1, 1)
-bones/26/position = Vector3(-0.94039, 0.481729, 1.82872)
-bones/26/rotation = Quaternion(0.375519, 0.022388, 0.926031, -0.0308551)
+bones/26/position = Vector3(-0.94039, 0.196044, 1.82872)
+bones/26/rotation = Quaternion(0.375519, 0.022388, 0.92603, -0.0308551)
 bones/26/scale = Vector3(1, 1, 1)
-bones/27/position = Vector3(1.14189, -0.171306, -1.87762)
-bones/27/rotation = Quaternion(0.375519, 0.022388, 0.926031, -0.0308551)
+bones/27/position = Vector3(1.14016, -0.36086, -1.88461)
+bones/27/rotation = Quaternion(0.375519, 0.022388, 0.92603, -0.0308551)
 bones/27/scale = Vector3(1, 1, 1)
 
 [node name="Cube" parent="PlatformerPackage3D/CollisionShape3D/zephAnimated/Armature/Skeleton3D" index="0"]
@@ -3278,13 +3621,38 @@ layers = 2
 [node name="Cube_001" parent="PlatformerPackage3D/CollisionShape3D/zephAnimated/Armature/Skeleton3D" index="1"]
 layers = 2
 
-[node name="AnimationTree" parent="PlatformerPackage3D/CollisionShape3D/zephAnimated" instance=ExtResource("3_lfdts")]
+[node name="AnimationTree" type="AnimationTree" parent="PlatformerPackage3D/CollisionShape3D/zephAnimated"]
 libraries = {
 "": SubResource("AnimationLibrary_pl5ds")
 }
+tree_root = SubResource("AnimationNodeStateMachine_303lc")
+anim_player = NodePath("../AnimationPlayer")
+parameters/conditions/dashing = false
+parameters/conditions/falling = false
+parameters/conditions/idle = false
+parameters/conditions/jumping = false
+parameters/conditions/ledgeGrabbing = false
+parameters/conditions/moving = false
+parameters/conditions/skidding = false
+parameters/conditions/spawning = false
+parameters/conditions/wallGrabbing = false
+parameters/JumpUp/TimeScale/scale = 1.0
 parameters/JumpUp/doubleJump/current_state = ""
 parameters/JumpUp/doubleJump/transition_request = "0"
 parameters/JumpUp/doubleJump/current_index = -1
+parameters/WalkTree/TimeScale/scale = 1.0
+
+[node name="DashUsedParticles" type="GPUParticles3D" parent="PlatformerPackage3D/CollisionShape3D/zephAnimated" node_paths=PackedStringArray("platformerPackage")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5351, 0)
+material_override = SubResource("StandardMaterial3D_ov1il")
+emitting = false
+amount = 30
+lifetime = 0.5
+randomness = 0.26
+process_material = SubResource("ParticleProcessMaterial_b5p22")
+draw_pass_1 = SubResource("QuadMesh_h101y")
+script = ExtResource("4_x57ql")
+platformerPackage = NodePath("../../..")
 
 [node name="InteractionZone" type="InteractionZone" parent="PlatformerPackage3D/CollisionShape3D"]
 collision_layer = 4
@@ -3372,7 +3740,82 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0)
 
+[node name="PauseMenu" type="Control" parent="MainUI"]
+process_mode = 3
+visible = false
+z_index = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("12_3wb0a")
+
+[node name="PauseMenuBackground" type="ColorRect" parent="MainUI/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.113725, 0.113725, 0.113725, 0.631373)
+
+[node name="PauseMenuMenu" type="ColorRect" parent="MainUI/PauseMenu/PauseMenuBackground"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -303.0
+offset_top = -202.0
+offset_right = 297.0
+offset_bottom = 198.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.596078, 0.596078, 0.596078, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="MainUI/PauseMenu/PauseMenuBackground/PauseMenuMenu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -157.0
+offset_top = 31.0
+offset_right = 158.0
+offset_bottom = 187.0
+grow_horizontal = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainUI/PauseMenu/PauseMenuBackground/PauseMenuMenu/MarginContainer"]
+layout_mode = 2
+
+[node name="BackToGame" type="Button" parent="MainUI/PauseMenu/PauseMenuBackground/PauseMenuMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Back To Game"
+
+[node name="MainMenu" type="Button" parent="MainUI/PauseMenu/PauseMenuBackground/PauseMenuMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Main Menu"
+
+[node name="DashScreenEffect" type="TextureRect" parent="MainUI" node_paths=PackedStringArray("platformerPackage")]
+visible = false
+material = SubResource("CanvasItemMaterial_d8k0k")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.75, 0.75)
+pivot_offset = Vector2(576, 324)
+texture = ExtResource("14_nlnsq")
+script = ExtResource("15_e11dj")
+platformerPackage = NodePath("../../PlatformerPackage3D")
+
+[connection signal="dash_started" from="PlatformerPackage3D" to="PlatformerPackage3D/CollisionShape3D/zephAnimated/DashUsedParticles" method="on_dashed"]
 [connection signal="dash_started" from="PlatformerPackage3D" to="PlatformerPackage3D/AudioCenter/PlayerDashSpeaker" method="play"]
+[connection signal="dash_started" from="PlatformerPackage3D" to="MainUI/DashScreenEffect" method="on_dash_started"]
 [connection signal="death" from="PlatformerPackage3D" to="PlatformerPackage3D" method="_on_death"]
 [connection signal="death" from="PlatformerPackage3D" to="PlatformerPackage3D/AudioCenter/PlayerDeathSpeaker" method="play"]
 [connection signal="jump_begin" from="PlatformerPackage3D" to="PlatformerPackage3D/PlatformerFeetSensor" method="disable_coyote_time"]
@@ -3382,9 +3825,12 @@ color = Color(0, 0, 0, 0)
 [connection signal="body_exited" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/PlatformerFeetSensor" method="on_body_exit"]
 [connection signal="fall_begin" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D" method="on_fall_begin"]
 [connection signal="landed" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D" method="on_landed"]
+[connection signal="landed" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/CollisionShape3D/zephAnimated/DashUsedParticles" method="on_landed"]
 [connection signal="landed" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/AudioCenter/PlayerLandSpeaker" method="play"]
 [connection signal="landed" from="PlatformerPackage3D/PlatformerFeetSensor" to="DynamicCameraPivot" method="on_landed"]
 [connection signal="body_entered" from="PlatformerPackage3D/CollisionShape3D/InteractionZone" to="PlatformerPackage3D/CollisionShape3D/InteractionZone" method="on_body_enter"]
 [connection signal="body_exited" from="PlatformerPackage3D/CollisionShape3D/InteractionZone" to="PlatformerPackage3D/CollisionShape3D/InteractionZone" method="on_body_exit"]
+[connection signal="pressed" from="MainUI/PauseMenu/PauseMenuBackground/PauseMenuMenu/MarginContainer/VBoxContainer/BackToGame" to="MainUI/PauseMenu" method="_on_back_to_game_pressed"]
+[connection signal="pressed" from="MainUI/PauseMenu/PauseMenuBackground/PauseMenuMenu/MarginContainer/VBoxContainer/MainMenu" to="MainUI/PauseMenu" method="_on_main_menu_pressed"]
 
 [editable path="PlatformerPackage3D/CollisionShape3D/zephAnimated"]
