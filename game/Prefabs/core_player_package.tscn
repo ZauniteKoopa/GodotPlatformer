@@ -3564,41 +3564,41 @@ mesh = SubResource("BoxMesh_r4ct1")
 transform = Transform3D(-1.16415e-08, 0, 0.25, 0, 0.25, 0, -0.25, 0, -1.16415e-08, 3.72529e-09, -1.40602, 0.0368737)
 
 [node name="Skeleton3D" parent="PlatformerPackage3D/CollisionShape3D/zephAnimated/Armature" index="0"]
-bones/0/position = Vector3(-4.30843e-09, -1.03541, 8.93296e-11)
-bones/0/rotation = Quaternion(4.11666e-08, 1.12678e-07, -0.0862961, 0.99627)
-bones/1/rotation = Quaternion(-9.60668e-09, -4.67595e-08, -0.13382, 0.991006)
-bones/1/scale = Vector3(1.00076, 1.00076, 1.00076)
+bones/0/position = Vector3(6.01445e-09, -0.937775, 2.87612e-09)
+bones/0/rotation = Quaternion(4.17833e-08, 1.12652e-07, -0.0807789, 0.996732)
+bones/1/rotation = Quaternion(-1.01918e-08, -4.673e-08, -0.124794, 0.992183)
+bones/1/scale = Vector3(1.02467, 1.02467, 1.02467)
 bones/2/rotation = Quaternion(2.15116e-08, 5.90887e-08, -0.0718671, 0.997414)
 bones/3/rotation = Quaternion(-1.14515e-08, 4.96244e-08, 0.138317, 0.990388)
 bones/3/scale = Vector3(1, 1, 1)
-bones/4/rotation = Quaternion(-0.89689, -0.0664857, 0.345835, 0.267519)
-bones/5/rotation = Quaternion(-0.553689, 0.0196683, -0.305179, 0.774537)
-bones/6/rotation = Quaternion(-0.0488125, 0.112035, 0.0277027, 0.992118)
+bones/4/rotation = Quaternion(-0.904877, -0.0333731, 0.288049, 0.311627)
+bones/5/rotation = Quaternion(-0.582418, 0.0181426, -0.377874, 0.719494)
+bones/6/rotation = Quaternion(-0.0488126, 0.112035, 0.0277027, 0.992118)
 bones/7/rotation = Quaternion(0.175071, 0.0829399, -0.409184, 0.89165)
 bones/7/scale = Vector3(1, 1, 1)
-bones/8/rotation = Quaternion(0.874756, -0.368516, 0.188003, 0.252295)
-bones/9/rotation = Quaternion(0.335444, -0.0146097, -0.502955, 0.796429)
+bones/8/rotation = Quaternion(0.823988, -0.379779, 0.199366, 0.370222)
+bones/9/rotation = Quaternion(0.55578, -0.0122849, -0.413044, 0.721354)
 bones/10/rotation = Quaternion(0.0150876, 0.0101706, -0.12389, 0.992129)
 bones/10/scale = Vector3(1, 1, 1)
-bones/11/rotation = Quaternion(0.000391462, -0.160389, -0.385469, 0.908674)
+bones/11/rotation = Quaternion(0.000391463, -0.160389, -0.385469, 0.908674)
 bones/11/scale = Vector3(1, 1, 1)
-bones/12/rotation = Quaternion(-1.91606e-07, 4.42986e-08, 0.965831, 0.259175)
+bones/12/rotation = Quaternion(-1.92742e-07, 4.09783e-08, 0.960375, 0.278712)
 bones/12/scale = Vector3(1, 1, 1)
-bones/13/rotation = Quaternion(7.89827e-09, -6.81264e-09, -0.159686, 0.987168)
-bones/14/rotation = Quaternion(1.08725e-08, -4.21498e-09, -0.184154, 0.982897)
-bones/15/rotation = Quaternion(3.62747e-09, -4.83217e-10, -0.0571214, 0.998367)
-bones/16/position = Vector3(-4.28075e-08, -1.10506, -0.787712)
-bones/16/rotation = Quaternion(0.953501, 0.126934, -0.249192, -0.112367)
+bones/13/rotation = Quaternion(7.89927e-09, -6.81351e-09, -0.12026, 0.992742)
+bones/14/rotation = Quaternion(1.08937e-08, -4.22318e-09, -0.334321, 0.942459)
+bones/15/rotation = Quaternion(3.62747e-09, -4.83215e-10, -0.0571214, 0.998367)
+bones/16/position = Vector3(-1.59589e-08, -0.91378, -0.787712)
+bones/16/rotation = Quaternion(0.954292, 0.11136, -0.255245, -0.108522)
 bones/16/scale = Vector3(1, 1, 1)
-bones/17/rotation = Quaternion(0.167077, 0.0137351, 0.675025, 0.718497)
+bones/17/rotation = Quaternion(0.153565, 0.0128937, 0.629358, 0.761683)
 bones/17/scale = Vector3(1, 1, 1)
-bones/18/rotation = Quaternion(-0.154718, 0.133635, -0.69068, 0.69366)
+bones/18/rotation = Quaternion(-0.139428, 0.14952, -0.611964, 0.764005)
 bones/19/rotation = Quaternion(0.0632648, -0.0251321, -0.397437, 0.915101)
-bones/20/position = Vector3(4.69616e-08, -1.10506, 0.787712)
-bones/20/rotation = Quaternion(0.934366, 0.353089, 0.0474921, 0.0058124)
+bones/20/position = Vector3(5.03516e-08, -0.91378, 0.787712)
+bones/20/rotation = Quaternion(0.955126, 0.292517, 0.0465455, 0.000867335)
 bones/20/scale = Vector3(1, 1, 1)
-bones/21/rotation = Quaternion(0.0226492, 0.00479006, 0.477487, 0.878334)
-bones/22/rotation = Quaternion(0.0409947, -0.0099162, -0.510929, 0.858588)
+bones/21/rotation = Quaternion(0.0172126, 0.00488663, 0.373198, 0.927579)
+bones/22/rotation = Quaternion(0.0404139, -0.012067, -0.464881, 0.884368)
 bones/22/scale = Vector3(1, 1, 1)
 bones/23/rotation = Quaternion(-0.20368, -0.00505072, -0.374036, 0.904758)
 bones/23/scale = Vector3(1, 1, 1)
@@ -3608,11 +3608,11 @@ bones/24/scale = Vector3(1, 1, 1)
 bones/25/position = Vector3(-1.44465, -3.41254, -0.924193)
 bones/25/rotation = Quaternion(1.81238e-07, 1.47852e-07, -0.78108, 0.624431)
 bones/25/scale = Vector3(1, 1, 1)
-bones/26/position = Vector3(-0.94039, 0.196044, 1.82872)
-bones/26/rotation = Quaternion(0.375519, 0.022388, 0.92603, -0.0308551)
+bones/26/position = Vector3(-0.94039, 0.571914, 1.82872)
+bones/26/rotation = Quaternion(0.375519, 0.022388, 0.926031, -0.0308551)
 bones/26/scale = Vector3(1, 1, 1)
-bones/27/position = Vector3(1.14016, -0.36086, -1.88461)
-bones/27/rotation = Quaternion(0.375519, 0.022388, 0.92603, -0.0308551)
+bones/27/position = Vector3(1.14184, -0.0780821, -1.87784)
+bones/27/rotation = Quaternion(0.375519, 0.022388, 0.926031, -0.0308551)
 bones/27/scale = Vector3(1, 1, 1)
 
 [node name="Cube" parent="PlatformerPackage3D/CollisionShape3D/zephAnimated/Armature/Skeleton3D" index="0"]
@@ -3782,21 +3782,41 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -157.0
-offset_top = 31.0
+offset_top = 10.0
 offset_right = 158.0
-offset_bottom = 187.0
+offset_bottom = 166.0
 grow_horizontal = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MainUI/PauseMenu/PauseMenuBackground/PauseMenuMenu/MarginContainer"]
 layout_mode = 2
+alignment = 1
 
 [node name="BackToGame" type="Button" parent="MainUI/PauseMenu/PauseMenuBackground/PauseMenuMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Back To Game"
 
+[node name="Spacing" type="Control" parent="MainUI/PauseMenu/PauseMenuBackground/PauseMenuMenu/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
 [node name="MainMenu" type="Button" parent="MainUI/PauseMenu/PauseMenuBackground/PauseMenuMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Main Menu"
+
+[node name="ColorRect" type="ColorRect" parent="MainUI/PauseMenu/PauseMenuBackground/PauseMenuMenu"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -225.0
+offset_right = 250.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.443137, 0.443137, 0.443137, 1)
 
 [node name="DashScreenEffect" type="TextureRect" parent="MainUI" node_paths=PackedStringArray("platformerPackage")]
 visible = false

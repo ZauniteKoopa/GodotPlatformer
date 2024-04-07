@@ -116,10 +116,17 @@ void PlatformerPackage3D::_physics_process(double delta) {
             }
 
             // If you didn't grab the ledge, slide on the wall
+            bool prevGrabbingWall = grabbingWall;
             grabbingWall = !grabbingLedge;
             dashing = false;
             if (!grabbingLedge) {
                 currentGroundMovement = Vector3(0, 0, 0);
+            }
+
+            // If transition from not grabbing wall to grabbing wall, change the direction the character is facing to be towards the wall
+            if (!prevGrabbingWall && grabbingWall) {
+                Plane groundPlane = Plane(Vector3(0, 0, 0), Vector3(0, 1, 0));
+                character_body->look_at(get_global_position() + groundPlane.project(-get_wall_normal()));
             }
 
             // Set consecutive jump to 0
@@ -248,11 +255,18 @@ void PlatformerPackage3D::relative_run(Vector2 controller_vector, double time_de
 void PlatformerPackage3D::dash() {
     dashLock.lock();
 
-    if (canDash && (grounded || curDashesUsed < maxNumAirDashes)) {
-        // Clear ground and vertical movement and set up dash dir to either the direction you're moving or the forward
+    if (canDash && (grounded || curDashesUsed < maxNumAirDashes) && !grabbingLedge) {
+        // Clear ground and vertical movement
         currentGroundMovement = Vector3(0, 0, 0);
         currentVerticalSpeed = 0;
-        Vector3 dashDir = (currentGroundInputDirection.length() < 0.01) ? -character_body->get_global_transform().get_basis().get_column(2) : currentGroundInputDirection.normalized();
+
+        // Set up dash dir. If on wall, dash the wall normal direction. Else dash the direction you're moving or the direction you're facing if not moving
+        Vector3 dashDir;
+        if (grabbingWall) {
+            dashDir = get_wall_normal();
+        } else {
+            dashDir = (currentGroundInputDirection.length() < 0.01) ? -character_body->get_global_transform().get_basis().get_column(2) : currentGroundInputDirection.normalized();
+        }
 
         // Apply speed force
         apply_speed_force(dashDir * dashSpeed, get_dash_duration());
@@ -512,15 +526,10 @@ Vector3 PlatformerPackage3D::calculate_vertical_velocity(double delta) {
 
 // Main private helper function to calculate the XZ component of velocity
 Vector3 PlatformerPackage3D::calculate_horizontal_velocity(double delta) {
-    // If grabbing wall, return zero vector
-    if (grabbingWall) {
-        return Vector3(0, 0, 0);
-    }
-
     double maxRunningSpeed = max_walking_speed;
 
     // If you're actually moving, adjust currentGroundMovement
-    if (currentGroundInputDirection.length() > 0.01f && !grabbingLedge) {
+    if (currentGroundInputDirection.length() > 0.01f && !grabbingLedge && !grabbingWall) {
         // If you're going really fast move accordingly
         if (currentGroundMovement.length() > immediate_stop_speed) {
             // Check if you're turning
