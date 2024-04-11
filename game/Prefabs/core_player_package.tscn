@@ -1,4 +1,4 @@
-[gd_scene load_steps=111 format=3 uid="uid://dcwy0io0dfh0m"]
+[gd_scene load_steps=121 format=3 uid="uid://dcwy0io0dfh0m"]
 
 [ext_resource type="Script" path="res://Scripts/PlatformerPackage3D.gd" id="1_k1vwv"]
 [ext_resource type="PackedScene" uid="uid://wg84utt21gkw" path="res://Meshes/zephAnimated.glb" id="2_ua8sf"]
@@ -6,6 +6,7 @@
 [ext_resource type="AudioStream" uid="uid://d2fdowpk0k2ui" path="res://Audio/Player_Jump.wav" id="4_664ea"]
 [ext_resource type="Script" path="res://Scripts/Effects/DashUsedParticles.gd" id="4_x57ql"]
 [ext_resource type="AudioStream" uid="uid://c4cfp564qe7be" path="res://Audio/Player_Land.wav" id="5_2b6o7"]
+[ext_resource type="Script" path="res://Scripts/Effects/DustCloudParticles.gd" id="5_fkymg"]
 [ext_resource type="AudioStream" uid="uid://cuwqqpv04k64o" path="res://Audio/Ledge_Snap.wav" id="6_0u5ed"]
 [ext_resource type="AudioStream" uid="uid://clxcjjd0xhjtn" path="res://Audio/Player_Dash.wav" id="7_4k4iy"]
 [ext_resource type="Script" path="res://Scripts/CameraSystem.gd" id="8_rrfxe"]
@@ -3451,19 +3452,63 @@ transparency = 1
 blend_mode = 1
 shading_mode = 0
 vertex_color_use_as_albedo = true
-albedo_color = Color(1, 0.227451, 0.298039, 1)
+albedo_color = Color(1, 0, 0, 1)
 albedo_texture = ExtResource("3_xadc3")
 billboard_mode = 1
 
+[sub_resource type="Curve" id="Curve_3vhb8"]
+max_value = 5.0
+_data = [Vector2(0, 4.9794), 0.0, 0.0, 0, 0, Vector2(0.997333, 0.0561277), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_t1010"]
+curve = SubResource("Curve_3vhb8")
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_b5p22"]
 lifetime_randomness = 0.3
+emission_shape_scale = Vector3(10, 10, 10)
 direction = Vector3(0, 1, 0)
-spread = 60.0
-initial_velocity_min = 10.0
-initial_velocity_max = 15.0
+spread = 40.0
+initial_velocity_min = 8.0
+initial_velocity_max = 10.0
 gravity = Vector3(0, 0, 0)
+scale_min = 0.0
+scale_max = 5.0
+scale_curve = SubResource("CurveTexture_t1010")
+scale_over_velocity_min = 1.0
+scale_over_velocity_max = 3.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_h101y"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rnd2p"]
+transparency = 1
+vertex_color_use_as_albedo = true
+
+[sub_resource type="Gradient" id="Gradient_shwcq"]
+colors = PackedColorArray(0.734882, 0.611071, 0.380823, 1, 0.855501, 0.683312, 0.52817, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_0c2pm"]
+gradient = SubResource("Gradient_shwcq")
+
+[sub_resource type="Curve" id="Curve_jq1yf"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.997333, 0.290422), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_0834s"]
+curve = SubResource("Curve_jq1yf")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_16ntw"]
+direction = Vector3(0, 1, 0)
+spread = 20.0
+initial_velocity_min = 2.0
+initial_velocity_max = 5.0
+gravity = Vector3(0, 0, 0)
+scale_min = 1.2
+scale_max = 1.5
+scale_curve = SubResource("CurveTexture_0834s")
+color_ramp = SubResource("GradientTexture1D_0c2pm")
+
+[sub_resource type="SphereMesh" id="SphereMesh_sme54"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_j6xqe"]
 radius = 5.0
@@ -3511,7 +3556,7 @@ jumping/apex_speed_definition = 0.75
 jumping/jump_buffer_duration = 0.1
 ledge_grab/auto_grab_vertical_offset = 1.25
 wall_slide/max_wall_grab_angle_requirement = 5.0
-wall_slide/max_wall_grab_fall_speed = 2.0
+wall_slide/max_wall_grab_fall_speed = 3.0
 wall_slide/wall_jump_speed_force_magnitude = 7.0
 wall_slide/wall_jump_speed_duration = 0.5
 wall_slide/wall_jump_height = 2.5
@@ -3564,54 +3609,46 @@ mesh = SubResource("BoxMesh_r4ct1")
 transform = Transform3D(-1.16415e-08, 0, 0.25, 0, 0.25, 0, -0.25, 0, -1.16415e-08, 3.72529e-09, -1.40602, 0.0368737)
 
 [node name="Skeleton3D" parent="PlatformerPackage3D/CollisionShape3D/zephAnimated/Armature" index="0"]
-bones/0/position = Vector3(6.01445e-09, -0.937775, 2.87612e-09)
-bones/0/rotation = Quaternion(4.17833e-08, 1.12652e-07, -0.0807789, 0.996732)
-bones/1/rotation = Quaternion(-1.01918e-08, -4.673e-08, -0.124794, 0.992183)
-bones/1/scale = Vector3(1.02467, 1.02467, 1.02467)
-bones/2/rotation = Quaternion(2.15116e-08, 5.90887e-08, -0.0718671, 0.997414)
-bones/3/rotation = Quaternion(-1.14515e-08, 4.96244e-08, 0.138317, 0.990388)
+bones/0/rotation = Quaternion(9.27546e-05, 0.0238888, -0.201653, 0.979166)
+bones/1/rotation = Quaternion(-9.72388e-09, -4.67728e-08, -0.157092, 0.987584)
+bones/2/rotation = Quaternion(4.06172e-08, 4.07025e-08, 0.14431, 0.989533)
+bones/3/rotation = Quaternion(-4.82262e-09, 4.15161e-08, 0.279134, 0.960252)
 bones/3/scale = Vector3(1, 1, 1)
-bones/4/rotation = Quaternion(-0.904877, -0.0333731, 0.288049, 0.311627)
-bones/5/rotation = Quaternion(-0.582418, 0.0181426, -0.377874, 0.719494)
-bones/6/rotation = Quaternion(-0.0488126, 0.112035, 0.0277027, 0.992118)
+bones/4/rotation = Quaternion(-0.852983, 0.293456, 0.201516, 0.381699)
+bones/5/rotation = Quaternion(-0.00279248, 0.00635803, 0.00195702, 0.999974)
 bones/7/rotation = Quaternion(0.175071, 0.0829399, -0.409184, 0.89165)
 bones/7/scale = Vector3(1, 1, 1)
-bones/8/rotation = Quaternion(0.823988, -0.379779, 0.199366, 0.370222)
-bones/9/rotation = Quaternion(0.55578, -0.0122849, -0.413044, 0.721354)
-bones/10/rotation = Quaternion(0.0150876, 0.0101706, -0.12389, 0.992129)
+bones/8/rotation = Quaternion(0.852066, -0.316898, 0.227377, 0.349082)
+bones/9/rotation = Quaternion(0.0027746, -0.00828293, 0.00190862, 0.99996)
+bones/10/rotation = Quaternion(0.0397906, 0.000504848, 0.0437373, 0.99825)
 bones/10/scale = Vector3(1, 1, 1)
-bones/11/rotation = Quaternion(0.000391463, -0.160389, -0.385469, 0.908674)
+bones/11/rotation = Quaternion(-0.17507, -0.0829408, -0.409185, 0.89165)
 bones/11/scale = Vector3(1, 1, 1)
-bones/12/rotation = Quaternion(-1.92742e-07, 4.09783e-08, 0.960375, 0.278712)
+bones/12/rotation = Quaternion(-1.75302e-07, -1.4423e-08, 0.791563, 0.611088)
 bones/12/scale = Vector3(1, 1, 1)
-bones/13/rotation = Quaternion(7.89927e-09, -6.81351e-09, -0.12026, 0.992742)
-bones/14/rotation = Quaternion(1.08937e-08, -4.22318e-09, -0.334321, 0.942459)
-bones/15/rotation = Quaternion(3.62747e-09, -4.83215e-10, -0.0571214, 0.998367)
-bones/16/position = Vector3(-1.59589e-08, -0.91378, -0.787712)
-bones/16/rotation = Quaternion(0.954292, 0.11136, -0.255245, -0.108522)
+bones/16/rotation = Quaternion(0.921849, -0.387417, 0.000484747, 0.0101108)
 bones/16/scale = Vector3(1, 1, 1)
-bones/17/rotation = Quaternion(0.153565, 0.0128937, 0.629358, 0.761683)
+bones/17/rotation = Quaternion(0.00766344, -0.0038946, 0.281545, 0.95951)
 bones/17/scale = Vector3(1, 1, 1)
-bones/18/rotation = Quaternion(-0.139428, 0.14952, -0.611964, 0.764005)
-bones/19/rotation = Quaternion(0.0632648, -0.0251321, -0.397437, 0.915101)
-bones/20/position = Vector3(5.03516e-08, -0.91378, 0.787712)
-bones/20/rotation = Quaternion(0.955126, 0.292517, 0.0465455, 0.000867335)
+bones/18/rotation = Quaternion(-0.0452481, -0.0181103, -0.177787, 0.982861)
+bones/19/rotation = Quaternion(1.28803e-08, -1.42813e-07, 0.0213754, 0.999772)
+bones/20/rotation = Quaternion(0.815588, 0.577679, 0.000203054, -0.0332099)
 bones/20/scale = Vector3(1, 1, 1)
-bones/21/rotation = Quaternion(0.0172126, 0.00488663, 0.373198, 0.927579)
-bones/22/rotation = Quaternion(0.0404139, -0.012067, -0.464881, 0.884368)
+bones/21/rotation = Quaternion(-0.0478674, 2.34754e-05, 0.769565, 0.636772)
+bones/22/rotation = Quaternion(-2.90474e-07, -1.96537e-07, 0.0727349, 0.997351)
 bones/22/scale = Vector3(1, 1, 1)
-bones/23/rotation = Quaternion(-0.20368, -0.00505072, -0.374036, 0.904758)
+bones/23/rotation = Quaternion(-0.0566493, -0.0607237, -0.0714119, 0.993984)
 bones/23/scale = Vector3(1, 1, 1)
-bones/24/position = Vector3(0.734761, -4.35336, 0.696981)
+bones/24/position = Vector3(0.811015, -2.81355, 0.749589)
 bones/24/rotation = Quaternion(1.81238e-07, 1.47852e-07, -0.78108, 0.624431)
 bones/24/scale = Vector3(1, 1, 1)
-bones/25/position = Vector3(-1.44465, -3.41254, -0.924193)
+bones/25/position = Vector3(-3.21624, -2.24218, -0.756938)
 bones/25/rotation = Quaternion(1.81238e-07, 1.47852e-07, -0.78108, 0.624431)
 bones/25/scale = Vector3(1, 1, 1)
-bones/26/position = Vector3(-0.94039, 0.571914, 1.82872)
+bones/26/position = Vector3(-4.68829, 2.8397, 4.71876)
 bones/26/rotation = Quaternion(0.375519, 0.022388, 0.926031, -0.0308551)
 bones/26/scale = Vector3(1, 1, 1)
-bones/27/position = Vector3(1.14184, -0.0780821, -1.87784)
+bones/27/position = Vector3(-4.68829, 2.81928, -4.75317)
 bones/27/rotation = Quaternion(0.375519, 0.022388, 0.926031, -0.0308551)
 bones/27/scale = Vector3(1, 1, 1)
 
@@ -3653,6 +3690,17 @@ process_material = SubResource("ParticleProcessMaterial_b5p22")
 draw_pass_1 = SubResource("QuadMesh_h101y")
 script = ExtResource("4_x57ql")
 platformerPackage = NodePath("../../..")
+
+[node name="DustCloudParticles" type="GPUParticles3D" parent="PlatformerPackage3D/CollisionShape3D/zephAnimated" node_paths=PackedStringArray("playerPlatformer")]
+transform = Transform3D(1, 0, -5.58794e-09, 0, 1, 0, 5.58794e-09, 0, 1, 4.51928, 7.06257, 0)
+material_override = SubResource("StandardMaterial3D_rnd2p")
+emitting = false
+amount = 10
+visibility_aabb = AABB(-1.03664, -4, -4, 2.07328, 8, 8)
+process_material = SubResource("ParticleProcessMaterial_16ntw")
+draw_pass_1 = SubResource("SphereMesh_sme54")
+script = ExtResource("5_fkymg")
+playerPlatformer = NodePath("../../..")
 
 [node name="InteractionZone" type="InteractionZone" parent="PlatformerPackage3D/CollisionShape3D"]
 collision_layer = 4
