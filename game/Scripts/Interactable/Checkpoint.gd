@@ -6,6 +6,8 @@ var mainPlayer: PlatformerPackage3D
 @export var activeColor: Color
 @export var inactiveColor: Color
 
+signal checkpoint_obtained
+
 
 # Called when the node enters the scene tree for the first time: disable color
 func _ready():
@@ -30,6 +32,8 @@ func _activate(player: PlatformerPackage3D):
 	mainPlayer.respawned.connect(_respawn)
 	flagMesh.get_surface_override_material(0).albedo_color = activeColor
 	main_checkpoint = self
+	
+	emit_signal("checkpoint_obtained")
 	pass
 
 # Main function to deactivate checkpoint

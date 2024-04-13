@@ -450,8 +450,8 @@ void PlatformerPackage3D::on_landed() {
 
     // If jump buffering still active, just launch jump and cancel jump
     if (jumpBufferTimer->isRunning()) {
-        launch_jump(Math::max(bufferedJumpHeight, shortJumpHeight + 0.5));
         didGroundJump = true;
+        launch_jump(Math::max(bufferedJumpHeight, shortJumpHeight + 0.5));
         jumpBufferTimer->cancel();
 
     // Else, just land on the ground and trigger consecutive groundJump timer

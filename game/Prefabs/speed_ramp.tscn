@@ -1,0 +1,42 @@
+[gd_scene load_steps=5 format=3 uid="uid://dr1ikys42o6w"]
+
+[ext_resource type="AudioStream" uid="uid://bboa3ntjipvb7" path="res://Audio/SonicUnleashedSpeedRamp.wav" id="1_lk0n3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dnrtp"]
+size = Vector3(1, 0.6, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fowjm"]
+size = Vector3(1, 0.6, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_q3jya"]
+size = Vector3(1.25, 1, 1.25)
+
+[node name="SpeedRamp" type="StaticBody3D"]
+transform = Transform3D(-4.37114e-08, -0.412612, 0.910907, 0, 0.910907, 0.412612, -1, 1.80358e-08, -3.9817e-08, 16.257, 5.07495, -7.32605)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 3, -8.94071e-08, 0, 8.94071e-08, 3, 0, 0, 0)
+shape = SubResource("BoxShape3D_dnrtp")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("BoxMesh_fowjm")
+
+[node name="ForceArea" type="ForceArea" parent="."]
+force_duration = 0.5
+force_magnitude = 20.0
+force_direction = Vector3(0, 0, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.645011, 0)
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ForceArea"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+shape = SubResource("BoxShape3D_q3jya")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("1_lk0n3")
+volume_db = -12.565
+max_db = 1.0
+
+[connection signal="body_entered" from="ForceArea" to="ForceArea" method="on_body_enter"]
+[connection signal="force_applied" from="ForceArea" to="AudioStreamPlayer3D" method="play"]

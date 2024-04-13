@@ -1,4 +1,4 @@
-[gd_scene load_steps=121 format=3 uid="uid://dcwy0io0dfh0m"]
+[gd_scene load_steps=124 format=3 uid="uid://dcwy0io0dfh0m"]
 
 [ext_resource type="Script" path="res://Scripts/PlatformerPackage3D.gd" id="1_k1vwv"]
 [ext_resource type="PackedScene" uid="uid://wg84utt21gkw" path="res://Meshes/zephAnimated.glb" id="2_ua8sf"]
@@ -9,11 +9,14 @@
 [ext_resource type="Script" path="res://Scripts/Effects/DustCloudParticles.gd" id="5_fkymg"]
 [ext_resource type="AudioStream" uid="uid://cuwqqpv04k64o" path="res://Audio/Ledge_Snap.wav" id="6_0u5ed"]
 [ext_resource type="AudioStream" uid="uid://clxcjjd0xhjtn" path="res://Audio/Player_Dash.wav" id="7_4k4iy"]
+[ext_resource type="Script" path="res://Scripts/Audio/PlayerJumpSoundEffect.gd" id="7_igodr"]
 [ext_resource type="Script" path="res://Scripts/CameraSystem.gd" id="8_rrfxe"]
 [ext_resource type="AudioStream" uid="uid://bihqjx6irpksu" path="res://Audio/Player_Death.mp3" id="8_u5s0f"]
 [ext_resource type="Script" path="res://Scripts/Effects/DynamicLine.gd" id="9_gs7qi"]
 [ext_resource type="Script" path="res://Scripts/UI/MainPlayerUI.gd" id="9_j8ci4"]
 [ext_resource type="Script" path="res://Scripts/UI/PauseMenu.gd" id="12_3wb0a"]
+[ext_resource type="AudioStream" uid="uid://cpct13unchm5v" path="res://Audio/sliding.wav" id="12_fkc54"]
+[ext_resource type="Script" path="res://Scripts/Audio/PlayerSlidingSoundEffect.gd" id="13_4t12f"]
 [ext_resource type="Texture2D" uid="uid://csqie433jgbm" path="res://resources/effect_4.png" id="14_nlnsq"]
 [ext_resource type="Script" path="res://Scripts/Effects/DashScreenEffect.gd" id="15_e11dj"]
 
@@ -3609,47 +3612,55 @@ mesh = SubResource("BoxMesh_r4ct1")
 transform = Transform3D(-1.16415e-08, 0, 0.25, 0, 0.25, 0, -0.25, 0, -1.16415e-08, 3.72529e-09, -1.40602, 0.0368737)
 
 [node name="Skeleton3D" parent="PlatformerPackage3D/CollisionShape3D/zephAnimated/Armature" index="0"]
-bones/0/rotation = Quaternion(9.27546e-05, 0.0238888, -0.201653, 0.979166)
-bones/1/rotation = Quaternion(-9.72388e-09, -4.67728e-08, -0.157092, 0.987584)
-bones/2/rotation = Quaternion(4.06172e-08, 4.07025e-08, 0.14431, 0.989533)
-bones/3/rotation = Quaternion(-4.82262e-09, 4.15161e-08, 0.279134, 0.960252)
+bones/0/position = Vector3(7.45058e-09, -1.00901, -2.56957e-09)
+bones/0/rotation = Quaternion(4.20938e-08, 1.1041e-07, -0.0786071, 0.996906)
+bones/1/rotation = Quaternion(-9.0621e-09, -4.84279e-08, -0.126883, 0.991918)
+bones/1/scale = Vector3(1.00723, 1.00723, 1.00723)
+bones/2/rotation = Quaternion(2.24575e-08, 5.72651e-08, -0.0651031, 0.997879)
+bones/3/rotation = Quaternion(-1.09585e-08, 4.84332e-08, 0.14314, 0.989702)
 bones/3/scale = Vector3(1, 1, 1)
-bones/4/rotation = Quaternion(-0.852983, 0.293456, 0.201516, 0.381699)
-bones/5/rotation = Quaternion(-0.00279248, 0.00635803, 0.00195702, 0.999974)
+bones/4/rotation = Quaternion(-0.894706, -0.0527933, 0.330654, 0.295604)
+bones/5/rotation = Quaternion(-0.563541, 0.0183189, -0.340291, 0.752521)
+bones/6/rotation = Quaternion(-0.0488125, 0.112035, 0.0277027, 0.992118)
 bones/7/rotation = Quaternion(0.175071, 0.0829399, -0.409184, 0.89165)
 bones/7/scale = Vector3(1, 1, 1)
-bones/8/rotation = Quaternion(0.852066, -0.316898, 0.227377, 0.349082)
-bones/9/rotation = Quaternion(0.0027746, -0.00828293, 0.00190862, 0.99996)
-bones/10/rotation = Quaternion(0.0397906, 0.000504848, 0.0437373, 0.99825)
+bones/8/rotation = Quaternion(0.859196, -0.381759, 0.193449, 0.280394)
+bones/9/rotation = Quaternion(0.390988, -0.0138933, -0.501561, 0.771603)
+bones/10/rotation = Quaternion(0.0140612, 0.0184853, -0.125988, 0.99176)
 bones/10/scale = Vector3(1, 1, 1)
-bones/11/rotation = Quaternion(-0.17507, -0.0829408, -0.409185, 0.89165)
+bones/11/rotation = Quaternion(0.000391462, -0.160389, -0.385469, 0.908674)
 bones/11/scale = Vector3(1, 1, 1)
-bones/12/rotation = Quaternion(-1.75302e-07, -1.4423e-08, 0.791563, 0.611088)
+bones/12/rotation = Quaternion(-1.864e-07, 4.08967e-08, 0.959962, 0.280129)
 bones/12/scale = Vector3(1, 1, 1)
-bones/16/rotation = Quaternion(0.921849, -0.387417, 0.000484747, 0.0101108)
+bones/13/rotation = Quaternion(5.14718e-09, -5.20804e-09, -0.149049, 0.98883)
+bones/14/rotation = Quaternion(1.05409e-08, -6.18109e-09, -0.179763, 0.98371)
+bones/15/rotation = Quaternion(1.14435e-08, 2.3106e-10, -0.086889, 0.996218)
+bones/16/position = Vector3(-2.06746e-08, -1.05334, -0.787712)
+bones/16/rotation = Quaternion(0.953673, 0.123472, -0.250709, -0.111391)
 bones/16/scale = Vector3(1, 1, 1)
-bones/17/rotation = Quaternion(0.00766344, -0.0038946, 0.281545, 0.95951)
+bones/17/rotation = Quaternion(0.163609, 0.013479, 0.663337, 0.730092)
 bones/17/scale = Vector3(1, 1, 1)
-bones/18/rotation = Quaternion(-0.0452481, -0.0181103, -0.177787, 0.982861)
-bones/19/rotation = Quaternion(1.28803e-08, -1.42813e-07, 0.0213754, 0.999772)
-bones/20/rotation = Quaternion(0.815588, 0.577679, 0.000203054, -0.0332099)
+bones/18/rotation = Quaternion(-0.15076, 0.138086, -0.670178, 0.713489)
+bones/19/rotation = Quaternion(0.0632648, -0.0251321, -0.397437, 0.915101)
+bones/20/position = Vector3(5.10312e-08, -1.05334, 0.787712)
+bones/20/rotation = Quaternion(0.939942, 0.338017, 0.0472512, 0.00459714)
 bones/20/scale = Vector3(1, 1, 1)
-bones/21/rotation = Quaternion(-0.0478674, 2.34754e-05, 0.769565, 0.636772)
-bones/22/rotation = Quaternion(-2.90474e-07, -1.96537e-07, 0.0727349, 0.997351)
+bones/21/rotation = Quaternion(0.0212907, 0.00481504, 0.452188, 0.891656)
+bones/22/rotation = Quaternion(0.0408489, -0.0105006, -0.498617, 0.865796)
 bones/22/scale = Vector3(1, 1, 1)
-bones/23/rotation = Quaternion(-0.0566493, -0.0607237, -0.0714119, 0.993984)
+bones/23/rotation = Quaternion(-0.20368, -0.00505072, -0.374036, 0.904758)
 bones/23/scale = Vector3(1, 1, 1)
-bones/24/position = Vector3(0.811015, -2.81355, 0.749589)
+bones/24/position = Vector3(0.734761, -4.35336, 0.696981)
 bones/24/rotation = Quaternion(1.81238e-07, 1.47852e-07, -0.78108, 0.624431)
 bones/24/scale = Vector3(1, 1, 1)
-bones/25/position = Vector3(-3.21624, -2.24218, -0.756938)
+bones/25/position = Vector3(-1.44465, -3.41254, -0.924193)
 bones/25/rotation = Quaternion(1.81238e-07, 1.47852e-07, -0.78108, 0.624431)
 bones/25/scale = Vector3(1, 1, 1)
-bones/26/position = Vector3(-4.68829, 2.8397, 4.71876)
-bones/26/rotation = Quaternion(0.375519, 0.022388, 0.926031, -0.0308551)
+bones/26/position = Vector3(-0.94039, 0.286571, 1.82872)
+bones/26/rotation = Quaternion(0.375519, 0.022388, 0.92603, -0.0308551)
 bones/26/scale = Vector3(1, 1, 1)
-bones/27/position = Vector3(-4.68829, 2.81928, -4.75317)
-bones/27/rotation = Quaternion(0.375519, 0.022388, 0.926031, -0.0308551)
+bones/27/position = Vector3(1.14005, -0.213635, -1.96327)
+bones/27/rotation = Quaternion(0.375519, 0.022388, 0.92603, -0.0308551)
 bones/27/scale = Vector3(1, 1, 1)
 
 [node name="Cube" parent="PlatformerPackage3D/CollisionShape3D/zephAnimated/Armature/Skeleton3D" index="0"]
@@ -3711,10 +3722,14 @@ shape = SubResource("SphereShape3D_j6xqe")
 
 [node name="AudioCenter" type="Node3D" parent="PlatformerPackage3D"]
 
-[node name="PlayerJumpSpeaker" type="AudioStreamPlayer3D" parent="PlatformerPackage3D/AudioCenter"]
+[node name="PlayerJumpSpeaker" type="AudioStreamPlayer3D" parent="PlatformerPackage3D/AudioCenter" node_paths=PackedStringArray("playerPackage")]
 transform = Transform3D(1, 0, -3.72529e-09, 0, 1, 0, 1.86265e-09, 0, 1, 0, 0, 0)
 stream = ExtResource("4_664ea")
 volume_db = -16.2
+pitch_scale = 0.75
+script = ExtResource("7_igodr")
+playerPackage = NodePath("../..")
+pitchScaling = 0.25
 
 [node name="PlayerLandSpeaker" type="AudioStreamPlayer3D" parent="PlatformerPackage3D/AudioCenter"]
 transform = Transform3D(1, 0, -1.86265e-09, 0, 1, 0, 1.86265e-09, 0, 1, -0.0177902, -0.0725532, 0.0626138)
@@ -3729,6 +3744,12 @@ stream = ExtResource("7_4k4iy")
 
 [node name="PlayerDeathSpeaker" type="AudioStreamPlayer3D" parent="PlatformerPackage3D/AudioCenter"]
 stream = ExtResource("8_u5s0f")
+
+[node name="PlayerSlidingSpeaker" type="AudioStreamPlayer" parent="PlatformerPackage3D/AudioCenter" node_paths=PackedStringArray("playerPlatformer")]
+stream = ExtResource("12_fkc54")
+volume_db = -10.0
+script = ExtResource("13_4t12f")
+playerPlatformer = NodePath("../..")
 
 [node name="SpotShadow" type="SpotShadow" parent="PlatformerPackage3D"]
 max_shadow_scale = 1.2
@@ -3887,7 +3908,7 @@ platformerPackage = NodePath("../../PlatformerPackage3D")
 [connection signal="death" from="PlatformerPackage3D" to="PlatformerPackage3D" method="_on_death"]
 [connection signal="death" from="PlatformerPackage3D" to="PlatformerPackage3D/AudioCenter/PlayerDeathSpeaker" method="play"]
 [connection signal="jump_begin" from="PlatformerPackage3D" to="PlatformerPackage3D/PlatformerFeetSensor" method="disable_coyote_time"]
-[connection signal="jump_begin" from="PlatformerPackage3D" to="PlatformerPackage3D/AudioCenter/PlayerJumpSpeaker" method="play"]
+[connection signal="jump_begin" from="PlatformerPackage3D" to="PlatformerPackage3D/AudioCenter/PlayerJumpSpeaker" method="_on_jump_started"]
 [connection signal="ledge_grab_begin" from="PlatformerPackage3D" to="PlatformerPackage3D/AudioCenter/LedgeSnapSpeaker" method="play"]
 [connection signal="body_entered" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/PlatformerFeetSensor" method="on_body_enter"]
 [connection signal="body_exited" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/PlatformerFeetSensor" method="on_body_exit"]
