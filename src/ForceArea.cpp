@@ -46,7 +46,7 @@ void ForceArea::on_body_enter(Node3D* body) {
         Vector3 globalDirection = to_global(localForceDirection) - get_global_position();
 
         // Apply force
-        player->apply_speed_force(forceMagnitude * globalDirection.normalized(), forceDuration);
+        player->apply_speed_force(forceMagnitude * globalDirection.normalized(), forceDuration, true);
         emit_signal("force_applied");
     }
 }

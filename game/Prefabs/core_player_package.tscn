@@ -3428,14 +3428,14 @@ advance_condition = &"spawning"
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_303lc"]
 states/Dash/node = SubResource("AnimationNodeAnimation_2h64t")
-states/Dash/position = Vector2(385, -174)
+states/Dash/position = Vector2(362, -202)
 states/End/position = Vector2(972, 108)
 states/Idle/node = SubResource("AnimationNodeAnimation_bqwrn")
 states/Idle/position = Vector2(115, 200)
 states/JumpDown/node = SubResource("AnimationNodeAnimation_idhrt")
-states/JumpDown/position = Vector2(465, -20)
+states/JumpDown/position = Vector2(645, -105)
 states/JumpUp/node = SubResource("AnimationNodeBlendTree_37n24")
-states/JumpUp/position = Vector2(452, 200)
+states/JumpUp/position = Vector2(490, 212)
 states/LedgeGrab/node = SubResource("AnimationNodeAnimation_jlvss")
 states/LedgeGrab/position = Vector2(682, 288)
 states/Skid/node = SubResource("AnimationNodeAnimation_6ft2s")
@@ -3448,7 +3448,7 @@ states/WalkTree/position = Vector2(95, 92)
 states/WallGrab/node = SubResource("AnimationNodeAnimation_xj8qn")
 states/WallGrab/position = Vector2(762, 118)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_p5ma1"), "Skid", "Idle", SubResource("AnimationNodeStateMachineTransition_cpfty"), "Skid", "JumpDown", SubResource("AnimationNodeStateMachineTransition_1skfo"), "Idle", "JumpDown", SubResource("AnimationNodeStateMachineTransition_wfu81"), "JumpDown", "Idle", SubResource("AnimationNodeStateMachineTransition_lux1h"), "JumpDown", "WallGrab", SubResource("AnimationNodeStateMachineTransition_c0ndk"), "JumpDown", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_1561j"), "WallGrab", "Idle", SubResource("AnimationNodeStateMachineTransition_hh4iy"), "Skid", "Dash", SubResource("AnimationNodeStateMachineTransition_v2e7u"), "JumpDown", "Dash", SubResource("AnimationNodeStateMachineTransition_gxcgw"), "Idle", "Dash", SubResource("AnimationNodeStateMachineTransition_hovx6"), "WallGrab", "Dash", SubResource("AnimationNodeStateMachineTransition_gl3uq"), "Dash", "JumpDown", SubResource("AnimationNodeStateMachineTransition_w24f2"), "Dash", "WallGrab", SubResource("AnimationNodeStateMachineTransition_c1xd3"), "Dash", "Idle", SubResource("AnimationNodeStateMachineTransition_p6vjl"), "Dash", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_gkbf5"), "Dash", "Skid", SubResource("AnimationNodeStateMachineTransition_txjxm"), "WallGrab", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_4bd8l"), "Idle", "WalkTree", SubResource("AnimationNodeStateMachineTransition_ul23a"), "WalkTree", "Idle", SubResource("AnimationNodeStateMachineTransition_h8ogc"), "WalkTree", "Skid", SubResource("AnimationNodeStateMachineTransition_q56sd"), "Skid", "WalkTree", SubResource("AnimationNodeStateMachineTransition_safhb"), "WalkTree", "Dash", SubResource("AnimationNodeStateMachineTransition_hoebi"), "Dash", "WalkTree", SubResource("AnimationNodeStateMachineTransition_31my1"), "WalkTree", "JumpDown", SubResource("AnimationNodeStateMachineTransition_pjw6r"), "JumpDown", "WalkTree", SubResource("AnimationNodeStateMachineTransition_arooh"), "WallGrab", "WalkTree", SubResource("AnimationNodeStateMachineTransition_dpuff"), "JumpDown", "SpawnIn", SubResource("AnimationNodeStateMachineTransition_5lgj1"), "Dash", "SpawnIn", SubResource("AnimationNodeStateMachineTransition_g5yac"), "WallGrab", "SpawnIn", SubResource("AnimationNodeStateMachineTransition_2n7jg"), "SpawnIn", "Idle", SubResource("AnimationNodeStateMachineTransition_npaux"), "JumpUp", "SpawnIn", SubResource("AnimationNodeStateMachineTransition_w4fpk"), "JumpUp", "Idle", SubResource("AnimationNodeStateMachineTransition_qq3wq"), "JumpUp", "JumpDown", SubResource("AnimationNodeStateMachineTransition_jdrfk"), "JumpUp", "WallGrab", SubResource("AnimationNodeStateMachineTransition_kpfum"), "JumpUp", "Dash", SubResource("AnimationNodeStateMachineTransition_v756f"), "JumpUp", "WalkTree", SubResource("AnimationNodeStateMachineTransition_uwd7w"), "JumpUp", "Skid", SubResource("AnimationNodeStateMachineTransition_ilw60"), "JumpUp", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_c5yf0"), "Idle", "JumpUp", SubResource("AnimationNodeStateMachineTransition_v0xdp"), "WalkTree", "JumpUp", SubResource("AnimationNodeStateMachineTransition_t66b3"), "Skid", "JumpUp", SubResource("AnimationNodeStateMachineTransition_0x2jk"), "Dash", "JumpUp", SubResource("AnimationNodeStateMachineTransition_urixy"), "JumpDown", "JumpUp", SubResource("AnimationNodeStateMachineTransition_myfke"), "WallGrab", "JumpUp", SubResource("AnimationNodeStateMachineTransition_wbo8s"), "LedgeGrab", "JumpUp", SubResource("AnimationNodeStateMachineTransition_uynjf"), "LedgeGrab", "SpawnIn", SubResource("AnimationNodeStateMachineTransition_4ynh4"), "WalkTree", "SpawnIn", SubResource("AnimationNodeStateMachineTransition_owhu7"), "Idle", "SpawnIn", SubResource("AnimationNodeStateMachineTransition_yclbe")]
-graph_offset = Vector2(-25, 137)
+graph_offset = Vector2(-3, -245.201)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ov1il"]
 transparency = 1
@@ -3612,41 +3612,41 @@ mesh = SubResource("BoxMesh_r4ct1")
 transform = Transform3D(-1.16415e-08, 0, 0.25, 0, 0.25, 0, -0.25, 0, -1.16415e-08, 3.72529e-09, -1.40602, 0.0368737)
 
 [node name="Skeleton3D" parent="PlatformerPackage3D/CollisionShape3D/zephAnimated/Armature" index="0"]
-bones/0/position = Vector3(7.45058e-09, -1.00901, -2.56957e-09)
-bones/0/rotation = Quaternion(4.20938e-08, 1.1041e-07, -0.0786071, 0.996906)
-bones/1/rotation = Quaternion(-9.0621e-09, -4.84279e-08, -0.126883, 0.991918)
-bones/1/scale = Vector3(1.00723, 1.00723, 1.00723)
-bones/2/rotation = Quaternion(2.24575e-08, 5.72651e-08, -0.0651031, 0.997879)
-bones/3/rotation = Quaternion(-1.09585e-08, 4.84332e-08, 0.14314, 0.989702)
+bones/0/position = Vector3(3.96995e-09, -0.918984, -3.8886e-15)
+bones/0/rotation = Quaternion(4.28508e-08, 1.11658e-07, -0.0716513, 0.99743)
+bones/1/rotation = Quaternion(-1.02029e-08, -4.77264e-08, -0.114667, 0.993404)
+bones/1/scale = Vector3(1.02897, 1.02896, 1.02896)
+bones/2/rotation = Quaternion(2.15696e-08, 5.90698e-08, -0.0709321, 0.997481)
+bones/3/rotation = Quaternion(-1.14151e-08, 4.96332e-08, 0.138984, 0.990295)
 bones/3/scale = Vector3(1, 1, 1)
-bones/4/rotation = Quaternion(-0.894706, -0.0527933, 0.330654, 0.295604)
-bones/5/rotation = Quaternion(-0.563541, 0.0183189, -0.340291, 0.752521)
-bones/6/rotation = Quaternion(-0.0488125, 0.112035, 0.0277027, 0.992118)
+bones/4/rotation = Quaternion(-0.899832, -0.0157614, 0.279569, 0.334508)
+bones/5/rotation = Quaternion(-0.599692, 0.0174214, -0.414447, 0.684325)
+bones/6/rotation = Quaternion(-0.0488126, 0.112035, 0.0277027, 0.992118)
 bones/7/rotation = Quaternion(0.175071, 0.0829399, -0.409184, 0.89165)
 bones/7/scale = Vector3(1, 1, 1)
-bones/8/rotation = Quaternion(0.859196, -0.381759, 0.193449, 0.280394)
-bones/9/rotation = Quaternion(0.390988, -0.0138933, -0.501561, 0.771603)
-bones/10/rotation = Quaternion(0.0140612, 0.0184853, -0.125988, 0.99176)
+bones/8/rotation = Quaternion(0.810134, -0.375457, 0.197193, 0.40476)
+bones/9/rotation = Quaternion(0.611736, -0.0117149, -0.373059, 0.697474)
+bones/10/rotation = Quaternion(0.0149458, 0.0113202, -0.12418, 0.992083)
 bones/10/scale = Vector3(1, 1, 1)
-bones/11/rotation = Quaternion(0.000391462, -0.160389, -0.385469, 0.908674)
+bones/11/rotation = Quaternion(0.000391463, -0.160389, -0.385469, 0.908674)
 bones/11/scale = Vector3(1, 1, 1)
-bones/12/rotation = Quaternion(-1.864e-07, 4.08967e-08, 0.959962, 0.280129)
+bones/12/rotation = Quaternion(-1.9089e-07, 3.58148e-08, 0.951169, 0.308672)
 bones/12/scale = Vector3(1, 1, 1)
-bones/13/rotation = Quaternion(5.14718e-09, -5.20804e-09, -0.149049, 0.98883)
-bones/14/rotation = Quaternion(1.05409e-08, -6.18109e-09, -0.179763, 0.98371)
-bones/15/rotation = Quaternion(1.14435e-08, 2.3106e-10, -0.086889, 0.996218)
-bones/16/position = Vector3(-2.06746e-08, -1.05334, -0.787712)
-bones/16/rotation = Quaternion(0.953673, 0.123472, -0.250709, -0.111391)
+bones/13/rotation = Quaternion(7.28884e-09, -6.45706e-09, -0.113165, 0.993576)
+bones/14/rotation = Quaternion(2.26177e-08, -6.97822e-09, -0.356838, 0.934167)
+bones/15/rotation = Quaternion(3.62835e-09, -4.83333e-10, -0.0612373, 0.998123)
+bones/16/position = Vector3(-1.6913e-08, -0.876969, -0.787712)
+bones/16/rotation = Quaternion(0.954472, 0.107759, -0.256424, -0.107791)
 bones/16/scale = Vector3(1, 1, 1)
-bones/17/rotation = Quaternion(0.163609, 0.013479, 0.663337, 0.730092)
+bones/17/rotation = Quaternion(0.150724, 0.0127687, 0.619744, 0.770089)
 bones/17/scale = Vector3(1, 1, 1)
-bones/18/rotation = Quaternion(-0.15076, 0.138086, -0.670178, 0.713489)
+bones/18/rotation = Quaternion(-0.1363, 0.152377, -0.596001, 0.776522)
 bones/19/rotation = Quaternion(0.0632648, -0.0251321, -0.397437, 0.915101)
-bones/20/position = Vector3(5.10312e-08, -1.05334, 0.787712)
-bones/20/rotation = Quaternion(0.939942, 0.338017, 0.0472512, 0.00459714)
+bones/20/position = Vector3(4.4262e-08, -0.876969, 0.787712)
+bones/20/rotation = Quaternion(0.959212, 0.278865, 0.0463362, -0.000269678)
 bones/20/scale = Vector3(1, 1, 1)
-bones/21/rotation = Quaternion(0.0212907, 0.00481504, 0.452188, 0.891656)
-bones/22/rotation = Quaternion(0.0408489, -0.0105006, -0.498617, 0.865796)
+bones/21/rotation = Quaternion(0.0159947, 0.00490668, 0.348786, 0.937053)
+bones/22/rotation = Quaternion(0.0402978, -0.0124494, -0.45648, 0.888734)
 bones/22/scale = Vector3(1, 1, 1)
 bones/23/rotation = Quaternion(-0.20368, -0.00505072, -0.374036, 0.904758)
 bones/23/scale = Vector3(1, 1, 1)
@@ -3656,11 +3656,11 @@ bones/24/scale = Vector3(1, 1, 1)
 bones/25/position = Vector3(-1.44465, -3.41254, -0.924193)
 bones/25/rotation = Quaternion(1.81238e-07, 1.47852e-07, -0.78108, 0.624431)
 bones/25/scale = Vector3(1, 1, 1)
-bones/26/position = Vector3(-0.94039, 0.286571, 1.82872)
-bones/26/rotation = Quaternion(0.375519, 0.022388, 0.92603, -0.0308551)
+bones/26/position = Vector3(-0.94039, 0.644076, 1.82872)
+bones/26/rotation = Quaternion(0.375519, 0.022388, 0.926031, -0.0308551)
 bones/26/scale = Vector3(1, 1, 1)
-bones/27/position = Vector3(1.14005, -0.213635, -1.96327)
-bones/27/rotation = Quaternion(0.375519, 0.022388, 0.92603, -0.0308551)
+bones/27/position = Vector3(1.13987, 0.109138, -1.89661)
+bones/27/rotation = Quaternion(0.375519, 0.022388, 0.926031, -0.0308551)
 bones/27/scale = Vector3(1, 1, 1)
 
 [node name="Cube" parent="PlatformerPackage3D/CollisionShape3D/zephAnimated/Armature/Skeleton3D" index="0"]
@@ -3887,6 +3887,19 @@ grow_horizontal = 2
 grow_vertical = 0
 color = Color(0.443137, 0.443137, 0.443137, 1)
 
+[node name="Label" type="Label" parent="MainUI/PauseMenu/PauseMenuBackground/PauseMenuMenu/ColorRect"]
+layout_mode = 0
+offset_right = 501.0
+offset_bottom = 203.0
+text = "Spacebar - Jump
+WASD - Movement
+Shift - Dash
+
+When in midair, you only have one dash.
+You can regain a dash by landing on the ground or hitting
+a trampoline / speed ramp"
+horizontal_alignment = 1
+
 [node name="DashScreenEffect" type="TextureRect" parent="MainUI" node_paths=PackedStringArray("platformerPackage")]
 visible = false
 material = SubResource("CanvasItemMaterial_d8k0k")
@@ -3902,6 +3915,7 @@ texture = ExtResource("14_nlnsq")
 script = ExtResource("15_e11dj")
 platformerPackage = NodePath("../../PlatformerPackage3D")
 
+[connection signal="dash_regained" from="PlatformerPackage3D" to="PlatformerPackage3D/CollisionShape3D/zephAnimated/DashUsedParticles" method="on_dash_regained"]
 [connection signal="dash_started" from="PlatformerPackage3D" to="PlatformerPackage3D/CollisionShape3D/zephAnimated/DashUsedParticles" method="on_dashed"]
 [connection signal="dash_started" from="PlatformerPackage3D" to="PlatformerPackage3D/AudioCenter/PlayerDashSpeaker" method="play"]
 [connection signal="dash_started" from="PlatformerPackage3D" to="MainUI/DashScreenEffect" method="on_dash_started"]
@@ -3914,7 +3928,6 @@ platformerPackage = NodePath("../../PlatformerPackage3D")
 [connection signal="body_exited" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/PlatformerFeetSensor" method="on_body_exit"]
 [connection signal="fall_begin" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D" method="on_fall_begin"]
 [connection signal="landed" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D" method="on_landed"]
-[connection signal="landed" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/CollisionShape3D/zephAnimated/DashUsedParticles" method="on_landed"]
 [connection signal="landed" from="PlatformerPackage3D/PlatformerFeetSensor" to="PlatformerPackage3D/AudioCenter/PlayerLandSpeaker" method="play"]
 [connection signal="landed" from="PlatformerPackage3D/PlatformerFeetSensor" to="DynamicCameraPivot" method="on_landed"]
 [connection signal="body_entered" from="PlatformerPackage3D/CollisionShape3D/InteractionZone" to="PlatformerPackage3D/CollisionShape3D/InteractionZone" method="on_body_enter"]

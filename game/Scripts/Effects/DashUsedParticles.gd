@@ -9,7 +9,7 @@ func on_dashed():
 		pass
 	pass
 	
-func on_landed():
+func on_dash_regained():
 	if (emitting):
 		emitting = false
 		pass

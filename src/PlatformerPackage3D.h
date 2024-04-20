@@ -159,7 +159,7 @@ class PlatformerPackage3D : public CharacterBody3D {
         // Main function to apply speed force
         //  Pre: speedForceVector is the direction and magnitude of the speed force affecting character,
         //       duration is the duration of the force before decaying
-        void apply_speed_force(Vector3 speedForceVector, double duration);
+        void apply_speed_force(Vector3 speedForceVector, double duration, bool regainDash = false);
 
         // Main function to cancel speed force
         void cancel_speed_force();

@@ -99,6 +99,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.6364, 3.94095, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.16737, 4.0408, -6.40158)
 
 [node name="OnboardingSign" parent="." instance=ExtResource("4_iv2nw")]
+transform = Transform3D(1.25, 0, 0, 0, 1.25, 0, 0, 0, 1.25, 8.75, 5.70375, 11.25)
 
 [node name="TestInteractable2" parent="." instance=ExtResource("5_55ys6")]
 visible = false

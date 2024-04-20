@@ -44,6 +44,7 @@ void PlatformerPackage3D::_bind_methods() {
     ADD_SIGNAL(MethodInfo("dash_started"));
     ADD_SIGNAL(MethodInfo("death"));
     ADD_SIGNAL(MethodInfo("respawned"));
+    ADD_SIGNAL(MethodInfo("dash_regained"));
 
     // Bind properties
     bind_properties();
@@ -289,7 +290,7 @@ void PlatformerPackage3D::dash() {
 
 
 // Main function to apply speed force
-void PlatformerPackage3D::apply_speed_force(Vector3 speedForceVector, double duration) {
+void PlatformerPackage3D::apply_speed_force(Vector3 speedForceVector, double duration, bool regainDash) {
     cancel_speed_force();
 
     appliedSpeedLock.lock();
@@ -312,6 +313,14 @@ void PlatformerPackage3D::apply_speed_force(Vector3 speedForceVector, double dur
         // Create timer and connect
         appliedSpeedTimer = get_tree()->create_timer(duration);
         appliedSpeedTimer->connect("timeout", appliedSpeedTimeoutListener);
+    }
+
+    if (regainDash) {
+        on_dash_regained();
+        curDashesUsed = 0;
+        dashing = false;
+
+        emit_signal("dash_regained");
     }
 
     appliedSpeedLock.unlock();
@@ -431,10 +440,15 @@ void PlatformerPackage3D::on_dash_regained() {
 
     // Unref dash cooldown timer
     if (dashCooldownTimer.is_valid()) {
+        dashCooldownTimer->disconnect("timeout", dashCooldownListener);
         dashCooldownTimer.unref();
     }
 
     dashLock.unlock();
+
+    if (curDashesUsed < maxNumAirDashes) {
+        emit_signal("dash_regained");
+    }
 }
 
 
@@ -445,7 +459,12 @@ void PlatformerPackage3D::on_landed() {
 
     // reset dashing
     dashLock.lock();
+
+    if (curDashesUsed >= maxNumAirDashes) {
+        emit_signal("dash_regained");
+    }
     curDashesUsed = 0;
+
     dashLock.unlock();
 
     // If jump buffering still active, just launch jump and cancel jump

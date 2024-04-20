@@ -127,6 +127,25 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "Back"
 
+[node name="Label" type="Label" parent="MainMenuBackground/HowToPlayScreen/HowToPlayMenu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -350.0
+offset_top = 44.0
+offset_right = 350.0
+offset_bottom = 375.0
+grow_horizontal = 2
+text = "Spacebar - Jump
+WASD - Movement
+Shift - Dash
+
+When in midair, you only have one dash.
+You can regain a dash by landing on the ground or hitting a trampoline / speed ramp"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [connection signal="pressed" from="MainMenuBackground/MarginContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="MainMenuBackground/MarginContainer/VBoxContainer/HowToPlay" to="." method="_on_how_to_play_pressed"]
 [connection signal="pressed" from="MainMenuBackground/MarginContainer/VBoxContainer/Exit" to="." method="_on_exit_pressed"]
