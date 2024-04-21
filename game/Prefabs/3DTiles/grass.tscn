@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://clxwdyotoq6xt"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c3ls7"]
+albedo_color = Color(0, 0.396078, 0, 1)
+
+[node name="Grass" type="CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.74667, 0, -2.74643)
+use_collision = true
+collision_mask = 3
+material = SubResource("StandardMaterial3D_c3ls7")

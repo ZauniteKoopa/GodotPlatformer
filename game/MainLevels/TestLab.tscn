@@ -91,6 +91,7 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 16.257
 [node name="SpeedRamp" parent="." instance=ExtResource("2_54pr1")]
 
 [node name="CorePlayerPackage" parent="." instance=ExtResource("1_7le36")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.03184, 6.27166, 0.15137)
 
 [node name="Checkpoint" parent="." instance=ExtResource("2_x0lre")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.6364, 3.94095, 0)

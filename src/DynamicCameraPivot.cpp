@@ -33,7 +33,7 @@ DynamicCameraPivot::~DynamicCameraPivot() {
 void DynamicCameraPivot::_enter_tree() {
     initialize_current_node_pointers();
 
-    set_position(target->get_global_position());
+    set_global_position(target->get_global_position());
     double currentYPivot = target->get_global_position()[Vector3::AXIS_Y];
 
     yaw = get_global_basis().get_euler()[Vector3::AXIS_X];
@@ -54,7 +54,7 @@ void DynamicCameraPivot::_process(double delta) {
         );
 
         currentPosition += (verticalPositionOffset * Vector3(0, 1, 0));
-        set_position(currentPosition);
+        set_global_position(currentPosition);
 
         // Set rotation
         set_rotation(Vector3(get_transitioning_yaw(delta), pitch, 0));
