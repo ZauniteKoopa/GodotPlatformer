@@ -319,6 +319,7 @@ void PlatformerPackage3D::apply_speed_force(Vector3 speedForceVector, double dur
         on_dash_regained();
         curDashesUsed = 0;
         dashing = false;
+        curExtraJumpsDone = 0;
 
         emit_signal("dash_regained");
     }
