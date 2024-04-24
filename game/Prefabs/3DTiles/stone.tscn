@@ -1,7 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8tgcya8lsx61"]
+[gd_scene load_steps=3 format=3 uid="uid://c8tgcya8lsx61"]
+
+[ext_resource type="Texture2D" uid="uid://b4i6rjx6wtfq0" path="res://Textures/Mossy_Stone_Bricks_29_JE3_BE2.png" id="1_eckpo"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jbemj"]
-albedo_color = Color(0.47451, 0.47451, 0.47451, 1)
+albedo_texture = ExtResource("1_eckpo")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
 
 [node name="Stone" type="CSGBox3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 87, 24.5, -2.38419e-07)

@@ -1,7 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://clxwdyotoq6xt"]
+[gd_scene load_steps=3 format=3 uid="uid://clxwdyotoq6xt"]
+
+[ext_resource type="Texture2D" uid="uid://ctdtb3chpjko8" path="res://Textures/Moss_Block_29_JE1.png" id="1_5qqjy"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c3ls7"]
-albedo_color = Color(0, 0.396078, 0, 1)
+albedo_color = Color(0, 0.968627, 0, 1)
+albedo_texture = ExtResource("1_5qqjy")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
 
 [node name="Grass" type="CSGBox3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.74667, 0, -2.74643)

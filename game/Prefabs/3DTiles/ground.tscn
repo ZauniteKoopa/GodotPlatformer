@@ -1,7 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://wxc1k2n5a2x4"]
+[gd_scene load_steps=3 format=3 uid="uid://wxc1k2n5a2x4"]
+
+[ext_resource type="Texture2D" uid="uid://b7vw8ccqw2i01" path="res://Textures/Granite_29_JE2_BE2.png" id="1_5gp8i"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2s8n8"]
-albedo_color = Color(0.588235, 0.337255, 0.203922, 1)
+albedo_texture = ExtResource("1_5gp8i")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
 
 [node name="Ground" type="CSGBox3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.81451, 0, 0)

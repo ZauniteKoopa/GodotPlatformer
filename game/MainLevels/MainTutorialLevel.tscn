@@ -1,14 +1,16 @@
-[gd_scene load_steps=15 format=3 uid="uid://crk7v1twf8juf"]
+[gd_scene load_steps=27 format=3 uid="uid://crk7v1twf8juf"]
 
 [ext_resource type="PackedScene" uid="uid://clxwdyotoq6xt" path="res://Prefabs/3DTiles/grass.tscn" id="1_rp7yq"]
 [ext_resource type="PackedScene" uid="uid://wxc1k2n5a2x4" path="res://Prefabs/3DTiles/ground.tscn" id="2_cxipm"]
 [ext_resource type="PackedScene" uid="uid://bh5ia6w25v03o" path="res://Prefabs/checkpoint.tscn" id="3_a0yfl"]
 [ext_resource type="PackedScene" uid="uid://dcwy0io0dfh0m" path="res://Prefabs/core_player_package.tscn" id="4_fmt6k"]
 [ext_resource type="PackedScene" uid="uid://c8tgcya8lsx61" path="res://Prefabs/3DTiles/stone.tscn" id="5_ypyql"]
+[ext_resource type="Texture2D" uid="uid://bfv3ibqki1upl" path="res://Textures/Lava.jpg" id="6_mifth"]
 [ext_resource type="Script" path="res://Scripts/DeathTrigger.gd" id="6_rb3nw"]
 [ext_resource type="PackedScene" uid="uid://cdxttr165quh7" path="res://Prefabs/trampoline.tscn" id="7_qvose"]
 [ext_resource type="PackedScene" uid="uid://dr1ikys42o6w" path="res://Prefabs/speed_ramp.tscn" id="8_oq5uk"]
 [ext_resource type="PackedScene" uid="uid://c7253ay5sll5k" path="res://Prefabs/goal_platform.tscn" id="9_x4whb"]
+[ext_resource type="PackedScene" uid="uid://nfabhwnhm663" path="res://Prefabs/Interactable/onboarding_sign.tscn" id="10_jxoql"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_t32i4"]
 size = Vector3(4.52219, 2, 7.21729)
@@ -17,14 +19,58 @@ size = Vector3(4.52219, 2, 7.21729)
 size = Vector3(4.5, 2, 7.2)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kcw38"]
-albedo_color = Color(1, 0, 0, 1)
+albedo_texture = ExtResource("6_mifth")
+uv1_scale = Vector3(0.4, 0.4, 0.4)
+uv1_triplanar = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6ttie"]
 size = Vector3(4.45898, 1.97058, 7.2)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_nsx2g"]
+size = Vector3(22, 2, 24)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ahi0b"]
+size = Vector3(22, 2, 24)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1dax7"]
+size = Vector3(20, 2, 22)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bkdvj"]
+size = Vector3(18, 6, 18)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cj7r0"]
+size = Vector3(18, 6, 18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wiu78"]
+size = Vector3(16.5, 6, 16.5)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5lvij"]
 transparency = 1
 albedo_color = Color(0.466667, 0.847059, 0.952941, 0.423529)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lsuqu"]
+resource_local_to_scene = true
+albedo_color = Color(0.364706, 0.364706, 0.364706, 1)
+metallic = 0.7
+metallic_specular = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w63qr"]
+resource_local_to_scene = true
+albedo_color = Color(0.364706, 0.364706, 0.364706, 1)
+metallic = 0.7
+metallic_specular = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7cpwg"]
+resource_local_to_scene = true
+albedo_color = Color(0.364706, 0.364706, 0.364706, 1)
+metallic = 0.7
+metallic_specular = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sea2u"]
+resource_local_to_scene = true
+albedo_color = Color(0.364706, 0.364706, 0.364706, 1)
+metallic = 0.7
+metallic_specular = 0.85
 
 [node name="MainTutorialLevel" type="Node3D"]
 
@@ -89,16 +135,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 248.613, 28.8118, -4.65759)
 size = Vector3(27, 21, 18)
 
 [node name="Ground11" parent="." instance=ExtResource("2_cxipm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 269.113, 49.3118, -3.65759)
-size = Vector3(14, 62, 72)
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 269.37, 49.3118, 20.635)
+size = Vector3(14, 62, 122.382)
+
+[node name="Ground13" parent="." instance=ExtResource("2_cxipm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 269.37, 100.424, -17.5146)
+size = Vector3(14, 40.4907, 44.286)
 
 [node name="Ground14" parent="." instance=ExtResource("2_cxipm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 264.613, 78.8118, 18.0243)
 size = Vector3(23, 3, 28.6362)
-
-[node name="Ground13" parent="." instance=ExtResource("2_cxipm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 269.113, 104.312, -15.6576)
-size = Vector3(14, 50, 48)
 
 [node name="Ground15" parent="." instance=ExtResource("2_cxipm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 417.613, 152.312, 69.8424)
@@ -132,7 +178,7 @@ size = Vector3(8, 3, 23)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.540556, 0)
 
 [node name="CorePlayerPackage" parent="." instance=ExtResource("4_fmt6k")]
-transform = Transform3D(0.0946818, 0, -0.995508, 0, 1, 0, 0.995508, 0, 0.0946818, 429.153, 142.934, -26.472)
+transform = Transform3D(0.0946818, 0, -0.995508, 0, 1, 0, 0.995508, 0, 0.0946818, -3.26854, 2.28347, 0.877311)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.707107, 0.707107, 0, -0.707107, -0.707107, 0, 0, 0)
@@ -196,7 +242,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85, 51.5, -0.5)
 size = Vector3(15, 26, 10)
 
 [node name="DeathPlatform" type="StaticBody3D" parent="."]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 114.099, 18, -1)
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 114.099, 13.1796, -1)
 collision_layer = 2
 collision_mask = 2
 
@@ -218,7 +264,7 @@ transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0.392948, -0.0275002, 0
 shape = SubResource("BoxShape3D_6ttie")
 
 [node name="DeathPlatform2" type="StaticBody3D" parent="."]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 154.099, 18, -1)
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 154.099, 12.8093, -1)
 collision_layer = 2
 collision_mask = 2
 
@@ -238,6 +284,50 @@ script = ExtResource("6_rb3nw")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DeathPlatform2/CollisionShape3D/DeathTrigger"]
 transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, -0.050703, -0.0436807, 0)
 shape = SubResource("BoxShape3D_6ttie")
+
+[node name="DeathPlatform3" type="StaticBody3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 404.165, 37.331, -1)
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeathPlatform3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.63795, 1.83397, -0.456727)
+shape = SubResource("BoxShape3D_nsx2g")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DeathPlatform3/CollisionShape3D"]
+mesh = SubResource("BoxMesh_ahi0b")
+surface_material_override/0 = SubResource("StandardMaterial3D_kcw38")
+
+[node name="DeathTrigger" type="Area3D" parent="DeathPlatform3/CollisionShape3D"]
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("6_rb3nw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeathPlatform3/CollisionShape3D/DeathTrigger"]
+transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, -0.050703, -0.0436807, 0)
+shape = SubResource("BoxShape3D_1dax7")
+
+[node name="DeathPlatform4" type="StaticBody3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 491.409, 54.7901, 130.039)
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeathPlatform4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.63795, 1.83397, -0.456727)
+shape = SubResource("BoxShape3D_bkdvj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DeathPlatform4/CollisionShape3D"]
+mesh = SubResource("BoxMesh_cj7r0")
+surface_material_override/0 = SubResource("StandardMaterial3D_kcw38")
+
+[node name="DeathTrigger" type="Area3D" parent="DeathPlatform4/CollisionShape3D"]
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("6_rb3nw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeathPlatform4/CollisionShape3D/DeathTrigger"]
+transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, -0.0507011, -0.0436802, 0)
+shape = SubResource("BoxShape3D_wiu78")
 
 [node name="Grass12" parent="." instance=ExtResource("1_rp7yq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 220, 21.5, -26.5)
@@ -260,10 +350,6 @@ size = Vector3(31, 10, 37)
 [node name="Checkpoint2" parent="." instance=ExtResource("3_a0yfl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 204, 27, -3)
 
-[node name="Checkpoint3" parent="." node_paths=PackedStringArray("flagMesh") instance=ExtResource("3_a0yfl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 95.1525, 27.5199, -3)
-flagMesh = NodePath("../Checkpoint2/FlagPole/Flag")
-
 [node name="Trampoline" parent="." instance=ExtResource("7_qvose")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 232, 28, -3)
 
@@ -277,11 +363,11 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 256.02
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 258.022, 52.9521, -24.3605)
 
 [node name="Trampoline5" parent="." instance=ExtResource("7_qvose")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 254.022, 69.9521, -20.3605)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 254.022, 68.5148, -20.3605)
 
 [node name="Stone6" parent="." instance=ExtResource("5_ypyql")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 243.927, 88, -2.15778)
-size = Vector3(18.854, 18, 31.3156)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 243.927, 86.1052, -2.15778)
+size = Vector3(18.854, 21.7896, 31.3156)
 
 [node name="Stone16" parent="." instance=ExtResource("5_ypyql")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 333.5, 77, 13.6844)
@@ -300,8 +386,8 @@ transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 381, 9
 size = Vector3(22, 18, 32)
 
 [node name="Stone23" parent="." instance=ExtResource("5_ypyql")]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 357, 165.5, 90.1844)
-size = Vector3(10, 34, 12)
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 360.953, 165.5, 90.1844)
+size = Vector3(10, 41.9055, 12)
 
 [node name="Stone24" parent="." instance=ExtResource("5_ypyql")]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 361.5, 186, 69.1844)
@@ -354,10 +440,6 @@ material = SubResource("StandardMaterial3D_5lvij")
 [node name="Checkpoint4" parent="." instance=ExtResource("3_a0yfl")]
 transform = Transform3D(-0.0661694, 0, -0.997808, 0, 1, 0, 0.997808, 0, -0.0661694, 258.211, 80.7232, 11.0271)
 
-[node name="Checkpoint5" parent="." node_paths=PackedStringArray("flagMesh") instance=ExtResource("3_a0yfl")]
-transform = Transform3D(0.995416, 0, 0.0956372, 0, 1, 0, -0.0956372, 0, 0.995416, 424.925, 138.538, -33.7469)
-flagMesh = NodePath("../Checkpoint4/FlagPole/Flag")
-
 [node name="SpeedRamp" parent="." instance=ExtResource("8_oq5uk")]
 transform = Transform3D(-4.37114e-08, -0.466819, 0.884353, 0, 0.884353, 0.466819, -1, 2.04053e-08, -3.86563e-08, 275.875, 80.2364, 13)
 
@@ -394,5 +476,64 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 405, 1
 [node name="Trampoline9" parent="." instance=ExtResource("7_qvose")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 405, 170, 74)
 
+[node name="Checkpoint6" parent="." instance=ExtResource("3_a0yfl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 424.62, 138.711, -39.1058)
+
+[node name="Checkpoint3" parent="." instance=ExtResource("3_a0yfl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 98.2939, 27.5922, -0.376333)
+
+[node name="OnboardingSign" parent="." instance=ExtResource("10_jxoql")]
+transform = Transform3D(1.25, 0, 0, 0, 1.25, 0, 0, 0, 1.25, 11.0832, 1.24448, -4.79074)
+
+[node name="SignPole" parent="OnboardingSign/CollisionShape3D" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_lsuqu")
+
+[node name="SignContent" parent="OnboardingSign/Sign UI/Background/SignInsides" index="0"]
+text = "[color=black]Press space to jump! Though you already knew that, Mr.Jumprat[/color]"
+
+[node name="OnboardingSign2" parent="." instance=ExtResource("10_jxoql")]
+transform = Transform3D(1.25, 0, 0, 0, 1.25, 0, 0, 0, 1.25, 31.0019, 3.40859, -5.26725)
+
+[node name="SignPole" parent="OnboardingSign2/CollisionShape3D" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_lsuqu")
+
+[node name="SignContent" parent="OnboardingSign2/Sign UI/Background/SignInsides" index="0"]
+text = "[color=black]If you jump towards the wall, you can slide down the wall to avoid a hard fall. If you jump while sliding down a wall, you can wall jump[/color]"
+
+[node name="OnboardingSign3" parent="." instance=ExtResource("10_jxoql")]
+transform = Transform3D(1.25, 0, 0, 0, 1.25, 0, 0, 0, 1.25, 45.9301, 17.2295, 5.24522)
+
+[node name="SignPole" parent="OnboardingSign3/CollisionShape3D" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_w63qr")
+
+[node name="SignContent" parent="OnboardingSign3/Sign UI/Background/SignInsides" index="0"]
+text = "[color=black]If you jump while in midair, you can double jump![/color]"
+
+[node name="OnboardingSign4" parent="." instance=ExtResource("10_jxoql")]
+transform = Transform3D(1.25, 0, 0, 0, 1.25, 0, 0, 0, 1.25, 109.262, 28.1807, -7.27495)
+
+[node name="SignPole" parent="OnboardingSign4/CollisionShape3D" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_7cpwg")
+
+[node name="SignContent" parent="OnboardingSign4/Sign UI/Background/SignInsides" index="0"]
+text = "[color=black]If you press left shift, you can dash! However, you only have one dash per jump. Can't have that motor overheating! Refresh it by landing[/color]"
+
+[node name="OnboardingSign5" parent="." instance=ExtResource("10_jxoql")]
+transform = Transform3D(1.25, 0, 0, 0, 1.25, 0, 0, 0, 1.25, 384.265, 110.343, -32.6571)
+
+[node name="SignPole" parent="OnboardingSign5/CollisionShape3D" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_sea2u")
+
+[node name="SignContent" parent="OnboardingSign5/Sign UI/Background/SignInsides" index="0"]
+text = "[color=black]If you want to reach even higher heights after a jump, hit spacebar the moment you hit the ground. If you do this 2 times in a row, you can reach max height in a triple jump! [/color]"
+
 [connection signal="body_entered" from="DeathPlatform/CollisionShape3D/DeathTrigger" to="DeathPlatform/CollisionShape3D/DeathTrigger" method="_on_body_entered"]
 [connection signal="body_entered" from="DeathPlatform2/CollisionShape3D/DeathTrigger" to="DeathPlatform2/CollisionShape3D/DeathTrigger" method="_on_body_entered"]
+[connection signal="body_entered" from="DeathPlatform3/CollisionShape3D/DeathTrigger" to="DeathPlatform3/CollisionShape3D/DeathTrigger" method="_on_body_entered"]
+[connection signal="body_entered" from="DeathPlatform4/CollisionShape3D/DeathTrigger" to="DeathPlatform4/CollisionShape3D/DeathTrigger" method="_on_body_entered"]
+
+[editable path="OnboardingSign"]
+[editable path="OnboardingSign2"]
+[editable path="OnboardingSign3"]
+[editable path="OnboardingSign4"]
+[editable path="OnboardingSign5"]
