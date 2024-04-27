@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://c7253ay5sll5k"]
+[gd_scene load_steps=9 format=3 uid="uid://c7253ay5sll5k"]
 
 [ext_resource type="Script" path="res://Scripts/Effects/Rotator.gd" id="1_f68ox"]
 [ext_resource type="Script" path="res://Scripts/GoalTrigger.gd" id="2_kwsk5"]
+[ext_resource type="AudioStream" uid="uid://72l2se32skh6" path="res://Audio/626259__rolly-sfx__youve-succeeded-game-jingle.wav" id="3_bpif7"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_t32i4"]
 
@@ -28,11 +29,12 @@ shape = SubResource("BoxShape3D_t32i4")
 mesh = SubResource("BoxMesh_64y5q")
 surface_material_override/0 = SubResource("StandardMaterial3D_75ci5")
 
-[node name="GoalTrigger" type="Area3D" parent="." node_paths=PackedStringArray("winMenu")]
+[node name="GoalTrigger" type="Area3D" parent="." node_paths=PackedStringArray("winMenu", "victorySound")]
 collision_layer = 3
 collision_mask = 3
 script = ExtResource("2_kwsk5")
 winMenu = NodePath("../UI Element")
+victorySound = NodePath("../AudioStreamPlayer")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="GoalTrigger"]
 transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 0, 0)
@@ -100,6 +102,10 @@ offset_bottom = -71.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Continue"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("3_bpif7")
 
 [connection signal="body_entered" from="GoalTrigger" to="GoalTrigger" method="_on_body_entered"]
 [connection signal="pressed" from="UI Element/Background/ColorRect/Button" to="GoalTrigger" method="_on_button_pressed"]

@@ -20,7 +20,7 @@ metallic_specular = 0.85
 size = Vector3(0.1, 1, 1.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qkhrc"]
-albedo_color = Color(0.537255, 0.380392, 0.164706, 1)
+albedo_color = Color(0.298039, 0.203922, 0.0705882, 1)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_wal8a"]
 top_radius = 1.0

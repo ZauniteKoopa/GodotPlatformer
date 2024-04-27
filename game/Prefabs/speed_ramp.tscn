@@ -1,15 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dr1ikys42o6w"]
+[gd_scene load_steps=5 format=3 uid="uid://dr1ikys42o6w"]
 
+[ext_resource type="PackedScene" uid="uid://cxchkt8frbokf" path="res://Meshes/SpeedRamp.glb" id="1_g685e"]
 [ext_resource type="AudioStream" uid="uid://bboa3ntjipvb7" path="res://Audio/SonicUnleashedSpeedRamp.wav" id="1_lk0n3"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_dnrtp"]
-size = Vector3(1, 0.6, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bg4yo"]
-albedo_color = Color(0.313726, 0.0470588, 0.92549, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_fowjm"]
-material = SubResource("StandardMaterial3D_bg4yo")
 size = Vector3(1, 0.6, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_q3jya"]
@@ -22,8 +16,8 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 
 transform = Transform3D(3, 0, 0, 0, 3, -8.94071e-08, 0, 8.94071e-08, 3, 0, 0, 0)
 shape = SubResource("BoxShape3D_dnrtp")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
-mesh = SubResource("BoxMesh_fowjm")
+[node name="SpeedRampMesh" parent="CollisionShape3D" instance=ExtResource("1_g685e")]
+transform = Transform3D(0.4, 4.74579e-29, -1.19904e-15, 3.17637e-23, 0.47, 1.34111e-08, 1.06581e-15, -1.40071e-08, 0.45, 0, 0, 0)
 
 [node name="ForceArea" type="ForceArea" parent="."]
 force_duration = 0.5

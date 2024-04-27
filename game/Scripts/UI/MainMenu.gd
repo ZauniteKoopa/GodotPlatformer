@@ -4,7 +4,7 @@ extends Control
 
 
 func _on_play_pressed():
-	get_tree().change_scene_to_file("res://MainLevels/TestLab.tscn")
+	get_tree().change_scene_to_file("res://MainLevels/MainTutorialLevel.tscn")
 	pass # Replace with function body.
 
 

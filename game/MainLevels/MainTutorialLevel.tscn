@@ -139,8 +139,8 @@ transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 269.37
 size = Vector3(14, 62, 122.382)
 
 [node name="Ground13" parent="." instance=ExtResource("2_cxipm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 269.37, 100.424, -17.5146)
-size = Vector3(14, 40.4907, 44.286)
+transform = Transform3D(1, 0, 0, 0, -0.0286021, 0.999591, 0, -0.999591, -0.0286021, 270.046, 102.952, -15.7084)
+size = Vector3(15.208, 51.2076, 46.5034)
 
 [node name="Ground14" parent="." instance=ExtResource("2_cxipm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 264.613, 78.8118, 18.0243)
@@ -149,6 +149,18 @@ size = Vector3(23, 3, 28.6362)
 [node name="Ground15" parent="." instance=ExtResource("2_cxipm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 417.613, 152.312, 69.8424)
 size = Vector3(9, 44, 43)
+
+[node name="Ground16" parent="." instance=ExtResource("2_cxipm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 336.939, 197.326, 90.355)
+size = Vector3(7.59756, 8.92438, 4.81032)
+
+[node name="Ground17" parent="." instance=ExtResource("2_cxipm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 329.581, 215.452, 73.0331)
+size = Vector3(7.59756, 28.6403, 20.2711)
+
+[node name="Ground18" parent="." instance=ExtResource("2_cxipm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 341.93, 208.958, 68.3373)
+size = Vector3(7.59756, 15.6516, 10.8795)
 
 [node name="Ground12" parent="." instance=ExtResource("2_cxipm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 229.765, 80.4663, -3.65759)
@@ -178,7 +190,7 @@ size = Vector3(8, 3, 23)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.540556, 0)
 
 [node name="CorePlayerPackage" parent="." instance=ExtResource("4_fmt6k")]
-transform = Transform3D(0.0946818, 0, -0.995508, 0, 1, 0, 0.995508, 0, 0.0946818, -3.26854, 2.28347, 0.877311)
+transform = Transform3D(0.0946818, 0, -0.995508, 0, 1, 0, 0.995508, 0, 0.0946818, -3.65184, 2.09553, 0.171653)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.707107, 0.707107, 0, -0.707107, -0.707107, 0, 0, 0)
@@ -198,8 +210,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 138.5, 14.5, -3)
 size = Vector3(18, 22, 59)
 
 [node name="Stone10" parent="." instance=ExtResource("5_ypyql")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 178, 33.6968, 25.5)
-size = Vector3(23, 41, 50)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 178, 30.9407, 25.5)
+size = Vector3(23, 46.5122, 50)
 
 [node name="Stone14" parent="." instance=ExtResource("5_ypyql")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 197, 35.1968, 27.5)
@@ -218,8 +230,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 138.875, 44.1201, -44.2764)
 size = Vector3(18.7683, 37.2401, 25.5269)
 
 [node name="Stone11" parent="." instance=ExtResource("5_ypyql")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 176, 41.1187, -24.5)
-size = Vector3(57, 31.2374, 36)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 176, 34.0455, -24.5)
+size = Vector3(57, 45.3838, 36)
 
 [node name="Stone2" parent="." instance=ExtResource("5_ypyql")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84.5, 42, -26.2405)
@@ -363,7 +375,8 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 256.02
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 258.022, 52.9521, -24.3605)
 
 [node name="Trampoline5" parent="." instance=ExtResource("7_qvose")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 254.022, 68.5148, -20.3605)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 254.022, 69.6516, -20.3605)
+metadata/_edit_group_ = true
 
 [node name="Stone6" parent="." instance=ExtResource("5_ypyql")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 243.927, 86.1052, -2.15778)
@@ -390,12 +403,20 @@ transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 360.95
 size = Vector3(10, 41.9055, 12)
 
 [node name="Stone24" parent="." instance=ExtResource("5_ypyql")]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 361.5, 186, 69.1844)
-size = Vector3(17, 3, 42)
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 361.5, 188.624, 74.0811)
+size = Vector3(18.3735, 3, 18.3325)
 
 [node name="Stone25" parent="." instance=ExtResource("5_ypyql")]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 352.5, 185.5, 57.6844)
-size = Vector3(16, 3, 49)
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 352.5, 190.543, 77.4357)
+size = Vector3(22.3022, 3, 30.7546)
+
+[node name="Stone26" parent="." instance=ExtResource("5_ypyql")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 321.229, 233.412, 33.6626)
+size = Vector3(54.6353, 3, 20.0264)
+
+[node name="Stone27" parent="." instance=ExtResource("5_ypyql")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 339.157, 209.358, 31.7695)
+size = Vector3(6.67432, 10.3123, 8.5137)
 
 [node name="Stone20" parent="." instance=ExtResource("5_ypyql")]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 400.5, 105, -36.8156)
@@ -410,31 +431,31 @@ transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 413.5,
 size = Vector3(31, 5, 48)
 
 [node name="Glass" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 348.5, 100, 10.6844)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 348.5, 122.364, 10.6844)
 use_collision = true
 collision_mask = 3
-size = Vector3(2, 38, 15)
+size = Vector3(2, 82.7284, 15)
 material = SubResource("StandardMaterial3D_5lvij")
 
 [node name="Glass4" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 361.5, 100, 10.6844)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 361.5, 121.806, 10.6844)
 use_collision = true
 collision_mask = 3
-size = Vector3(2, 38, 15)
+size = Vector3(2, 81.6128, 15)
 material = SubResource("StandardMaterial3D_5lvij")
 
 [node name="Glass2" type="CSGBox3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 354.5, 100, 18.6844)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 354.5, 122.049, 18.6844)
 use_collision = true
 collision_mask = 3
-size = Vector3(2, 38, 15)
+size = Vector3(2, 82.0977, 15)
 material = SubResource("StandardMaterial3D_5lvij")
 
 [node name="Glass3" type="CSGBox3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 354.5, 100, 2.68445)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 354.5, 121.891, 2.68445)
 use_collision = true
 collision_mask = 3
-size = Vector3(2, 38, 15)
+size = Vector3(2, 81.7814, 15)
 material = SubResource("StandardMaterial3D_5lvij")
 
 [node name="Checkpoint4" parent="." instance=ExtResource("3_a0yfl")]
@@ -471,10 +492,10 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 365, 9
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 405, 150, 42)
 
 [node name="Trampoline8" parent="." instance=ExtResource("7_qvose")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 405, 157, 63)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 405, 157, 66.2719)
 
 [node name="Trampoline9" parent="." instance=ExtResource("7_qvose")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 405, 170, 74)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 405, 169.48, 81.0563)
 
 [node name="Checkpoint6" parent="." instance=ExtResource("3_a0yfl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 424.62, 138.711, -39.1058)
@@ -526,6 +547,12 @@ surface_material_override/0 = SubResource("StandardMaterial3D_sea2u")
 
 [node name="SignContent" parent="OnboardingSign5/Sign UI/Background/SignInsides" index="0"]
 text = "[color=black]If you want to reach even higher heights after a jump, hit spacebar the moment you hit the ground. If you do this 2 times in a row, you can reach max height in a triple jump! [/color]"
+
+[node name="Trampoline10" parent="." instance=ExtResource("7_qvose")]
+transform = Transform3D(-0.00561997, 0, 0.999984, 0, 1, 0, -0.999984, 0, -0.00561997, 328.083, 230.17, 64.6591)
+
+[node name="Checkpoint5" parent="." instance=ExtResource("3_a0yfl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 378.528, 170.617, 89.5971)
 
 [connection signal="body_entered" from="DeathPlatform/CollisionShape3D/DeathTrigger" to="DeathPlatform/CollisionShape3D/DeathTrigger" method="_on_body_entered"]
 [connection signal="body_entered" from="DeathPlatform2/CollisionShape3D/DeathTrigger" to="DeathPlatform2/CollisionShape3D/DeathTrigger" method="_on_body_entered"]
